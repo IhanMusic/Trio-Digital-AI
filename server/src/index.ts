@@ -141,8 +141,19 @@ app.get('/api/health', (req, res) => {
 if (process.env.NODE_ENV === 'production') {
   const clientBuildPath = path.join(__dirname, '..', '..', 'client', 'build');
   
-  // Servir les fichiers statiques du build React
-  app.use(express.static(clientBuildPath));
+  // Servir les fichiers statiques du build React avec des options de cache
+  app.use(express.static(clientBuildPath, {
+    maxAge: '1d',
+    etag: true,
+    lastModified: true,
+    index: false,
+    setHeaders: (res) => {
+      // Cache les assets statiques (images, CSS, JS)
+      if (res.req?.path?.match(/\.(jpg|jpeg|png|gif|webp|svg|css|js|ico|woff|woff2|ttf|eot)$/)) {
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+      }
+    }
+  }));
   
   // Route catch-all pour le routing côté client React
   app.get('*', (req, res) => {

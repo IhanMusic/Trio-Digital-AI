@@ -16,11 +16,36 @@ const corsOptions = {
   maxAge: 86400 // Cache les résultats CORS pendant 24h
 };
 
-// Middleware CORS pour les fichiers statiques
-router.use('/images', cors(corsOptions));
+// Route OPTIONS pour le preflight CORS
+router.options('/images/*', cors(corsOptions));
 
-// Middleware pour vérifier l'accès aux images
-const verifyImageAccess = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+// Options pour servir les fichiers statiques publics
+const publicStaticOptions = {
+  maxAge: '1d', // Cache côté client pendant 1 jour
+  immutable: true,
+  lastModified: true,
+  etag: true,
+  index: false, // Désactiver la liste des fichiers
+  setHeaders: (res: express.Response) => {
+    // Permettre la mise en cache par le navigateur
+    res.setHeader('Cache-Control', 'public, max-age=86400, immutable');
+    // Permettre l'affichage des images dans les balises <img>
+    res.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_URL || 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    // Optimiser le chargement des images
+    res.setHeader('Accept-Ranges', 'bytes');
+    res.setHeader('Vary', 'Accept-Encoding');
+  }
+};
+
+// Servir les images statiques depuis le dossier public/images (sans authentification)
+// Ces images incluent les logos, images de landing page, témoignages, exemples, etc.
+router.use('/images', cors(corsOptions), express.static(path.join(process.cwd(), 'public', 'images'), publicStaticOptions));
+
+// Middleware pour vérifier l'accès aux images générées (protégées)
+const verifyGeneratedImageAccess = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
   try {
     // Extraire le nom du fichier de l'URL
     const filename = path.basename(req.path);
@@ -66,32 +91,10 @@ const verifyImageAccess = async (req: express.Request, res: express.Response, ne
   }
 };
 
-// Options pour servir les fichiers statiques
-const staticOptions = {
-  maxAge: '1d', // Cache côté client pendant 1 jour
-  immutable: true,
-  lastModified: true,
-  etag: true,
-  index: false, // Désactiver la liste des fichiers
-  fallthrough: false, // Renvoyer 404 si le fichier n'existe pas
-  setHeaders: (res: express.Response) => {
-    // Permettre la mise en cache par le navigateur
-    res.setHeader('Cache-Control', 'public, max-age=86400, immutable');
-    // Permettre l'affichage des images dans les balises <img>
-    res.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_URL || 'http://localhost:3000');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    // Optimiser le chargement des images
-    res.setHeader('Accept-Ranges', 'bytes');
-    res.setHeader('Vary', 'Accept-Encoding');
-  }
-};
-
-// Route OPTIONS pour le preflight CORS
-router.options('/images/*', cors(corsOptions));
-
-// Servir les images statiques depuis le dossier public/images
-router.use('/images', express.static(path.join(process.cwd(), 'public', 'images'), staticOptions));
+// Route pour les images générées par l'API (avec authentification)
+// Cette route peut être utilisée pour les images générées qui nécessitent une authentification
+router.get('/generated-images/*', authenticate, verifyGeneratedImageAccess, (req, res, next) => {
+  express.static(path.join(process.cwd(), 'generated'), publicStaticOptions)(req, res, next);
+});
 
 export default router;
