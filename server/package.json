@@ -11,7 +11,6 @@
     "init-admin": "ts-node src/scripts/initAdmin.ts",
     "init-users": "ts-node src/scripts/initUsers.ts",
     "init-folders": "ts-node src/scripts/initFolders.ts",
-    "postinstall": "npm run init-folders",
     "generate-storyboard": "ts-node src/scripts/generateStoryboard.ts",
     "generate-ramdy": "ts-node src/scripts/generateRamdyStoryboard.ts",
     "migrate-to-cloudinary": "ts-node src/scripts/migrateToCloudinary.ts"
