@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Logo from '../../components/common/Logo';
+import { config } from '../../config/env';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ const Register: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch(`${config.apiUrl}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
