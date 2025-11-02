@@ -279,47 +279,66 @@ const Results: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {platformPosts.map(post => (
               <div key={post._id} className="glass-panel overflow-hidden hover:scale-[1.02] transition-all duration-300">
-                {/* Affichage VIDÉO si mediaType='video' */}
-                {post.content.mediaType === 'video' && post.content.videoUrl ? (
-                  <div className="relative w-full bg-black" style={{ paddingTop: post.content.videoFormat === '9:16' ? '177.78%' : '56.25%' }}>
-                    <div className="absolute top-0 left-0 w-full h-full">
-                      <video 
-                        controls 
-                        className="w-full h-full object-contain"
-                        poster={post.content.imageUrl ? config.getImageUrl(post.content.imageUrl) : undefined}
-                      >
-                        <source src={config.getImageUrl(post.content.videoUrl)} type="video/mp4" />
-                        Votre navigateur ne supporte pas la lecture de vidéos.
-                      </video>
+                {/* Affichage conditionnel : Vidéo OU Image */}
+                {(() => {
+                  // CAS 1: Post VIDÉO
+                  if (post.content.mediaType === 'video' && post.content.videoUrl) {
+                    return (
+                      <div className="relative w-full bg-black" style={{ 
+                        paddingTop: post.content.videoFormat === '9:16' ? '177.78%' : 
+                                    post.content.videoFormat === '1:1' ? '100%' : '56.25%' 
+                      }}>
+                        <div className="absolute top-0 left-0 w-full h-full">
+                          <video 
+                            controls 
+                            className="w-full h-full object-contain"
+                            poster={post.content.imageUrl ? config.getImageUrl(post.content.imageUrl) : undefined}
+                          >
+                            <source src={config.getImageUrl(post.content.videoUrl)} type="video/mp4" />
+                            Votre navigateur ne supporte pas la lecture de vidéos.
+                          </video>
+                        </div>
+                        {/* Badge type vidéo */}
+                        <div className="absolute top-2 left-2 z-10">
+                          <span className="bg-[#53dfb2] text-black px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg">
+                            🎬 {post.videoType || 'Video'} {post.content.videoDuration ? `${post.content.videoDuration}s` : ''}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  }
+                  
+                  // CAS 2: Post IMAGE
+                  if (post.content.imageUrl) {
+                    return (
+                      <div style={getImageStyle(post)} className="relative">
+                        <div className="absolute top-0 right-0 p-2 z-10">
+                          <button 
+                            onClick={() => handleDownload(post.content.imageUrl!, post.platform, post._id)}
+                            className="bg-black/50 hover:bg-black/70 p-2 rounded-full transition-all duration-200"
+                            title="Télécharger l'image"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                          </button>
+                        </div>
+                        <img 
+                          src={config.getImageUrl(post.content.imageUrl)} 
+                          alt="Post visual" 
+                          className="absolute top-0 left-0 w-full h-full object-cover"
+                        />
+                      </div>
+                    );
+                  }
+                  
+                  // CAS 3: Pas de média
+                  return (
+                    <div className="bg-white/5 p-8 rounded text-white/60 text-center">
+                      Aucun média disponible
                     </div>
-                    {/* Badge type vidéo */}
-                    <div className="absolute top-2 left-2 z-10">
-                      <span className="bg-[#53dfb2] text-black px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg">
-                        🎬 {post.videoType || 'Video'} {post.content.videoDuration ? `${post.content.videoDuration}s` : ''}
-                      </span>
-                    </div>
-                  </div>
-                ) : post.content.imageUrl ? (
-                  // Affichage IMAGE (comme avant)
-                  <div style={getImageStyle(post)} className="relative">
-                    <div className="absolute top-0 right-0 p-2 z-10">
-                      <button 
-                        onClick={() => handleDownload(post.content.imageUrl!, post.platform, post._id)}
-                        className="bg-black/50 hover:bg-black/70 p-2 rounded-full transition-all duration-200"
-                        title="Télécharger l'image"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                      </button>
-                    </div>
-                    <img 
-                      src={config.getImageUrl(post.content.imageUrl)} 
-                      alt="Post visual" 
-                      className="absolute top-0 left-0 w-full h-full object-cover"
-                    />
-                  </div>
-                ) : null}
+                  );
+                })()}
                 
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">

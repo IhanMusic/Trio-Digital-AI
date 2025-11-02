@@ -18,7 +18,8 @@ import sharp from 'sharp';
 
 // 🔥 CONFIGURATION GÉNÉRATION VIDÉO
 // Mettre à true pour générer des REELs au lieu d'images
-const GENERATE_VIDEO = false; // ⚠️ TEMPORAIREMENT DÉSACTIVÉ - réactiver quand API VEO3 sera configurée
+const GENERATE_VIDEO = true; // ✅ ACTIVÉ - Génère UNE vidéo REEL par calendrier
+const VIDEOS_PER_CALENDAR = 1; // Nombre de vidéos à générer par calendrier (pour test)
 
 /**
  * Transforme une image (Buffer) en format carré en ajoutant du padding blanc
@@ -689,6 +690,7 @@ DIRECTIVES CRÉATIVES
           scheduledDate: date,
           content: {
             text: parsedPost.postContent,
+            mediaType: 'image' as 'image' | 'video' | 'text',
             imageUrl: '',
             imagePublicId: '',
             imagePrompt: parsedPost.imagePrompt,
@@ -815,118 +817,208 @@ DIRECTIVES CRÉATIVES
             }
           }
 
-        // 🎬 GÉNÉRATION VIDÉO VEO3 (EN PLUS de l'image)
-        if (GENERATE_VIDEO) {
-          try {
-            logger.info('=== Début de la génération REEL VEO3 ===');
-            
-            // Construire le prompt vidéo professionnel pour REEL Instagram
-            const reelPrompt = `Cinematic 8-second Instagram Reel shot in the style of ${brand.name} commercial meets lifestyle storytelling,
-${parsedPost.postContent},
+        // Marquer explicitement ce post comme IMAGE
+        postData.content.mediaType = 'image';
+
+        logger.info('Création du post IMAGE dans la base de données...');
+        const post = await Post.create(postData);
+        logger.info('Post IMAGE créé avec succès, ID:', post._id);
+        savedPosts.push(post);
+      }
+    }
+
+    // 🎬 GÉNÉRATION D'UNE VIDÉO REEL (en plus des images)
+    if (GENERATE_VIDEO && VIDEOS_PER_CALENDAR > 0) {
+      logger.info('\n\n🎬 ========================================');
+      logger.info('🎬 GÉNÉRATION DE VIDÉO REEL VEO3');
+      logger.info('🎬 ========================================\n');
+      
+      try {
+        // Choisir Instagram comme plateforme pour le REEL
+        const reelPlatform = 'instagram';
+        
+        // Date : milieu de la période du calendrier
+        const reelDate = new Date(calendar.startDate);
+        const daysDiff = Math.floor((calendar.endDate.getTime() - calendar.startDate.getTime()) / (24 * 60 * 60 * 1000));
+        reelDate.setDate(reelDate.getDate() + Math.floor(daysDiff / 2));
+        reelDate.setHours(18, 0, 0, 0); // 18h00 pour les REELs
+        
+        logger.info(`Date programmée pour le REEL: ${reelDate.toLocaleDateString()} à ${reelDate.getHours()}:${reelDate.getMinutes()}`);
+        
+        // Attendre pour respecter le rate limit OpenAI
+        await this.waitForOpenAIRateLimit();
+        
+        // Générer le contenu texte pour le REEL
+        logger.info('Génération du contenu texte du REEL avec GPT-5...');
+        
+        const reelResponse = await axios.post('https://api.openai.com/v1/chat/completions', {
+          model: 'gpt-5',
+          reasoning_effort: 'medium',
+          messages: [
+            {
+              role: 'system',
+              content: `Tu es un expert en création de REELS Instagram viraux. Crée un contenu court, percutant et engageant pour un REEL de ${brand.name}.`
+            },
+            {
+              role: 'user',
+              content: `Créez un contenu REEL Instagram pour ${brand.name} (${brand.sector}).
+              
+${briefData.products.length > 0 ? `Produit phare: ${briefData.products[0].name} - ${briefData.products[0].description}` : ''}
+
+Le contenu doit être:
+- Court et percutant (50-100 mots max)
+- Optimisé pour un format vidéo vertical 9:16
+- Avec un hook fort dans les 3 premières secondes
+- Call-to-action engageant
+
+FORMAT DE RÉPONSE:
+---POST #1---
+[Contenu du REEL]
+
+---HASHTAGS---
+[5-7 hashtags]
+
+---CALL TO ACTION---
+[CTA]`
+            }
+          ]
+        }, {
+          headers: {
+            'Authorization': `Bearer ${OPENAI_API_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const reelContent = reelResponse.data.choices[0].message.content;
+        logger.info(`Contenu REEL généré:\n${reelContent.substring(0, 200)}...`);
+        
+        const parsedReelPosts = parseGPTResponse(reelContent);
+        
+        if (parsedReelPosts.length === 0) {
+          throw new Error('Impossible de parser le contenu REEL généré');
+        }
+        
+        const parsedReelPost = parsedReelPosts[0];
+        
+        // Construire le prompt vidéo professionnel pour REEL Instagram
+        const reelPrompt = `Cinematic 8-second Instagram Reel in the style of ${brand.name} commercial,
+${parsedReelPost.postContent},
 dynamic camera movement revealing ${products.length > 0 ? products[0].name : 'product'} in authentic lifestyle context,
+${products.length > 0 && products[0].category ? `${products[0].category} product showcase` : 'product showcase'},
 shot on Sony A7III with 50mm f/1.2 lens at f/2.0 for beautiful bokeh,
 9:16 vertical format optimized for Instagram Reels,
-professional commercial video production, 1080p quality, scroll-stopping transformation reveal
+${brand.colors?.primary ? `brand colors: ${brand.colors.primary}` : 'vibrant colors'},
+professional commercial video production, 1080p quality, scroll-stopping transformation reveal,
+lifestyle integration, natural lighting, authentic moment capture`;
 
-Audio cues:
-Ambient: Natural environment sounds with authentic moment capture
-Sound effects: Subtle product interaction sounds
-Music: Upbeat inspiring audio at 120 BPM synchronized with transformation`;
-
-            logger.info('Prompt REEL construit:', reelPrompt.substring(0, 200) + '...');
-            
-            // Préparer les images produits (jusqu'à 3)
-            const productImageBuffers: Buffer[] = [];
-            
-            if (calendar.selectedProducts && calendar.selectedProducts.length > 0 && products.length > 0) {
-              const productsToUse = products.slice(0, 3); // Max 3 produits
-              
-              for (const product of productsToUse) {
-                if (product.images && product.images.main) {
-                  try {
-                    logger.info(`Téléchargement image produit: ${product.name}`);
-                    const response = await axios.get(product.images.main, {
-                      responseType: 'arraybuffer',
-                      timeout: 30000
-                    });
-                    productImageBuffers.push(Buffer.from(response.data));
-                    logger.info(`✅ Image produit ${product.name} téléchargée`);
-                  } catch (error: any) {
-                    logger.error(`Erreur téléchargement image ${product.name}:`, error.message);
-                  }
-                }
+        logger.info('Prompt REEL construit:', reelPrompt.substring(0, 200) + '...');
+        
+        // Préparer les images produits (jusqu'à 3)
+        const productImageBuffers: Buffer[] = [];
+        
+        if (calendar.selectedProducts && calendar.selectedProducts.length > 0 && products.length > 0) {
+          const productsToUse = products.slice(0, 3); // Max 3 produits
+          
+          for (const product of productsToUse) {
+            if (product.images && product.images.main) {
+              try {
+                logger.info(`Téléchargement image produit: ${product.name}`);
+                const response = await axios.get(product.images.main, {
+                  responseType: 'arraybuffer',
+                  timeout: 30000
+                });
+                productImageBuffers.push(Buffer.from(response.data));
+                logger.info(`✅ Image produit ${product.name} téléchargée`);
+              } catch (error: any) {
+                logger.error(`Erreur téléchargement image ${product.name}:`, error.message);
               }
             }
-            
-            // Générer la vidéo avec VEO3
-            if (productImageBuffers.length > 0) {
-              logger.info(`🎬 Génération REEL avec ${productImageBuffers.length} image(s) produit(s)`);
-              
-              const video = await Veo3Service.generateVideoWithReferences(
-                reelPrompt,
-                productImageBuffers,
-                {
-                  duration: 8,
-                  aspectRatio: '9:16',
-                  resolution: '1080p'
-                }
-              );
-              
-              logger.info('✅ REEL généré avec succès par VEO3');
-              logger.info('URL vidéo:', video.videoUrl);
-              
-              // Ajouter les infos vidéo au postData (casting en any pour TypeScript)
-              (postData as any).content.mediaType = 'video';
-              (postData as any).content.videoUrl = video.videoUrl;
-              (postData as any).content.videoPublicId = video.videoPublicId;
-              (postData as any).content.videoPrompt = reelPrompt;
-              (postData as any).content.videoDuration = video.duration;
-              (postData as any).content.videoFormat = '9:16';
-              (postData as any).content.videoResolution = '1080p';
-              (postData as any).content.hasAudio = true;
-              (postData as any).videoType = 'reel';
-              
-            } else {
-              logger.info('⚠️  Aucune image produit disponible, génération vidéo sans référence');
-              
-              const video = await Veo3Service.generateVideo(reelPrompt, {
-                duration: 8,
-                aspectRatio: '9:16',
-                resolution: '1080p'
-              });
-              
-              logger.info('✅ REEL généré avec succès par VEO3 (sans référence produit)');
-              logger.info('URL vidéo:', video.videoUrl);
-              
-              // Ajouter les infos vidéo au postData (casting en any pour TypeScript)
-              (postData as any).content.mediaType = 'video';
-              (postData as any).content.videoUrl = video.videoUrl;
-              (postData as any).content.videoPublicId = video.videoPublicId;
-              (postData as any).content.videoPrompt = reelPrompt;
-              (postData as any).content.videoDuration = video.duration;
-              (postData as any).content.videoFormat = '9:16';
-              (postData as any).content.videoResolution = '1080p';
-              (postData as any).content.hasAudio = true;
-              (postData as any).videoType = 'reel';
-            }
-            
-          } catch (error: any) {
-            logger.error('❌ Erreur lors de la génération vidéo VEO3:', error.message);
-            logger.error('Stack:', error.stack);
-            // Ne pas bloquer la création du post si la vidéo échoue
-            logger.info('Création du post sans vidéo (image seulement)');
           }
         }
-
-        logger.info('Création du post dans la base de données...');
-        const post = await Post.create(postData);
-        logger.info('Post créé avec succès, ID:', post._id);
-        savedPosts.push(post);
+        
+        // Générer la vidéo avec VEO3
+        let video;
+        if (productImageBuffers.length > 0) {
+          logger.info(`🎬 Génération REEL avec ${productImageBuffers.length} image(s) produit(s)`);
+          
+          video = await Veo3Service.generateVideoWithReferences(
+            reelPrompt,
+            productImageBuffers,
+            {
+              duration: 8,
+              aspectRatio: '9:16',
+              resolution: '1080p'
+            }
+          );
+        } else {
+          logger.info('⚠️  Aucune image produit disponible, génération vidéo sans référence');
+          
+          video = await Veo3Service.generateVideo(reelPrompt, {
+            duration: 8,
+            aspectRatio: '9:16',
+            resolution: '1080p'
+          });
+        }
+        
+        logger.info('✅ REEL généré avec succès par VEO3');
+        logger.info('URL vidéo:', video.videoUrl);
+        
+        // Vérifier que la vidéo a bien été générée
+        if (!video.videoUrl || !video.videoPublicId) {
+          throw new Error('Vidéo générée mais URL ou publicId manquant');
+        }
+        
+        // Créer le post VIDÉO
+        const videoPostData = {
+          calendarId: calendar._id,
+          brandId: brand._id,
+          createdBy: user._id,
+          platform: reelPlatform,
+          scheduledDate: reelDate,
+          content: {
+            text: parsedReelPost.postContent,
+            mediaType: 'video' as 'image' | 'video' | 'text',
+            videoUrl: video.videoUrl,
+            videoPublicId: video.videoPublicId,
+            videoPrompt: reelPrompt,
+            videoDuration: video.duration,
+            videoFormat: '9:16' as '16:9' | '9:16' | '1:1',
+            videoResolution: '1080p' as '720p' | '1080p',
+            hasAudio: true
+          },
+          videoType: 'reel' as 'story' | 'reel' | 'short' | 'animation' | 'standard',
+          status: 'pending_validation',
+          tags: calendar.generationSettings?.themes || [],
+          hashtags: parsedReelPost.hashtags,
+          callToAction: parsedReelPost.callToAction,
+          aiGenerated: true,
+          products: calendar.selectedProducts || []
+        };
+        
+        logger.info('Création du post VIDÉO dans la base de données...');
+        logger.info('Post data:', {
+          platform: videoPostData.platform,
+          mediaType: videoPostData.content.mediaType,
+          videoUrl: videoPostData.content.videoUrl ? 'présent' : 'absent',
+          videoType: videoPostData.videoType,
+          scheduledDate: videoPostData.scheduledDate
+        });
+        
+        const videoPost = await Post.create(videoPostData);
+        logger.info('✅ Post VIDÉO créé avec succès, ID:', videoPost._id);
+        savedPosts.push(videoPost);
+        
+      } catch (error: any) {
+        logger.error('❌ Erreur lors de la génération vidéo VEO3:', error.message);
+        logger.error('Stack:', error.stack);
+        logger.info('⚠️  La génération continue sans vidéo (toutes les images ont été créées)');
       }
     }
 
     logger.info(`\n=== Fin de la génération ===`);
     logger.info(`${savedPosts.length} posts générés au total`);
+    logger.info(`Images: ${savedPosts.filter(p => p.content.mediaType === 'image').length}`);
+    logger.info(`Vidéos: ${savedPosts.filter(p => p.content.mediaType === 'video').length}`);
     return savedPosts;
   }
 
