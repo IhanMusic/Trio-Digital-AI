@@ -875,16 +875,16 @@ Music: Upbeat inspiring audio at 120 BPM synchronized with transformation`;
               logger.info('✅ REEL généré avec succès par VEO3');
               logger.info('URL vidéo:', video.videoUrl);
               
-              // Ajouter les infos vidéo au postData
-              postData.content.mediaType = 'video';
-              postData.content.videoUrl = video.videoUrl;
-              postData.content.videoPublicId = video.videoPublicId;
-              postData.content.videoPrompt = reelPrompt;
-              postData.content.videoDuration = video.duration;
-              postData.content.videoFormat = '9:16';
-              postData.content.videoResolution = '1080p';
-              postData.content.hasAudio = true;
-              postData.videoType = 'reel';
+              // Ajouter les infos vidéo au postData (casting en any pour TypeScript)
+              (postData as any).content.mediaType = 'video';
+              (postData as any).content.videoUrl = video.videoUrl;
+              (postData as any).content.videoPublicId = video.videoPublicId;
+              (postData as any).content.videoPrompt = reelPrompt;
+              (postData as any).content.videoDuration = video.duration;
+              (postData as any).content.videoFormat = '9:16';
+              (postData as any).content.videoResolution = '1080p';
+              (postData as any).content.hasAudio = true;
+              (postData as any).videoType = 'reel';
               
             } else {
               logger.info('⚠️  Aucune image produit disponible, génération vidéo sans référence');
@@ -898,16 +898,16 @@ Music: Upbeat inspiring audio at 120 BPM synchronized with transformation`;
               logger.info('✅ REEL généré avec succès par VEO3 (sans référence produit)');
               logger.info('URL vidéo:', video.videoUrl);
               
-              // Ajouter les infos vidéo au postData
-              postData.content.mediaType = 'video';
-              postData.content.videoUrl = video.videoUrl;
-              postData.content.videoPublicId = video.videoPublicId;
-              postData.content.videoPrompt = reelPrompt;
-              postData.content.videoDuration = video.duration;
-              postData.content.videoFormat = '9:16';
-              postData.content.videoResolution = '1080p';
-              postData.content.hasAudio = true;
-              postData.videoType = 'reel';
+              // Ajouter les infos vidéo au postData (casting en any pour TypeScript)
+              (postData as any).content.mediaType = 'video';
+              (postData as any).content.videoUrl = video.videoUrl;
+              (postData as any).content.videoPublicId = video.videoPublicId;
+              (postData as any).content.videoPrompt = reelPrompt;
+              (postData as any).content.videoDuration = video.duration;
+              (postData as any).content.videoFormat = '9:16';
+              (postData as any).content.videoResolution = '1080p';
+              (postData as any).content.hasAudio = true;
+              (postData as any).videoType = 'reel';
             }
             
           } catch (error: any) {
