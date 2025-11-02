@@ -2,6 +2,7 @@ import express from 'express';
 import { body } from 'express-validator';
 import User, { IUserDocument } from '../models/User';
 import AuthService from '../services/AuthService';
+import EmailService from '../services/EmailService';
 import { authenticate } from '../middleware/auth';
 
 const router = express.Router();
@@ -56,6 +57,12 @@ router.post('/register', registerValidation, async (req: express.Request, res: e
     });
 
     await user.save();
+
+    // Envoyer l'email de bienvenue (asynchrone, ne bloque pas la réponse)
+    EmailService.sendWelcomeEmail(user.email, user.name).catch(error => {
+      console.error('Erreur lors de l\'envoi de l\'email de bienvenue:', error);
+      // On ne bloque pas l'inscription si l'email échoue
+    });
 
     const tokens = AuthService.generateAuthTokens(user);
 
@@ -327,14 +334,15 @@ router.post('/forgot-password', [
 
     const resetToken = AuthService.generatePasswordResetToken(user._id.toString(), user.email);
 
-    // TODO: Envoyer l'email avec le token
-    // Pour le moment, on renvoie le token dans la réponse pour le développement
+    // Envoyer l'email de réinitialisation (asynchrone, ne bloque pas la réponse)
+    EmailService.sendPasswordResetEmail(user.email, user.name, resetToken).catch(error => {
+      console.error('Erreur lors de l\'envoi de l\'email de réinitialisation:', error);
+      // On ne bloque pas la requête si l'email échoue
+    });
+
     res.json({
       success: true,
-      message: 'Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.',
-      data: {
-        resetToken // À retirer en production
-      }
+      message: 'Si un compte existe avec cet email, vous recevrez un lien de réinitialisation.'
     });
   } catch (error) {
     console.error('Erreur lors de la demande de réinitialisation:', error);

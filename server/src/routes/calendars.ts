@@ -4,6 +4,7 @@ import { authenticate } from '../middleware/auth';
 import Calendar from '../models/Calendar';
 import Brand from '../models/Brand';
 import PostGenerationService from '../services/PostGenerationService';
+import EmailService from '../services/EmailService';
 import { FileStorageService } from '../services/FileStorageService';
 import mongoose from 'mongoose';
 
@@ -81,6 +82,18 @@ router.post('/:id/generate', authenticate, async (req: Request, res: Response) =
         console.log(`Post ${post._id}: Pas d'image générée`);
       }
     }
+
+    // Envoyer l'email de notification "Calendrier prêt" (asynchrone)
+    EmailService.sendCalendarReadyEmail(
+      req.user.email,
+      req.user.name,
+      String(calendar._id),
+      posts.length,
+      brand.name
+    ).catch(error => {
+      console.error('Erreur lors de l\'envoi de l\'email de notification calendrier:', error);
+      // On ne bloque pas la réponse si l'email échoue
+    });
 
     res.status(200).json({
       success: true,

@@ -13,7 +13,8 @@
     "init-folders": "ts-node src/scripts/initFolders.ts",
     "generate-storyboard": "ts-node src/scripts/generateStoryboard.ts",
     "generate-ramdy": "ts-node src/scripts/generateRamdyStoryboard.ts",
-    "migrate-to-cloudinary": "ts-node src/scripts/migrateToCloudinary.ts"
+    "migrate-to-cloudinary": "ts-node src/scripts/migrateToCloudinary.ts",
+    "test-email": "ts-node src/scripts/test-email-smtp.ts"
   },
   "keywords": [],
   "author": "",
@@ -21,8 +22,14 @@
   "dependencies": {
     "@google/genai": "^1.28.0",
     "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/fs-extra": "^11.0.4",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/multer": "^1.4.12",
+    "@types/node": "^20.0.0",
+    "@types/nodemailer": "^7.0.3",
+    "@types/sharp": "^0.31.1",
     "@types/uuid": "^10.0.0",
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
@@ -33,21 +40,17 @@
     "express-rate-limit": "^7.5.0",
     "express-validator": "^7.2.1",
     "form-data": "^4.0.1",
+    "fs-extra": "^11.2.0",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.0",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^7.0.10",
     "python-bridge": "^1.1.0",
     "sharp": "^0.33.5",
-    "uuid": "^11.0.5",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
-    "@types/fs-extra": "^11.0.4",
-    "@types/node": "^20.0.0",
-    "@types/sharp": "^0.31.1",
-    "fs-extra": "^11.2.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
     "nodemon": "^3.0.0"
