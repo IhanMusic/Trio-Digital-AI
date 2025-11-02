@@ -281,4 +281,53 @@ export class FileStorageService {
       throw error;
     }
   }
+
+  /**
+   * Sauvegarde une vidéo sur Cloudinary
+   */
+  static async saveVideo(
+    videoBuffer: Buffer,
+    options: {
+      folder?: string;
+      resource_type?: string;
+      format?: string;
+    } = {}
+  ): Promise<{
+    url: string;
+    publicId: string;
+    duration?: number;
+    format: string;
+    width?: number;
+    height?: number;
+    resolution?: string;
+  }> {
+    try {
+      logger.info('Début du téléchargement de la vidéo sur Cloudinary...');
+      logger.info('Taille du buffer:', videoBuffer.length, 'octets');
+
+      const folder = options.folder || 'generated-videos';
+      
+      // Uploader vers Cloudinary
+      const result = await CloudinaryService.uploadVideo(videoBuffer, {
+        folder,
+        resource_type: 'video',
+        format: options.format || 'mp4'
+      });
+
+      logger.info('Vidéo téléchargée vers Cloudinary avec succès:', result.url);
+
+      return {
+        url: result.url,
+        publicId: result.publicId,
+        duration: result.duration,
+        format: result.format || 'mp4',
+        width: result.width,
+        height: result.height,
+        resolution: result.height ? `${result.height}p` : undefined
+      };
+    } catch (error) {
+      logger.error('Erreur lors de la sauvegarde de la vidéo:', error);
+      throw error;
+    }
+  }
 }

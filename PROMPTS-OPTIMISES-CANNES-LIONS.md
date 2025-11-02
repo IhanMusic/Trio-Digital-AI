@@ -1300,8 +1300,500 @@ Commencez par implémenter le nouveau prompt système dans PostGenerationService
 
 ---
 
-**Document créé le:** 2 novembre 2025  
-**Version:** 1.0 - Cannes Lions Edition  
-**Statut:** Prêt pour implémentation  
+## 11. 🎬 GÉNÉRATION VIDÉO VEO 3.1 - NIVEAU CANNES LIONS
 
-🏆 **Excellence Publicitaire Garantie**
+### Vue d'ensemble
+
+VEO 3.1 permet de générer des vidéos publicitaires professionnelles de 4-8 secondes avec audio natif synchronisé, parfaites pour Stories, Reels, Shorts et Animations.
+
+### 🎯 Structure d'un prompt vidéo professionnel
+
+```
+Cinematic {duration}-second {videoType} shot in the style of {director},
+{cameraMovement} camera movement capturing {subject} {action},
+{lightingSetup} lighting during {timeOfDay} creating {mood},
+Shot on {camera} with {lens} at {aperture},
+Color palette: {primaryColor} dominating with {secondaryColor} accents,
+Sound design: {audioDescription} with {ambiance},
+{aspectRatio} format optimized for {platform},
+{product} subtly integrated as lifestyle enabler occupying {percentage}% of frame,
+Professional commercial video production, {resolution} quality, hyper-realistic
+
+Audio cues:
+Dialogues: "{dialogues}" (if applicable)
+Sound effects: {soundEffects}
+Ambient: {ambientSound}
+```
+
+### 🎨 Directeurs/Styles de référence par type de vidéo
+
+#### 📱 Stories Instagram / Facebook (9:16, 6s)
+```
+1. Behind the Scenes Style
+   - Style: Documentaire intime, caméra portée
+   - Mood: Authentique, sans filtre, humain
+   - Exemple: "Chef's Table intimacy meets documentary rawness"
+
+2. Product Reveal Style
+   - Style: Apple commercial, épuré, cinématographique
+   - Mood: Premium, aspirationnel, élégant
+   - Exemple: "Apple product reveal meets minimalist luxury"
+
+3. Lifestyle Moment Style
+   - Style: Kinfolk aesthetic, lumière naturelle
+   - Mood: Slow living, mindful, intemporel
+   - Exemple: "Kinfolk Magazine cinematography meets slow morning rituals"
+
+4. Tutorial Rapide Style
+   - Style: Tasty-style quick tips, dynamique
+   - Mood: Énergétique, éducatif, accessible
+   - Exemple: "Tasty recipe video meets educational storytelling"
+```
+
+#### 🎬 Reels Instagram (9:16, 8s)
+```
+1. Transformation Style
+   - Style: Before/After narratif, dramatique
+   - Mood: Satisfaisant, révélateur, impact
+   - Exemple: "Satisfying transformation meets lifestyle upgrade"
+
+2. Trending Sound Style
+   - Style: Synchronisé sur musique, rythmé
+   - Mood: Fun, viral, engageant
+   - Exemple: "TikTok trending aesthetic meets brand storytelling"
+
+3. Educational Style
+   - Style: Tips & tricks, value-driven
+   - Mood: Utile, expert, actionnable
+   - Exemple: "Expert tutorial meets quick wins"
+```
+
+#### ⚡ Shorts YouTube / TikTok (9:16, 8s)
+```
+1. Hook-Driven Style
+   - Style: Pattern interrupt immédiat
+   - Mood: Choquant, intriguant, captivant
+   - Exemple: "Viral hook meets storytelling payoff"
+
+2. Challenge Style
+   - Style: Participatif, tendance
+   - Mood: Fun, communautaire, énergétique
+   - Exemple: "TikTok challenge meets brand engagement"
+```
+
+#### ✨ Animation / Motion Design (1:1 ou 16:9, 4-8s)
+```
+1. Motion Graphics Style
+   - Style: After Effects, cinematic
+   - Mood: Professionnel, dynamique, moderne
+   - Exemple: "Motion design meets brand reveal"
+
+2. Stop Motion Style
+   - Style: Artisanal, créatif
+   - Mood: Unique, mémorable, original
+   - Exemple: "Wes Anderson stop-motion meets product showcase"
+```
+
+### 📋 Templates de prompts vidéo par type
+
+#### 📱 TEMPLATE STORY INSTAGRAM (9:16, 6s)
+
+```typescript
+const STORY_VIDEO_PROMPT = `
+Cinematic 6-second Instagram Story shot in the style of behind-the-scenes documentary,
+handheld camera movement with gentle shake capturing ${subject} ${action},
+soft natural lighting during ${timeOfDay} creating intimate authentic atmosphere,
+Shot on iPhone 15 Pro with cinematic mode at f/2.8,
+Color palette: ${brandColor1} as primary with ${brandColor2} warm accents,
+Sound design: ambient room sound, natural conversations, authentic moment capture,
+9:16 vertical format optimized for Instagram Stories,
+${product} subtly visible in background occupying 20-30% of frame as natural part of scene,
+Professional mobile-first video production, 1080p quality, authentic feel
+
+Audio cues:
+Ambient: Natural environment sounds, authentic moment
+Sound effects: Subtle product interaction sounds
+Music: Soft background if applicable
+`;
+```
+
+**Exemple - Yaourt artisanal Story:**
+```
+Cinematic 6-second Instagram Story shot in the style of Kinfolk morning ritual documentary,
+slow overhead camera movement revealing breakfast setup from above,
+soft golden hour lighting filtering through kitchen window creating warm intimate atmosphere,
+Shot on iPhone 15 Pro cinematic mode at f/2.8,
+Color palette: creamy white #FFF8F0 as primary with berry pink #D946A6 warm accents,
+Sound design: gentle spoon tinking glass, morning birds chirping outside, soft breathing,
+9:16 vertical format optimized for Instagram Stories,
+artisanal yogurt jar subtly visible on rustic wood table occupying 25% of frame with breakfast spread,
+Professional mobile-first video production, 1080p quality, authentic morning feel
+
+Audio cues:
+Ambient: Morning kitchen sounds, gentle breeze through window
+Sound effects: Spoon meeting glass jar, subtle pour sound
+Dialogues: "Mon moment pour moi..." (whispered, intimate)
+```
+
+#### 🎬 TEMPLATE REEL INSTAGRAM (9:16, 8s)
+
+```typescript
+const REEL_VIDEO_PROMPT = `
+Cinematic 8-second Instagram Reel shot in the style of ${director},
+dynamic ${cameraMovement} camera movement revealing ${transformation},
+${lightingType} lighting creating ${mood} atmosphere,
+Shot on ${camera} with ${lens} at ${aperture},
+Color palette: vibrant ${color1} with energetic ${color2} highlights,
+Sound design: trending audio sync with ${soundEffects},
+9:16 vertical format optimized for Instagram Reels,
+${product} integrated as transformation enabler occupying 35% of frame,
+Professional social media video production, 1080p quality, scroll-stopping impact
+
+Audio cues:
+Music: Trending audio track (specify BPM and vibe)
+Sound effects: ${transitionSounds}
+Voice over: ${voiceDescription} (if applicable)
+`;
+```
+
+**Exemple - Transformation beauté Reel:**
+```
+Cinematic 8-second Instagram Reel shot in the style of Glossier commercial meets transformation reveal,
+dynamic 180-degree camera rotation revealing before-to-after skincare transformation,
+soft ring light lighting creating flattering glow-up atmosphere,
+Shot on Sony A7III with 50mm f/1.2 lens at f/2.0,
+Color palette: vibrant rose gold #B76E79 with energetic soft pink #FFE4E1 highlights,
+Sound design: trending upbeat audio sync with satisfying reveal whoosh sounds,
+9:16 vertical format optimized for Instagram Reels,
+skincare cream jar integrated as transformation enabler occupying 35% of frame in final reveal,
+Professional social media video production, 1080p quality, scroll-stopping glow-up impact
+
+Audio cues:
+Music: Upbeat trending audio 120 BPM, positive vibe
+Sound effects: Whoosh transition, satisfying reveal chime
+Voice over: "The secret?" (confident, female voice, whispered reveal)
+```
+
+#### ⚡ TEMPLATE SHORT YOUTUBE/TIKTOK (9:16, 8s)
+
+```typescript
+const SHORT_VIDEO_PROMPT = `
+Viral 8-second ${platform} Short shot in the style of ${viralCreator},
+attention-grabbing ${hookMovement} in first 2 seconds then ${mainAction},
+${lightingStyle} lighting with high-contrast ${mood},
+Shot on ${camera} optimized for mobile viewing,
+Color palette: punchy ${color1} with high-saturation ${color2},
+Sound design: hook sound effect + ${mainAudio} + payoff sound,
+9:16 vertical format optimized for ${platform} algorithm,
+${product} revealed as solution at 6-second mark occupying 40% of frame,
+Professional viral video production, 1080p quality, thumb-stopping hook
+
+Audio cues:
+Hook sound: ${hookAudio} (0-2s, attention grab)
+Main audio: ${contentAudio} (2-6s, value delivery)
+Payoff sound: ${payoffAudio} (6-8s, satisfaction)
+`;
+```
+
+**Exemple - Tutorial produit Short:**
+```
+Viral 8-second TikTok Short shot in the style of trending kitchen hack videos,
+attention-grabbing extreme close-up zoom on product in first 2 seconds then quick demo sequence,
+bright overhead ring lighting with high-contrast satisfying visual,
+Shot on iPhone 15 Pro optimized for mobile viewing,
+Color palette: punchy product color with high-saturation contrast background,
+Sound design: record scratch hook + satisfying click sounds + victory chime,
+9:16 vertical format optimized for TikTok algorithm,
+product revealed as game-changer solution at 6-second mark occupying 40% of frame,
+Professional viral video production, 1080p quality, thumb-stopping satisfying hook
+
+Audio cues:
+Hook sound: Record scratch + "Wait, WHAT?!" (0-2s, shock value)
+Main audio: Quick voiceover tips with satisfying product sounds (2-6s)
+Payoff sound: Victory chime + "Mind. Blown." (6-8s, satisfaction)
+```
+
+#### ✨ TEMPLATE ANIMATION (1:1 ou 16:9, 6s)
+
+```typescript
+const ANIMATION_VIDEO_PROMPT = `
+Cinematic 6-second motion design animation in the style of ${motionStyle},
+${animationType} animation revealing ${brandMessage},
+${colorScheme} color palette with ${accentColor} dynamic accents,
+${transitionStyle} transitions between scenes,
+${aspectRatio} format optimized for ${platform},
+${product} or ${logo} integrated as central visual element,
+Professional motion graphics, 4K quality, smooth 60fps
+
+Animation elements:
+Typography: ${fontStyle} with ${animationEffect}
+Graphics: ${graphicStyle} with ${motionType}
+Transitions: ${transitionEffect}
+Sound design: ${audioSync}
+`;
+```
+
+**Exemple - Révélation produit Animation:**
+```
+Cinematic 6-second motion design animation in the style of Apple product reveal meets liquid motion,
+smooth liquid morphing animation revealing product benefits through abstract shapes,
+gradient color palette from brand blue #0066CC to energetic orange #FF6B35 dynamic accents,
+fluid particle transitions between benefit scenes,
+1:1 square format optimized for Instagram feed,
+product bottle integrated as central visual element with rotating 3D reveal,
+Professional motion graphics, 4K quality, smooth 60fps
+
+Animation elements:
+Typography: Modern sans-serif with kinetic reveal animation
+Graphics: Abstract liquid shapes with physics-based motion
+Transitions: Particle morph with fluid dynamics
+Sound design: Whoosh sounds synced to transitions, subtle product ting
+```
+
+### 🎭 Intégration produits dans les vidéos
+
+#### Règles d'or pour l'intégration subtile
+
+```
+1. CONTEXTE LIFESTYLE (Règle 70-30)
+   - 70% du temps : Montrer le moment/transformation
+   - 30% du temps : Révéler le produit comme enabler
+
+2. PROGRESSION NARRATIVE
+   - 0-2s : Hook (problème/situation)
+   - 2-5s : Action/transformation (produit apparaît naturellement)
+   - 5-8s : Résultat/bénéfice (produit = héros silencieux)
+
+3. TAILLE DU PRODUIT DANS LE CADRE
+   - Stories : 20-30% max (contexte prime)
+   - Reels : 30-35% (équilibre)
+   - Shorts : 35-40% (produit plus visible)
+   - Animation : 40-50% (produit = star)
+
+4. MOMENTS CLÉS
+   - Jamais de gros plan produit statique
+   - Toujours en interaction ou mouvement
+   - Intégré dans un geste naturel
+```
+
+#### Workflow avec images de référence produits
+
+```typescript
+// Utiliser jusqu'à 3 images produits pour cohérence visuelle
+const videoPromptWithProducts = `
+[PROMPT VIDÉO STANDARD]
+
+Product reference integration:
+Using ${productCount} product reference images to maintain visual consistency:
+- Product appearance: ${productDescription}
+- Product placement: ${placementStrategy}
+- Product interaction: ${interactionType}
+- Visual consistency: Preserve exact product colors, shapes, textures from references
+
+Reference images guide:
+Image 1: Front view for product recognition
+Image 2: Context/usage angle
+Image 3: Detail/texture close-up (if applicable)
+`;
+```
+
+### 🎵 Design sonore et audio VEO 3.1
+
+VEO 3.1 génère automatiquement l'audio synchronisé. Voici comment le guider :
+
+#### 1. Dialogues
+```
+Dialogues: "Text exact entre guillemets"
+- Ton de voix: [Warm, excited, whispery, confident, etc.]
+- Accent: [If applicable]
+- Timing: [Beginning, middle, end, throughout]
+```
+
+**Exemple:**
+```
+Dialogues: "This changed everything for me"
+- Tone: Intimate whisper with genuine emotion
+- Timing: Appears at 4-second mark during transformation reveal
+```
+
+#### 2. Effets sonores
+```
+Sound effects: [Specific sounds that enhance the narrative]
+- Product sounds: [Clicks, pours, zips, etc.]
+- Transition sounds: [Whooshes, chimes, swipes]
+- Ambient sounds: [Natural environment]
+```
+
+**Exemple:**
+```
+Sound effects: Satisfying jar lid twist, gentle pour of yogurt, spoon tinking glass
+- Product sounds: Subtle and ASMR-quality
+- Ambient sounds: Morning kitchen atmosphere, gentle birds outside window
+```
+
+#### 3. Musique/Ambiance
+```
+Ambient sound: [Overall sound atmosphere]
+- Mood: [Energetic, calm, inspiring, etc.]
+- BPM: [If music, specify tempo]
+- Genre: [If applicable]
+```
+
+**Exemple:**
+```
+Ambient: Soft acoustic guitar fingerpicking at 90 BPM
+- Mood: Calm morning ritual, inspiring new beginning
+- Volume: Subtle background, not overpowering dialogue/effects
+```
+
+### 📱 Formats vidéo par plateforme
+
+| Type | Format | Durée | Résolution | Audio | Usage |
+|------|--------|-------|------------|-------|-------|
+| **Story IG/FB** | 9:16 | 6s | 1080p | Ambiant + effets | Behind-scenes, moments authentiques |
+| **Reel IG** | 9:16 | 8s | 1080p | Musique + VO | Transformations, tutorials, trends |
+| **Short YouTube** | 9:16 | 8s | 1080p | VO + musique | Educational, viral hooks |
+| **TikTok** | 9:16 | 6-8s | 1080p | Trending audio | Challenges, trends, viral content |
+| **Feed IG** | 1:1 | 6s | 1080p | Subtle audio | Aesthetic, brand content |
+| **Animation** | 1:1 ou 16:9 | 4-8s | 1080p/4K | Sound design | Motion graphics, reveals |
+
+### 🎬 Exemples complets par secteur
+
+#### EXEMPLE 1: Food & Beverage - Story Instagram
+
+**Prompt:**
+```
+Cinematic 6-second Instagram Story shot in the style of Kinfolk Magazine slow living aesthetic,
+gentle overhead descending camera movement revealing morning breakfast ritual setup,
+warm golden hour natural lighting filtering through gauze curtains at 5200K creating serene morning atmosphere,
+Shot on iPhone 15 Pro with cinematic mode at f/2.8,
+Color palette: creamy white #FFF8F0 as dominant with berry magenta #D946A6 and warm wood #8B4513 accents,
+Sound design: gentle morning ambiance, soft spoon sounds, satisfied "mmm" reaction,
+9:16 vertical format optimized for Instagram Stories authentic feel,
+artisanal yogurt jar with berries subtly visible as centerpiece occupying 25% of breakfast tableau,
+Professional mobile-first storytelling, 1080p quality, intimate morning ritual authenticity
+
+Audio cues:
+Ambient: Soft morning birds chirping, gentle breeze, peaceful morning kitchen
+Sound effects: Delicate spoon meeting glass, soft yogurt texture sound, satisfied sigh
+Dialogues: "Mon moment sacré..." (whispered, intimate, French accent, at 3-second mark)
+```
+
+#### EXEMPLE 2: Beauty - Reel Instagram
+
+**Prompt:**
+```
+Cinematic 8-second Instagram Reel shot in the style of Glossier fresh-faced transformation,
+dynamic camera rotation revealing before-to-after skincare glow-up with mirror reflection,
+soft ring light at 4500K creating flattering dewy skin glow atmosphere,
+Shot on Sony A7III with 50mm f/1.2 lens at f/2.0 for beautiful bokeh,
+Color palette: rose gold #B76E79 with soft pink #FFE4E1 and clean white #F8F8FF highlights,
+Sound design: trending upbeat audio synced with transformation whoosh and satisfying reveal chime,
+9:16 vertical format optimized for Instagram Reels engagement,
+luxury cream jar revealed at transformation peak occupying 35% of frame as secret weapon,
+Professional beauty video production, 1080p quality, scroll-stopping glow transformation
+
+Audio cues:
+Music: Upbeat trending audio 120 BPM, empowering positive energy
+Sound effects: Satisfying whoosh at rotation, gentle chime at reveal, cream jar twist
+Voice over: "The secret? This." (confident whisper, female, at 6-second transformation reveal)
+```
+
+#### EXEMPLE 3: Tech Product - Short YouTube
+
+**Prompt:**
+```
+Viral 8-second YouTube Short shot in the style of Apple minimalist product reveal meets tech review excitement,
+attention-grabbing extreme zoom into product interface in first 2 seconds followed by feature showcase sequence,
+clean studio lighting at 5000K with high-contrast dramatic shadows on white backdrop,
+Shot on Canon EOS R5 with 24-70mm f/2.8 lens at 35mm f/4.0,
+Color palette: tech blue #0066CC with clean white #FFFFFF and energetic orange #FF6B35 accents,
+Sound design: tech startup chime hook + interface click sounds + victory notification,
+9:16 vertical format optimized for YouTube Shorts algorithm discovery,
+software dashboard revealed as productivity game-changer at 6-second mark occupying 40% of frame,
+Professional tech video production, 1080p quality, thumb-stopping "wow" factor
+
+Audio cues:
+Hook sound: Attention-grabbing tech startup chime + "Wait, this is insane!" (0-2s)
+Main audio: Quick interface clicks, smooth transitions, satisfying UI sounds (2-6s)
+Payoff sound: Success notification chime + "This changes everything" (6-8s, excited reveal)
+```
+
+### ⚙️ Workflow de génération avec images produits
+
+```typescript
+// 1. Récupérer les images produits du calendrier
+const productImages = await getProductImagesFromCalendar(calendarId);
+
+// 2. Préparer jusqu'à 3 images de référence
+const referenceImages = productImages.slice(0, 3).map(img => img.buffer);
+
+// 3. Générer la vidéo avec VEO3
+const video = await Veo3Service.generateVideoWithReferences(
+  videoPrompt,
+  referenceImages,
+  {
+    duration: 8,
+    aspectRatio: '9:16',
+    resolution: '1080p',
+    negativePrompt: 'low quality, blurry, shaky camera, poor lighting'
+  }
+);
+
+// 4. Sauvegarder avec métadonnées
+await Post.create({
+  content: {
+    mediaType: 'video',
+    videoUrl: video.videoUrl,
+    videoPublicId: video.videoPublicId,
+    videoPrompt: videoPrompt,
+    videoDuration: video.duration,
+    videoFormat: '9:16',
+    videoResolution: '1080p',
+    hasAudio: true,
+    referenceImages: productImages.map(img => img.url)
+  },
+  videoType: 'reel',
+  // ... autres champs
+});
+```
+
+### 🎯 Checklist qualité vidéo Cannes Lions
+
+**📹 STRUCTURE NARRATIVE:**
+- [ ] Hook puissant 0-2 secondes
+- [ ] Transformation visible 2-6 secondes
+- [ ] Payoff émotionnel 6-8 secondes
+- [ ] Arc narratif complet malgré la courte durée
+
+**🎬 DIRECTION:**
+- [ ] Style de directeur référencé
+- [ ] Mouvement caméra intentionnel
+- [ ] Éclairage cohérent et professionnel
+- [ ] Composition équilibrée
+
+**🎨 VISUEL:**
+- [ ] Palette couleurs marque respectée
+- [ ] Produit intégré subtilement (<40%)
+- [ ] Qualité broadcast (1080p minimum)
+- [ ] Format optimisé pour plateforme
+
+**🎵 AUDIO:**
+- [ ] Audio synchronisé naturellement
+- [ ] Effets sonores pertinents
+- [ ] Dialogues authentiques (si applicable)
+- [ ] Ambiance cohérente avec le mood
+
+**🎯 IMPACT:**
+- [ ] Scroll-stopping dans les 2 premières secondes
+- [ ] Message clair et mémorable
+- [ ] Appel à l'action implicite
+- [ ] Potentiel viral/partage élevé
+
+---
+
+**Document mis à jour le:** 2 novembre 2025  
+**Version:** 2.0 - Cannes Lions Edition + VEO 3.1 Video  
+**Statut:** Prêt pour implémentation complète (Images + Vidéos)  
+
+🏆 **Excellence Publicitaire Image & Vidéo Garantie**

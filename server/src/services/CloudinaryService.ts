@@ -111,6 +111,84 @@ export class CloudinaryService {
     }
   }
   
+  static async uploadVideo(
+    videoBuffer: Buffer,
+    options: {
+      folder?: string;
+      publicId?: string;
+      resource_type?: string;
+      format?: string;
+    } = {}
+  ): Promise<{
+    url: string;
+    publicId: string;
+    duration?: number;
+    width?: number;
+    height?: number;
+    format?: string;
+  }> {
+    // Vérifier les variables d'environnement
+    if (!process.env.CLOUDINARY_CLOUD_NAME || 
+        !process.env.CLOUDINARY_API_KEY || 
+        !process.env.CLOUDINARY_API_SECRET) {
+      throw new Error('Variables d\'environnement Cloudinary manquantes');
+    }
+    
+    // Reconfigurer Cloudinary
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET
+    });
+    
+    try {
+      logger.info('Début du téléchargement vidéo vers Cloudinary...');
+      
+      // Convertir le buffer en base64
+      const base64Video = `data:video/mp4;base64,${videoBuffer.toString('base64')}`;
+      
+      // Configurer les options de téléchargement
+      const uploadOptions: any = {
+        folder: options.folder || 'generated-videos',
+        resource_type: 'video',
+        format: options.format || 'mp4'
+      };
+      
+      if (options.publicId) {
+        uploadOptions.public_id = options.publicId;
+      }
+      
+      // Télécharger la vidéo
+      const result = await new Promise<any>((resolve, reject) => {
+        cloudinary.uploader.upload(base64Video, uploadOptions, (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        });
+      });
+      
+      logger.info('Vidéo téléchargée avec succès vers Cloudinary');
+      logger.info('URL:', result.secure_url);
+      
+      // Vérifier que l'URL est bien une URL complète
+      if (!result.secure_url || !result.secure_url.startsWith('http')) {
+        logger.error('URL Cloudinary vidéo invalide:', result.secure_url);
+        throw new Error('URL Cloudinary vidéo invalide');
+      }
+      
+      return {
+        url: result.secure_url,
+        publicId: result.public_id,
+        duration: result.duration,
+        width: result.width,
+        height: result.height,
+        format: result.format
+      };
+    } catch (error) {
+      logger.error('Erreur lors du téléchargement vidéo vers Cloudinary:', error);
+      throw error;
+    }
+  }
+  
   static getImageUrl(publicId: string, options: {
     width?: number;
     height?: number;

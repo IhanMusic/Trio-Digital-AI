@@ -12,12 +12,23 @@ export interface IPost extends Document {
   scheduledDate: Date;
   content: {
     text: string;
+    mediaType: 'image' | 'video' | 'text'; // Type de média principal
+    // Champs image
     imageUrl?: string;
     imagePublicId?: string; // ID public Cloudinary
-    videoUrl?: string;
     imageStyle?: string; // Style visuel de l'image
     imagePrompt?: string; // Prompt utilisé pour générer l'image
+    // Champs vidéo
+    videoUrl?: string;
+    videoPublicId?: string; // ID public Cloudinary pour la vidéo
+    videoPrompt?: string; // Prompt utilisé pour générer la vidéo
+    videoDuration?: number; // Durée en secondes
+    videoFormat?: '16:9' | '9:16' | '1:1'; // Format de la vidéo
+    videoResolution?: '720p' | '1080p'; // Résolution
+    hasAudio?: boolean; // Si la vidéo a de l'audio
+    referenceImages?: string[]; // URLs des images de référence utilisées
   };
+  videoType?: 'story' | 'reel' | 'short' | 'animation' | 'standard'; // Type de contenu vidéo
   status: 'pending_validation' | 'approved' | 'rejected';
   approvalStatus: {
     approved: boolean;
@@ -80,11 +91,35 @@ const PostSchema: Schema = new Schema({
       type: String,
       required: true
     },
+    mediaType: {
+      type: String,
+      enum: ['image', 'video', 'text'],
+      default: 'image'
+    },
+    // Champs image
     imageUrl: String,
-    imagePublicId: String, // ID public Cloudinary
-    videoUrl: String,
+    imagePublicId: String,
     imageStyle: String,
-    imagePrompt: String
+    imagePrompt: String,
+    // Champs vidéo
+    videoUrl: String,
+    videoPublicId: String,
+    videoPrompt: String,
+    videoDuration: Number,
+    videoFormat: {
+      type: String,
+      enum: ['16:9', '9:16', '1:1']
+    },
+    videoResolution: {
+      type: String,
+      enum: ['720p', '1080p']
+    },
+    hasAudio: Boolean,
+    referenceImages: [String]
+  },
+  videoType: {
+    type: String,
+    enum: ['story', 'reel', 'short', 'animation', 'standard']
   },
   status: {
     type: String,
