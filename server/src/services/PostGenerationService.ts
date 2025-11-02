@@ -13,7 +13,12 @@ import Product, { IProduct } from '../models/Product';
 import KeyDateService from './KeyDateService';
 import { parseGPTResponse } from '../utils/promptParser';
 import { ProductIntegrationWithStabilityService } from './ProductIntegrationWithStabilityService';
+import Veo3Service from './Veo3Service';
 import sharp from 'sharp';
+
+// 🔥 CONFIGURATION GÉNÉRATION VIDÉO
+// Mettre à true pour générer des REELs au lieu d'images
+const GENERATE_VIDEO = true;
 
 /**
  * Transforme une image (Buffer) en format carré en ajoutant du padding blanc
@@ -809,6 +814,109 @@ DIRECTIVES CRÉATIVES
               });
             }
           }
+
+        // 🎬 GÉNÉRATION VIDÉO VEO3 (EN PLUS de l'image)
+        if (GENERATE_VIDEO) {
+          try {
+            logger.info('=== Début de la génération REEL VEO3 ===');
+            
+            // Construire le prompt vidéo professionnel pour REEL Instagram
+            const reelPrompt = `Cinematic 8-second Instagram Reel shot in the style of ${brand.name} commercial meets lifestyle storytelling,
+${parsedPost.postContent},
+dynamic camera movement revealing ${products.length > 0 ? products[0].name : 'product'} in authentic lifestyle context,
+shot on Sony A7III with 50mm f/1.2 lens at f/2.0 for beautiful bokeh,
+9:16 vertical format optimized for Instagram Reels,
+professional commercial video production, 1080p quality, scroll-stopping transformation reveal
+
+Audio cues:
+Ambient: Natural environment sounds with authentic moment capture
+Sound effects: Subtle product interaction sounds
+Music: Upbeat inspiring audio at 120 BPM synchronized with transformation`;
+
+            logger.info('Prompt REEL construit:', reelPrompt.substring(0, 200) + '...');
+            
+            // Préparer les images produits (jusqu'à 3)
+            const productImageBuffers: Buffer[] = [];
+            
+            if (calendar.selectedProducts && calendar.selectedProducts.length > 0 && products.length > 0) {
+              const productsToUse = products.slice(0, 3); // Max 3 produits
+              
+              for (const product of productsToUse) {
+                if (product.images && product.images.main) {
+                  try {
+                    logger.info(`Téléchargement image produit: ${product.name}`);
+                    const response = await axios.get(product.images.main, {
+                      responseType: 'arraybuffer',
+                      timeout: 30000
+                    });
+                    productImageBuffers.push(Buffer.from(response.data));
+                    logger.info(`✅ Image produit ${product.name} téléchargée`);
+                  } catch (error: any) {
+                    logger.error(`Erreur téléchargement image ${product.name}:`, error.message);
+                  }
+                }
+              }
+            }
+            
+            // Générer la vidéo avec VEO3
+            if (productImageBuffers.length > 0) {
+              logger.info(`🎬 Génération REEL avec ${productImageBuffers.length} image(s) produit(s)`);
+              
+              const video = await Veo3Service.generateVideoWithReferences(
+                reelPrompt,
+                productImageBuffers,
+                {
+                  duration: 8,
+                  aspectRatio: '9:16',
+                  resolution: '1080p'
+                }
+              );
+              
+              logger.info('✅ REEL généré avec succès par VEO3');
+              logger.info('URL vidéo:', video.videoUrl);
+              
+              // Ajouter les infos vidéo au postData
+              postData.content.mediaType = 'video';
+              postData.content.videoUrl = video.videoUrl;
+              postData.content.videoPublicId = video.videoPublicId;
+              postData.content.videoPrompt = reelPrompt;
+              postData.content.videoDuration = video.duration;
+              postData.content.videoFormat = '9:16';
+              postData.content.videoResolution = '1080p';
+              postData.content.hasAudio = true;
+              postData.videoType = 'reel';
+              
+            } else {
+              logger.info('⚠️  Aucune image produit disponible, génération vidéo sans référence');
+              
+              const video = await Veo3Service.generateVideo(reelPrompt, {
+                duration: 8,
+                aspectRatio: '9:16',
+                resolution: '1080p'
+              });
+              
+              logger.info('✅ REEL généré avec succès par VEO3 (sans référence produit)');
+              logger.info('URL vidéo:', video.videoUrl);
+              
+              // Ajouter les infos vidéo au postData
+              postData.content.mediaType = 'video';
+              postData.content.videoUrl = video.videoUrl;
+              postData.content.videoPublicId = video.videoPublicId;
+              postData.content.videoPrompt = reelPrompt;
+              postData.content.videoDuration = video.duration;
+              postData.content.videoFormat = '9:16';
+              postData.content.videoResolution = '1080p';
+              postData.content.hasAudio = true;
+              postData.videoType = 'reel';
+            }
+            
+          } catch (error: any) {
+            logger.error('❌ Erreur lors de la génération vidéo VEO3:', error.message);
+            logger.error('Stack:', error.stack);
+            // Ne pas bloquer la création du post si la vidéo échoue
+            logger.info('Création du post sans vidéo (image seulement)');
+          }
+        }
 
         logger.info('Création du post dans la base de données...');
         const post = await Post.create(postData);
