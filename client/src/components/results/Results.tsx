@@ -40,11 +40,19 @@ interface Post {
     imageUrl?: string;
     imageWidth?: number;
     imageHeight?: number;
+    mediaType?: 'image' | 'video';
+    videoUrl?: string;
+    videoPublicId?: string;
+    videoFormat?: string;
+    videoResolution?: string;
+    videoDuration?: number;
+    hasAudio?: boolean;
   };
   status: 'pending_validation' | 'approved' | 'rejected';
   brandId: {
     name: string;
   };
+  videoType?: 'story' | 'reel' | 'short' | 'animation';
   products?: Product[]; // Produits associés au post
 }
 
@@ -271,7 +279,28 @@ const Results: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {platformPosts.map(post => (
               <div key={post._id} className="glass-panel overflow-hidden hover:scale-[1.02] transition-all duration-300">
-                {post.content.imageUrl && (
+                {/* Affichage VIDÉO si mediaType='video' */}
+                {post.content.mediaType === 'video' && post.content.videoUrl ? (
+                  <div className="relative w-full bg-black" style={{ paddingTop: post.content.videoFormat === '9:16' ? '177.78%' : '56.25%' }}>
+                    <div className="absolute top-0 left-0 w-full h-full">
+                      <video 
+                        controls 
+                        className="w-full h-full object-contain"
+                        poster={post.content.imageUrl ? config.getImageUrl(post.content.imageUrl) : undefined}
+                      >
+                        <source src={config.getImageUrl(post.content.videoUrl)} type="video/mp4" />
+                        Votre navigateur ne supporte pas la lecture de vidéos.
+                      </video>
+                    </div>
+                    {/* Badge type vidéo */}
+                    <div className="absolute top-2 left-2 z-10">
+                      <span className="bg-[#53dfb2] text-black px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg">
+                        🎬 {post.videoType || 'Video'} {post.content.videoDuration ? `${post.content.videoDuration}s` : ''}
+                      </span>
+                    </div>
+                  </div>
+                ) : post.content.imageUrl ? (
+                  // Affichage IMAGE (comme avant)
                   <div style={getImageStyle(post)} className="relative">
                     <div className="absolute top-0 right-0 p-2 z-10">
                       <button 
@@ -290,7 +319,7 @@ const Results: React.FC = () => {
                       className="absolute top-0 left-0 w-full h-full object-cover"
                     />
                   </div>
-                )}
+                ) : null}
                 
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
