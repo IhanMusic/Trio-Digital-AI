@@ -104,11 +104,11 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       imgSrc: ["'self'", "data:", "https:", "blob:"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "blob:"],
       connectSrc: ["'self'"],
       fontSrc: ["'self'", "data:"],
       objectSrc: ["'none'"],
-      mediaSrc: ["'self'"],
+      mediaSrc: ["'self'", "https://res.cloudinary.com", "blob:"],
       frameSrc: ["'none'"],
     }
   }

@@ -18,7 +18,7 @@ import sharp from 'sharp';
 
 // 🔥 CONFIGURATION GÉNÉRATION VIDÉO
 // Mettre à true pour générer des REELs au lieu d'images
-const GENERATE_VIDEO = true;
+const GENERATE_VIDEO = false; // ⚠️ TEMPORAIREMENT DÉSACTIVÉ - réactiver quand API VEO3 sera configurée
 
 /**
  * Transforme une image (Buffer) en format carré en ajoutant du padding blanc
