@@ -200,14 +200,22 @@ class Veo3Service {
         logger.info('⚠️ Format forcé à 16:9 pour images de référence');
       }
 
-      // Préparer les références
-      const references = referenceImages.map(img => ({
-        image: {
-          imageBytes: img.toString('base64'),
-          mimeType: "image/png" as const
-        },
-        referenceType: "asset" as const
-      }));
+      // Préparer les références avec la structure inlineData (conforme au SDK Google)
+      const references = referenceImages.map((img, index) => {
+        logger.info(`📸 Préparation référence #${index + 1} - Taille: ${img.length} bytes`);
+        return {
+          image: {
+            inlineData: {
+              mimeType: "image/png",
+              data: img.toString('base64')
+            }
+          },
+          referenceType: "asset"
+        };
+      });
+
+      logger.info('📦 Structure des références préparée (format inlineData)');
+      logger.info(`Prompt envoyé à VEO3: ${prompt.substring(0, 150)}...`);
 
       // Générer
       let operation = await this.ai.models.generateVideos({
@@ -223,6 +231,7 @@ class Veo3Service {
       });
 
       logger.info('⏳ Génération avec références en cours...');
+      logger.info('💡 VEO3 utilise maintenant les images de référence pour préserver l\'apparence exacte des produits');
       
       operation = await this.pollVideoOperation(operation);
       const result = await this.downloadAndSaveVideo(operation);
@@ -232,6 +241,9 @@ class Veo3Service {
 
     } catch (error: any) {
       logger.error('❌ Erreur génération avec références:', error);
+      if (error.response) {
+        logger.error('Détails API:', JSON.stringify(error.response.data, null, 2));
+      }
       throw new Error(`Erreur références: ${error.message}`);
     }
   }

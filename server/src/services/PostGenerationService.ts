@@ -900,18 +900,51 @@ FORMAT DE RÉPONSE:
         
         const parsedReelPost = parsedReelPosts[0];
         
-        // Construire le prompt vidéo professionnel pour REEL Instagram
-        const reelPrompt = `Cinematic 8-second Instagram Reel in the style of ${brand.name} commercial,
-${parsedReelPost.postContent},
-dynamic camera movement revealing ${products.length > 0 ? products[0].name : 'product'} in authentic lifestyle context,
-${products.length > 0 && products[0].category ? `${products[0].category} product showcase` : 'product showcase'},
-shot on Sony A7III with 50mm f/1.2 lens at f/2.0 for beautiful bokeh,
-9:16 vertical format optimized for Instagram Reels,
-${brand.colors?.primary ? `brand colors: ${brand.colors.primary}` : 'vibrant colors'},
-professional commercial video production, 1080p quality, scroll-stopping transformation reveal,
-lifestyle integration, natural lighting, authentic moment capture`;
+        // Construire un prompt vidéo ULTRA-DESCRIPTIF pour préserver l'apparence exacte du produit
+        const productDetails = products.length > 0 ? products[0] : null;
+        
+        let reelPrompt = `Professional 8-second commercial video showcasing the EXACT product from the reference image.
 
-        logger.info('Prompt REEL construit:', reelPrompt.substring(0, 200) + '...');
+🎯 CRITICAL PRODUCT APPEARANCE REQUIREMENTS (MUST PRESERVE):
+- Product: ${productDetails ? productDetails.name : 'product'}
+- The product MUST maintain its EXACT visual appearance from the reference image
+- All product colors, packaging design, labels, and branding are IDENTICAL to reference
+- Product shape, proportions, and physical characteristics match reference perfectly
+- Any text, logos, or graphics on the product are preserved exactly as shown
+- The product is the HERO element, clearly visible and instantly recognizable
+${productDetails && productDetails.uniqueSellingPoints && productDetails.uniqueSellingPoints.length > 0 ? `- Key features to highlight: ${productDetails.uniqueSellingPoints.join(', ')}` : ''}
+
+📹 VIDEO CONCEPT:
+${parsedReelPost.postContent}
+
+🎬 CINEMATOGRAPHY:
+- Format: 16:9 horizontal video (optimized for product showcase)
+- Camera movement: Smooth, dynamic reveal showcasing product from multiple angles
+- The camera orbits or tracks to highlight product details while maintaining reference appearance
+- Lighting: Professional commercial lighting that enhances without altering product appearance
+- Setting: ${productDetails?.category || 'Lifestyle'} context that complements the product
+${brand.colors?.primary ? `- Color palette: ${brand.colors.primary}${brand.colors.secondary ? `, ${brand.colors.secondary}` : ''}${brand.colors.accent ? `, ${brand.colors.accent}` : ''} (brand colors integrated in environment)` : ''}
+
+🎯 PRODUCT INTEGRATION:
+- The product occupies 40-60% of frame throughout the video
+- Product is always in sharp focus and well-lit
+- Background and environment enhance the product without competing for attention
+- Natural lifestyle integration showing product in authentic use context
+${productDetails && productDetails.customerBenefits && productDetails.customerBenefits.length > 0 ? `- Visual storytelling conveys: ${productDetails.customerBenefits.join(', ')}` : ''}
+
+⚡ STYLE & MOOD:
+- Tone: ${brand.tone || 'Professional and aspirational'}
+- Style: High-end commercial product video
+- Mood: ${productDetails?.category === 'food' ? 'Appetizing and fresh' : productDetails?.category === 'cosmetic' ? 'Luxurious and elegant' : 'Modern and premium'}
+- Quality: Cinema-grade, 1080p resolution, professional color grading
+
+🔑 KEY INSTRUCTION:
+The reference image shows the EXACT product appearance that MUST be maintained throughout the entire video. 
+Do not alter, reimagine, or modify the product's visual characteristics in any way.`;
+
+        logger.info('📝 Prompt REEL ultra-descriptif construit');
+        logger.info('Produit:', productDetails?.name || 'N/A');
+        logger.info('Prompt complet:', reelPrompt.substring(0, 300) + '...');
         
         // Préparer les images produits (jusqu'à 3)
         const productImageBuffers: Buffer[] = [];
