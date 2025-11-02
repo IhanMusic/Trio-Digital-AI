@@ -16,7 +16,52 @@ import { ProductIntegrationWithStabilityService } from './ProductIntegrationWith
 import sharp from 'sharp';
 
 /**
- * Transforme une image en format carré en ajoutant du padding blanc
+ * Transforme une image (Buffer) en format carré en ajoutant du padding blanc
+ */
+async function makeImageSquareFromBuffer(imageBuffer: Buffer): Promise<Buffer> {
+  try {
+    logger.info('Transformation du buffer d\'image en format carré');
+    
+    const image = sharp(imageBuffer);
+    const metadata = await image.metadata();
+    
+    if (!metadata.width || !metadata.height) {
+      throw new Error('Impossible de lire les dimensions de l\'image');
+    }
+    
+    const width = metadata.width;
+    const height = metadata.height;
+    
+    // Si l'image est déjà carrée, la retourner telle quelle
+    if (width === height) {
+      logger.info('Image déjà carrée, aucune transformation nécessaire');
+      return await image.png().toBuffer();
+    }
+    
+    // Déterminer la taille du carré (la plus grande dimension)
+    const size = Math.max(width, height);
+    
+    logger.info(`Dimensions originales: ${width}x${height}, nouvelle taille: ${size}x${size}`);
+    
+    // Redimensionner avec padding blanc pour obtenir un carré
+    const squareBuffer = await image
+      .resize(size, size, {
+        fit: 'contain',
+        background: { r: 255, g: 255, b: 255, alpha: 1 }
+      })
+      .png()
+      .toBuffer();
+    
+    logger.info('✅ Image transformée en carré avec succès');
+    return squareBuffer;
+  } catch (error: any) {
+    logger.error('❌ Erreur lors de la transformation en carré:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Transforme une image (chemin de fichier) en format carré en ajoutant du padding blanc
  */
 async function makeImageSquare(imagePath: string): Promise<Buffer> {
   try {
@@ -685,18 +730,45 @@ DIRECTIVES CRÉATIVES
                 logger.info(`Image du produit trouvée: ${productImagePath}`);
                 
                 try {
-                  // Construire le chemin complet de l'image
-                  // process.cwd() retourne déjà le chemin vers "Trio Digital/server"
-                  const fullPath = path.join(process.cwd(), 'public', productImagePath);
-                  logger.info(`Chemin complet de l'image: ${fullPath}`);
+                  let imageBuffer: Buffer;
+                  
+                  // Vérifier si c'est une URL (Cloudinary ou autre)
+                  if (productImagePath.startsWith('http://') || productImagePath.startsWith('https://') || productImagePath.includes('cloudinary.com')) {
+                    logger.info('📥 Téléchargement de l\'image depuis l\'URL:', productImagePath);
+                    
+                    // Télécharger l'image depuis l'URL
+                    const response = await axios.get(productImagePath, { 
+                      responseType: 'arraybuffer',
+                      timeout: 30000 // 30 secondes de timeout
+                    });
+                    imageBuffer = Buffer.from(response.data);
+                    logger.info('✅ Image téléchargée depuis l\'URL avec succès');
+                  } else {
+                    // Chemin local - pour développement ou fallback
+                    const fullPath = path.join(process.cwd(), 'public', productImagePath);
+                    logger.info('📂 Lecture de l\'image depuis le chemin local:', fullPath);
+                    
+                    const fs = await import('fs');
+                    if (!fs.existsSync(fullPath)) {
+                      throw new Error(`Fichier introuvable: ${fullPath}`);
+                    }
+                    
+                    imageBuffer = await fs.promises.readFile(fullPath);
+                    logger.info('✅ Image lue depuis le système de fichiers local');
+                  }
                   
                   // Transformer l'image en carré pour toutes les plateformes (format 1:1)
                   logger.info('📐 Format carré (1:1) - transformation de l\'image produit en carré');
-                  const squareImageBuffer = await makeImageSquare(fullPath);
+                  const squareImageBuffer = await makeImageSquareFromBuffer(imageBuffer);
                   referenceImageBase64 = squareImageBuffer.toString('base64');
                   logger.info('✅ Image produit transformée en carré et convertie en base64');
                 } catch (error: any) {
-                  logger.error('❌ Erreur lors de la conversion de l\'image produit en base64:', error.message);
+                  logger.error('❌ Erreur lors de la conversion de l\'image produit en base64:');
+                  logger.error('Details:', error.message);
+                  if (error.response) {
+                    logger.error('HTTP Status:', error.response.status);
+                    logger.error('HTTP Data:', error.response.data);
+                  }
                   logger.info('Génération sans image de référence');
                 }
               } else {

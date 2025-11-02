@@ -4,28 +4,17 @@ import Product, { IProduct } from '../models/Product';
 import Brand from '../models/Brand';
 import mongoose from 'mongoose';
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
+import { FileStorageService } from '../services/FileStorageService';
+import { logger } from '../config/logger';
 
-// Configuration de multer pour le stockage des fichiers
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, '../../public/images');
-    // Créer le dossier s'il n'existe pas
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    // Générer un nom de fichier unique
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+// Configuration de multer pour stocker en mémoire
+const storage = multer.memoryStorage();
+const upload = multer({ 
+  storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024 // Limite de 10MB
   }
 });
-
-const upload = multer({ storage });
 
 const router = express.Router();
 
@@ -187,19 +176,42 @@ router.post('/', authenticate, upload.fields([
       createdBy: req.user?._id
     };
     
-    // Ajouter les chemins des images
+    // Uploader les images vers Cloudinary
     if (files.logo && files.logo.length > 0) {
-      productData.logo = `/images/${files.logo[0].filename}`;
+      logger.info('Upload du logo vers Cloudinary...');
+      const { url } = await FileStorageService.saveImage(files.logo[0].buffer, {
+        purpose: 'product',
+        useCloudinary: true
+      });
+      productData.logo = url;
+      logger.info('Logo uploadé:', url);
     }
     
     if (files.mainImage && files.mainImage.length > 0) {
+      logger.info('Upload de l\'image principale vers Cloudinary...');
+      const { url } = await FileStorageService.saveImage(files.mainImage[0].buffer, {
+        purpose: 'product',
+        useCloudinary: true
+      });
       if (!productData.images) productData.images = {};
-      productData.images.main = `/images/${files.mainImage[0].filename}`;
+      productData.images.main = url;
+      logger.info('Image principale uploadée:', url);
     }
     
     if (files.galleryImages && files.galleryImages.length > 0) {
+      logger.info(`Upload de ${files.galleryImages.length} images de galerie vers Cloudinary...`);
       if (!productData.images) productData.images = {};
-      productData.images.gallery = files.galleryImages.map(file => `/images/${file.filename}`);
+      const galleryUrls = await Promise.all(
+        files.galleryImages.map(async (file) => {
+          const { url } = await FileStorageService.saveImage(file.buffer, {
+            purpose: 'product',
+            useCloudinary: true
+          });
+          return url;
+        })
+      );
+      productData.images.gallery = galleryUrls;
+      logger.info('Images de galerie uploadées');
     }
     
     // Créer le produit
@@ -278,23 +290,45 @@ router.put('/:id', authenticate, upload.fields([
       ...req.body
     };
     
-    // Ajouter les chemins des images
+    // Uploader les nouvelles images vers Cloudinary
     if (files.logo && files.logo.length > 0) {
-      productData.logo = `/images/${files.logo[0].filename}`;
+      logger.info('Upload du nouveau logo vers Cloudinary...');
+      const { url } = await FileStorageService.saveImage(files.logo[0].buffer, {
+        purpose: 'product',
+        useCloudinary: true
+      });
+      productData.logo = url;
+      logger.info('Nouveau logo uploadé:', url);
     }
     
     if (files.mainImage && files.mainImage.length > 0) {
+      logger.info('Upload de la nouvelle image principale vers Cloudinary...');
+      const { url } = await FileStorageService.saveImage(files.mainImage[0].buffer, {
+        purpose: 'product',
+        useCloudinary: true
+      });
       if (!productData.images) productData.images = {};
-      productData.images = { ...productData.images, main: `/images/${files.mainImage[0].filename}` };
+      productData.images = { ...productData.images, main: url };
+      logger.info('Nouvelle image principale uploadée:', url);
     }
     
     if (files.galleryImages && files.galleryImages.length > 0) {
+      logger.info(`Upload de ${files.galleryImages.length} nouvelles images de galerie vers Cloudinary...`);
       if (!productData.images) productData.images = {};
-      const galleryImages = files.galleryImages.map(file => `/images/${file.filename}`);
+      const galleryUrls = await Promise.all(
+        files.galleryImages.map(async (file) => {
+          const { url } = await FileStorageService.saveImage(file.buffer, {
+            purpose: 'product',
+            useCloudinary: true
+          });
+          return url;
+        })
+      );
       productData.images = { 
         ...productData.images, 
-        gallery: galleryImages 
+        gallery: galleryUrls 
       };
+      logger.info('Nouvelles images de galerie uploadées');
     }
     
     // Mettre à jour le produit
