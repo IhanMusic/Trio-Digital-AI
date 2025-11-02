@@ -946,52 +946,93 @@ Do not alter, reimagine, or modify the product's visual characteristics in any w
         logger.info('Produit:', productDetails?.name || 'N/A');
         logger.info('Prompt complet:', reelPrompt.substring(0, 300) + '...');
         
-        // Préparer les images produits (jusqu'à 3)
-        const productImageBuffers: Buffer[] = [];
+        // 🎨 PIPELINE EN 2 ÉTAPES : Nano Banana → VEO3
+        // Étape 1: Générer une image stylisée avec Nano Banana
+        // Étape 2: Animer l'image avec VEO3 (image-to-video)
+        
+        logger.info('🎨 ========================================');
+        logger.info('🎨 ÉTAPE 1/2: Génération image avec Nano Banana');
+        logger.info('🎨 ========================================');
+        
+        // Préparer l'image produit de référence pour Nano Banana
+        let productReferenceBase64: string | undefined;
         
         if (calendar.selectedProducts && calendar.selectedProducts.length > 0 && products.length > 0) {
-          const productsToUse = products.slice(0, 3); // Max 3 produits
+          const product = products[0]; // Utiliser le premier produit
           
-          for (const product of productsToUse) {
-            if (product.images && product.images.main) {
-              try {
-                logger.info(`Téléchargement image produit: ${product.name}`);
-                const response = await axios.get(product.images.main, {
-                  responseType: 'arraybuffer',
-                  timeout: 30000
-                });
-                productImageBuffers.push(Buffer.from(response.data));
-                logger.info(`✅ Image produit ${product.name} téléchargée`);
-              } catch (error: any) {
-                logger.error(`Erreur téléchargement image ${product.name}:`, error.message);
-              }
+          if (product.images && product.images.main) {
+            try {
+              logger.info(`📥 Téléchargement image produit: ${product.name}`);
+              const response = await axios.get(product.images.main, {
+                responseType: 'arraybuffer',
+                timeout: 30000
+              });
+              const imageBuffer = Buffer.from(response.data);
+              productReferenceBase64 = imageBuffer.toString('base64');
+              logger.info(`✅ Image produit téléchargée: ${imageBuffer.length} bytes`);
+            } catch (error: any) {
+              logger.error(`❌ Erreur téléchargement image ${product.name}:`, error.message);
             }
           }
         }
         
-        // Générer la vidéo avec VEO3
-        let video;
-        if (productImageBuffers.length > 0) {
-          logger.info(`🎬 Génération REEL avec ${productImageBuffers.length} image(s) produit(s)`);
-          
-          video = await Veo3Service.generateVideoWithReferences(
-            reelPrompt,
-            productImageBuffers,
-            {
-              duration: 8,
-              aspectRatio: '9:16',
-              resolution: '1080p'
-            }
-          );
-        } else {
-          logger.info('⚠️  Aucune image produit disponible, génération vidéo sans référence');
-          
-          video = await Veo3Service.generateVideo(reelPrompt, {
-            duration: 8,
-            aspectRatio: '9:16',
-            resolution: '1080p'
-          });
+        // Construire le prompt pour Nano Banana (image statique pour vidéo 9:16)
+        const nanoBananaPrompt = `Professional 9:16 vertical commercial product shot for Instagram Reel.
+${parsedReelPost.postContent}
+
+Product: ${productDetails ? productDetails.name : 'featured product'}
+Style: High-end product photography, cinematic composition
+Format: Vertical 9:16 optimized for mobile video animation
+Setting: ${productDetails?.category || 'Lifestyle'} context that tells a story
+Colors: ${brand.colors?.primary ? `${brand.colors.primary} brand palette` : 'Vibrant commercial colors'}
+Mood: ${productDetails?.category === 'food' ? 'Fresh and appetizing' : productDetails?.category === 'cosmetic' ? 'Luxurious and elegant' : 'Modern and premium'}
+
+The product should be the focal point (40-60% of frame), clearly visible, well-lit, ready for smooth animation.`;
+
+        logger.info('📝 Prompt Nano Banana:', nanoBananaPrompt.substring(0, 200) + '...');
+        
+        // Générer l'image avec Nano Banana (avec ou sans référence produit)
+        const nanaBananaResults = await GeminiImageService.generateImages(
+          nanoBananaPrompt,
+          {
+            numberOfImages: 1,
+            aspectRatio: '9:16', // Format vertical pour REEL
+            imageSize: '1K',
+            referenceImage: productReferenceBase64
+          }
+        );
+        
+        if (nanaBananaResults.length === 0) {
+          throw new Error('Nano Banana n\'a pas généré d\'image');
         }
+        
+        logger.info('✅ Image Nano Banana générée:', nanaBananaResults[0].url);
+        
+        // Télécharger l'image générée pour l'animer avec VEO3
+        logger.info('📥 Téléchargement de l\'image Nano Banana pour animation...');
+        const nanaBananaImageResponse = await axios.get(nanaBananaResults[0].url, {
+          responseType: 'arraybuffer',
+          timeout: 30000
+        });
+        const nanaBananaImageBuffer = Buffer.from(nanaBananaImageResponse.data);
+        logger.info(`✅ Image téléchargée: ${nanaBananaImageBuffer.length} bytes`);
+        
+        // 🎬 ÉTAPE 2: Animer l'image avec VEO3 (image-to-video)
+        logger.info('\n🎬 ========================================');
+        logger.info('🎬 ÉTAPE 2/2: Animation avec VEO3');
+        logger.info('🎬 ========================================');
+        
+        logger.info('🎥 Animation de l\'image Nano Banana en REEL 9:16 vertical');
+        
+        const video = await Veo3Service.generateVideoFromImage(
+          reelPrompt,
+          nanaBananaImageBuffer,
+          {
+            duration: 8,
+            aspectRatio: '9:16', // ✅ Compatible avec image-to-video !
+            resolution: '1080p'
+          }
+        );
         
         logger.info('✅ REEL généré avec succès par VEO3');
         logger.info('URL vidéo:', video.videoUrl);
