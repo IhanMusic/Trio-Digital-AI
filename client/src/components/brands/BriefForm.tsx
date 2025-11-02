@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/AuthContext';
+import { config } from '../../config/env';
 import { BriefData } from '../../types/brief';
 import { 
   SECTORS, 
@@ -371,7 +372,7 @@ export const BriefForm: React.FC = () => {
       const fetchBrandDetails = async () => {
         try {
           setLoading(true);
-          const response = await fetch(`http://localhost:5000/api/brands/${id}`, {
+          const response = await fetch(`${config.apiUrl}/brands/${id}`, {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`,
@@ -455,8 +456,8 @@ export const BriefForm: React.FC = () => {
 
       // Déterminer si on crée ou on met à jour une marque
       const url = isEditMode 
-        ? `http://localhost:5000/api/brands/${id}` 
-        : 'http://localhost:5000/api/brands';
+        ? `${config.apiUrl}/brands/${id}` 
+        : `${config.apiUrl}/brands`;
       
       const method = isEditMode ? 'PUT' : 'POST';
 

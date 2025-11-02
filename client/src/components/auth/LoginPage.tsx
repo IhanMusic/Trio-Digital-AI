@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { config } from '../../config/env';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = config.apiUrl;
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');

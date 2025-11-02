@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/AuthContext';
+import { config } from '../../config/env';
 
 interface Brand {
   _id: string;
@@ -25,7 +26,7 @@ const BrandsList: React.FC = () => {
 
     const fetchBrands = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/brands', {
+        const response = await fetch(`${config.apiUrl}/brands`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,

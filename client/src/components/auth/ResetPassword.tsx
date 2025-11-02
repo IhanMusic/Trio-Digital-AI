@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { config } from '../../config/env';
 
 const ResetPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -26,7 +27,7 @@ const ResetPassword: React.FC = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/reset-password', {
+      const response = await fetch(`${config.apiUrl}/auth/reset-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
