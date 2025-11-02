@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Upload</title>
+</head>
+<body>
+    <form id="uploadForm">
+        <input type="file" name="product_image" accept="image/*"><br><br>
+        <input type="text" name="prompt" placeholder="Enter prompt" value="generate a product image"><br><br>
+        <input type="text" name="aspect_ratio" value="1:1"><br><br>
+        <input type="submit" value="Upload">
+    </form>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/ai/stability/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer test@thirdadvertising.dz'
+                    },
+                    body: formData
+                });
+                
+                const result = await response.json();
+                console.log('Response:', result);
+                
+                if (result.error) {
+                    alert('Error: ' + result.error.message);
+                } else {
+                    alert('Success! Image URL: ' + result.data[0].url);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

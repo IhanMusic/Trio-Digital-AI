@@ -1,0 +1,52 @@
+services:
+  # Service Web - Backend + Frontend
+  - type: web
+    name: trio-digital
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: |
+      # Installer les dépendances et builder le client
+      cd client && npm install && npm run build && cd ..
+      # Installer les dépendances et builder le serveur
+      cd server && npm install && npm run build && cd ..
+    startCommand: cd server && npm start
+    envVars:
+      # Les variables d'environnement seront configurées dans l'interface Render
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        fromGroup: web
+      - key: CLIENT_URL
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: STABILITY_API_KEY
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: MAIL_FROM_NAME
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: HUGGINGFACE_TOKEN
+        sync: false
+    healthCheckPath: /api/health
