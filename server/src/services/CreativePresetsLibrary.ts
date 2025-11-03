@@ -1716,21 +1716,58 @@ export const LIGHTING_SETUPS: LightingSetup[] = [
 // ==========================================
 
 /**
- * Sélectionne un preset créatif unique basé sur l'index du post
- * Assure une rotation automatique pour éviter la monotonie
+ * Crée un hash simple à partir d'une chaîne de caractères
+ * Utilisé pour générer un seed unique par calendrier
+ */
+function simpleHash(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+}
+
+/**
+ * Génère un nombre pseudo-aléatoire basé sur un seed et un offset
+ * Permet une randomisation reproductible mais unique
+ */
+function seededRandom(seed: number, offset: number): number {
+  const x = Math.sin(seed + offset) * 10000;
+  return Math.floor((x - Math.floor(x)) * 1000000);
+}
+
+/**
+ * Sélectionne un preset créatif avec RANDOMISATION ANARCHIQUE MAXIMALE
+ * Chaque calendrier obtient une signature visuelle complètement unique
+ * 
+ * @param postIndex - Index du post dans le calendrier
+ * @param totalPosts - Nombre total de posts dans le calendrier
+ * @param sector - Secteur d'activité (pour filtrage futur)
+ * @param brandColors - Couleurs de la marque
+ * @param calendarId - ID du calendrier pour seed unique (NOUVEAU)
  */
 export function selectCreativePreset(
   postIndex: number,
   totalPosts: number,
   sector: string = 'general',
-  brandColors?: { primary?: string; secondary?: string; accent?: string }
+  brandColors?: { primary?: string; secondary?: string; accent?: string },
+  calendarId?: string
 ): CreativePreset {
-  // Sélection cyclique des styles basée sur l'index
-  const styleIndex = postIndex % PHOTOGRAPHIC_STYLES.length;
-  const paletteIndex = postIndex % COLOR_PALETTES.length;
-  const frameworkIndex = postIndex % CREATIVE_FRAMEWORKS.length;
-  const contextIndex = postIndex % CREATIVE_CONTEXTS.length;
-  const lightingIndex = postIndex % LIGHTING_SETUPS.length;
+  // 🎲 RANDOMISATION TOTALE avec seed unique par calendrier
+  // Utiliser calendarId comme seed pour des résultats reproductibles mais uniques
+  const seed = calendarId 
+    ? simpleHash(calendarId.toString() + postIndex.toString())
+    : postIndex * 1000 + Math.floor(Math.random() * 1000); // Fallback vraiment random
+  
+  // 🎨 Sélection VRAIMENT aléatoire de chaque composant
+  // Chaque offset différent crée une séquence indépendante
+  const styleIndex = seededRandom(seed, 0) % PHOTOGRAPHIC_STYLES.length;
+  const paletteIndex = seededRandom(seed, 1) % COLOR_PALETTES.length;
+  const frameworkIndex = seededRandom(seed, 2) % CREATIVE_FRAMEWORKS.length;
+  const contextIndex = seededRandom(seed, 3) % CREATIVE_CONTEXTS.length;
+  const lightingIndex = seededRandom(seed, 4) % LIGHTING_SETUPS.length;
 
   const style = PHOTOGRAPHIC_STYLES[styleIndex];
   const palette = COLOR_PALETTES[paletteIndex];

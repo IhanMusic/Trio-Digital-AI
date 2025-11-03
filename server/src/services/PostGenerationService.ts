@@ -333,7 +333,8 @@ class PostGenerationService {
             primary: brand.colors?.primary,
             secondary: brand.colors?.secondary,
             accent: brand.colors?.accent
-          }
+          },
+          String(calendar._id) // ✨ SEED UNIQUE PAR CALENDRIER pour randomisation anarchique
         );
         
         logger.info(`🎨 Preset créatif sélectionné:`);
@@ -353,6 +354,52 @@ class PostGenerationService {
             accent: brand.colors?.accent
           }
         );
+        
+        // 🎨 CONSTRUIRE LA SECTION CRÉATIVE ENRICHIE POUR GPT-5
+        const creativeDirectionSection = `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎨 DIRECTION CRÉATIVE SPÉCIFIQUE POUR CE POST #${i + 1}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ IMPÉRATIF: Ce post DOIT suivre cette direction créative unique pour maximiser la diversité du calendrier.
+
+📸 STYLE PHOTOGRAPHIQUE IMPOSÉ: ${creativePreset.style.name}
+Catégorie: ${creativePreset.style.category.toUpperCase()}
+Description: ${creativePreset.style.mood}
+
+🎬 RÉFÉRENCE PHOTOGRAPHIQUE OBLIGATOIRE:
+${creativePreset.reference}
+
+⚠️ Vous DEVEZ reproduire ce style et cette approche photographique dans votre direction artistique.
+
+💡 ÉCLAIRAGE & AMBIANCE:
+- Setup: ${creativePreset.lighting.name} (${creativePreset.lighting.timeOfDay})
+- Caractéristiques: ${creativePreset.lighting.characteristics}
+- Mood cible: ${creativePreset.lighting.mood}
+
+🎨 ${colorPalettePrompt}
+
+🏗️ FRAMEWORK NARRATIF À APPLIQUER: ${creativePreset.framework.name}
+Structure: ${creativePreset.framework.structure}
+Application: ${creativePreset.framework.application}
+
+⚠️ Votre contenu textuel DOIT suivre cette structure narrative précise.
+
+🌍 CONTEXTE/SETTING IMPOSÉ: ${creativePreset.context.name}
+Description: ${creativePreset.context.description}
+
+⚠️ L'image DOIT être dans ce contexte/environnement spécifique.
+
+📐 COMPOSITION & TECHNIQUE:
+- Composition: ${creativePreset.style.composition}
+- Lighting technique: ${creativePreset.style.lighting}
+- Technical specs: ${creativePreset.style.technicalSpecs}
+
+🎯 OBJECTIF CRÉATIF:
+Créer un post visuellement et narrativement UNIQUE qui se distingue radicalement des autres posts du calendrier.
+Chaque post doit avoir sa propre identité créative tout en maintenant la cohérence de marque.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
         
         // Incrémenter l'index global pour le prochain post
         globalPostIndex++;
@@ -544,6 +591,8 @@ ${briefData.legalConstraints.disclaimers.map((d: string) => `⚠️ ${d}`).join(
 → Respecter les normes sectorielles
 → Inclure les mentions obligatoires si nécessaire
 ` : ''}
+
+${creativeDirectionSection}
 
 📱 EXCELLENCE PAR PLATEFORME - ${platform.toUpperCase()}:
 
