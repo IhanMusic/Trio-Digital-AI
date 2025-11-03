@@ -15,6 +15,7 @@ import { parseGPTResponse } from '../utils/promptParser';
 import { ProductIntegrationWithStabilityService } from './ProductIntegrationWithStabilityService';
 import Veo3Service from './Veo3Service';
 import sharp from 'sharp';
+import { selectCreativePreset, generateColorPalettePrompt } from './CreativePresetsLibrary';
 
 // 🔥 CONFIGURATION GÉNÉRATION VIDÉO
 // Mettre à true pour générer des REELs au lieu d'images
@@ -296,6 +297,13 @@ class PostGenerationService {
     // Créer les posts avec du contenu généré pour chaque plateforme
     const savedPosts: IPost[] = [];
     
+    // Calculer le nombre total de posts pour toutes les plateformes
+    const totalPostsCount = Object.values(scheduledDates).reduce((sum, dates) => sum + dates.length, 0);
+    logger.info(`\n🎨 Creative Variation Engine activé : ${totalPostsCount} posts au total`);
+    
+    // Index global pour suivre la position du post parmi tous les posts
+    let globalPostIndex = 0;
+    
     for (const [platform, dates] of Object.entries(scheduledDates)) {
       logger.info(`\nGénération du contenu pour ${platform}`);
       logger.info(`Nombre de dates programmées: ${dates.length}`);
@@ -315,6 +323,39 @@ class PostGenerationService {
       for (let i = 0; i < dates.length; i++) {
         const date = dates[i];
         logger.info(`\nGénération du contenu pour ${platform} - Post #${i + 1} (${date.toLocaleDateString()})`);
+        
+        // 🎨 SÉLECTIONNER UN PRESET CRÉATIF UNIQUE POUR CE POST
+        const creativePreset = selectCreativePreset(
+          globalPostIndex,
+          totalPostsCount,
+          brand.sector,
+          {
+            primary: brand.colors?.primary,
+            secondary: brand.colors?.secondary,
+            accent: brand.colors?.accent
+          }
+        );
+        
+        logger.info(`🎨 Preset créatif sélectionné:`);
+        logger.info(`   - Style: ${creativePreset.style.name}`);
+        logger.info(`   - Référence: ${creativePreset.reference.substring(0, 80)}...`);
+        logger.info(`   - Palette: ${creativePreset.palette.name}`);
+        logger.info(`   - Framework: ${creativePreset.framework.name}`);
+        logger.info(`   - Contexte: ${creativePreset.context.name}`);
+        logger.info(`   - Éclairage: ${creativePreset.lighting.name}`);
+        
+        // Générer le prompt de palette de couleurs
+        const colorPalettePrompt = generateColorPalettePrompt(
+          creativePreset.palette,
+          {
+            primary: brand.colors?.primary,
+            secondary: brand.colors?.secondary,
+            accent: brand.colors?.accent
+          }
+        );
+        
+        // Incrémenter l'index global pour le prochain post
+        globalPostIndex++;
         
         // Vérifier si cette date correspond à une date clé
       const relevantKeyDates = KeyDateService.isKeyDate(date, keyDates);
