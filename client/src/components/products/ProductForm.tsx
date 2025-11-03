@@ -14,6 +14,8 @@ interface ProductFormData {
   variants: string[];
   uniqueSellingPoints: string[];
   customerBenefits: string[];
+  certifications: string[];
+  labels: string[];
   technicalSheet: {
     ingredients: string[];
     nutritionalInfo: string;
@@ -65,6 +67,8 @@ const ProductForm: React.FC = () => {
   const [newUSP, setNewUSP] = useState('');
   const [newBenefit, setNewBenefit] = useState('');
   const [newIngredient, setNewIngredient] = useState('');
+  const [newCertification, setNewCertification] = useState('');
+  const [newLabel, setNewLabel] = useState('');
   
   // État principal du formulaire
   const [formData, setFormData] = useState<ProductFormData>({
@@ -76,6 +80,8 @@ const ProductForm: React.FC = () => {
     variants: [],
     uniqueSellingPoints: [],
     customerBenefits: [],
+    certifications: [],
+    labels: [],
     technicalSheet: {
       ingredients: [],
       nutritionalInfo: '',
@@ -130,6 +136,8 @@ const ProductForm: React.FC = () => {
             variants: product.variants || [],
             uniqueSellingPoints: product.uniqueSellingPoints || [],
             customerBenefits: product.customerBenefits || [],
+            certifications: product.certifications || [],
+            labels: product.labels || [],
             technicalSheet: {
               ingredients: product.technicalSheet?.ingredients || [],
               nutritionalInfo: product.technicalSheet?.nutritionalInfo || '',
@@ -217,7 +225,7 @@ const ProductForm: React.FC = () => {
   };
   
   // Gestionnaires pour les tableaux
-  const handleAddItem = (field: 'flavors' | 'scents' | 'variants' | 'uniqueSellingPoints' | 'customerBenefits' | 'technicalSheet.ingredients', value: string) => {
+  const handleAddItem = (field: 'flavors' | 'scents' | 'variants' | 'uniqueSellingPoints' | 'customerBenefits' | 'certifications' | 'labels' | 'technicalSheet.ingredients', value: string) => {
     if (!value.trim()) return;
     
     if (field.includes('.')) {
@@ -242,10 +250,12 @@ const ProductForm: React.FC = () => {
     else if (field === 'variants') setNewVariant('');
     else if (field === 'uniqueSellingPoints') setNewUSP('');
     else if (field === 'customerBenefits') setNewBenefit('');
+    else if (field === 'certifications') setNewCertification('');
+    else if (field === 'labels') setNewLabel('');
     else if (field === 'technicalSheet.ingredients') setNewIngredient('');
   };
   
-  const handleRemoveItem = (field: 'flavors' | 'scents' | 'variants' | 'uniqueSellingPoints' | 'customerBenefits' | 'technicalSheet.ingredients', index: number) => {
+  const handleRemoveItem = (field: 'flavors' | 'scents' | 'variants' | 'uniqueSellingPoints' | 'customerBenefits' | 'certifications' | 'labels' | 'technicalSheet.ingredients', index: number) => {
     if (field.includes('.')) {
       const [parent, child] = field.split('.');
       setFormData(prev => ({
@@ -320,6 +330,15 @@ const ProductForm: React.FC = () => {
       
       formData.customerBenefits.forEach((benefit, index) => {
         formDataToSend.append(`customerBenefits[${index}]`, benefit);
+      });
+      
+      // Ajouter certifications et labels
+      formData.certifications.forEach((cert, index) => {
+        formDataToSend.append(`certifications[${index}]`, cert);
+      });
+      
+      formData.labels.forEach((label, index) => {
+        formDataToSend.append(`labels[${index}]`, label);
       });
       
       // Ajouter la fiche technique
@@ -598,6 +617,87 @@ const ProductForm: React.FC = () => {
                       type="button"
                       className="text-red-400 hover:text-red-300"
                       onClick={() => handleRemoveItem('scents', index)}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Certifications & Labels */}
+        <section className="glass-panel p-6 rounded-xl">
+          <h2 className="text-xl font-semibold text-white mb-6 border-b border-white/20 pb-2">
+            Certifications & Labels
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-white/80 mb-2">
+                Certifications (Bio, ISO, etc.)
+              </label>
+              <div className="flex items-center space-x-2 mb-2">
+                <input
+                  type="text"
+                  className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#53dfb2] focus:border-transparent"
+                  value={newCertification}
+                  onChange={(e) => setNewCertification(e.target.value)}
+                  placeholder="Ex: Agriculture Biologique"
+                />
+                <button
+                  type="button"
+                  className="glass-button px-3 py-2"
+                  onClick={() => handleAddItem('certifications', newCertification)}
+                >
+                  +
+                </button>
+              </div>
+              <div className="space-y-2 max-h-40 overflow-y-auto">
+                {formData.certifications.map((cert, index) => (
+                  <div key={index} className="flex items-center justify-between bg-white/10 px-3 py-2 rounded-lg">
+                    <span className="text-white/80">{cert}</span>
+                    <button
+                      type="button"
+                      className="text-red-400 hover:text-red-300"
+                      onClick={() => handleRemoveItem('certifications', index)}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-white/80 mb-2">
+                Labels (Vegan, Made in France, etc.)
+              </label>
+              <div className="flex items-center space-x-2 mb-2">
+                <input
+                  type="text"
+                  className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#53dfb2] focus:border-transparent"
+                  value={newLabel}
+                  onChange={(e) => setNewLabel(e.target.value)}
+                  placeholder="Ex: Vegan, Cruelty-Free"
+                />
+                <button
+                  type="button"
+                  className="glass-button px-3 py-2"
+                  onClick={() => handleAddItem('labels', newLabel)}
+                >
+                  +
+                </button>
+              </div>
+              <div className="space-y-2 max-h-40 overflow-y-auto">
+                {formData.labels.map((label, index) => (
+                  <div key={index} className="flex items-center justify-between bg-white/10 px-3 py-2 rounded-lg">
+                    <span className="text-white/80">{label}</span>
+                    <button
+                      type="button"
+                      className="text-red-400 hover:text-red-300"
+                      onClick={() => handleRemoveItem('labels', index)}
                     >
                       &times;
                     </button>

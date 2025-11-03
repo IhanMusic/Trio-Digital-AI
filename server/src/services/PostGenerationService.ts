@@ -235,6 +235,9 @@ class PostGenerationService {
       sector: brand.sector,
       companyDescription: brand.description,
       communicationStyle: brand.tone,
+      businessType: undefined as string | undefined,
+      companyStage: undefined as string | undefined,
+      pricePositioning: undefined as string | undefined,
       targetAudience: {
         demographic: brand.targetAudience,
         professional: [],
@@ -245,7 +248,11 @@ class PostGenerationService {
       socialMediaGoals: brand.values || [],
       contentTypes: ['Photos', 'Vidéos', 'Stories'],
       uniqueSellingPoints: '',
+      audienceNeeds: '',
+      productSolution: '',
       competitors: brand.competitors,
+      successMetrics: [],
+      roiExpectations: [],
       budget: { totalBudget: '0', allocation: {} },
       resources: { internalTeam: [], externalPartners: [], tools: [] },
       legalConstraints: { regulations: [], compliance: [], disclaimers: [] },
@@ -398,12 +405,104 @@ ${brand.colors?.primary ? `
 - Ton de Marque: ${brand.tone || 'À définir selon le secteur'}
 ${brand.values && brand.values.length > 0 ? `- Valeurs: ${brand.values.join(', ')}` : ''}
 
-🔍 ANALYSE CONCURRENTIELLE:
-${brand.competitors && brand.competitors.length > 0 ? `
-- Concurrents principaux: ${brand.competitors.join(', ')}
-→ IMPÉRATIF: Se différencier radicalement par l'angle créatif, pas imiter
+${briefData.businessType || briefData.companyStage || briefData.pricePositioning ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 POSITIONNEMENT STRATÉGIQUE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${briefData.businessType ? `Type d'Entreprise: ${briefData.businessType}` : ''}
+${briefData.companyStage ? `Stage: ${briefData.companyStage}` : ''}
+${briefData.pricePositioning ? `Positionnement Prix: ${briefData.pricePositioning}` : ''}
+
+⚠️ IMPÉRATIF: Adapter le ton, style et approche selon ce positionnement
+${briefData.businessType === 'B2B' ? '→ Ton professionnel, ROI-focused, expertise technique' : ''}
+${briefData.businessType === 'B2C' ? '→ Ton émotionnel, bénéfices lifestyle, connexion personnelle' : ''}
+${briefData.pricePositioning === 'Luxury' ? '→ Élégance, exclusivité, qualité supérieure, attention aux détails' : ''}
+${briefData.pricePositioning === 'Budget' ? '→ Accessibilité, rapport qualité-prix, praticité' : ''}
+` : ''}
+
+${briefData.competitiveAnalysis && briefData.competitiveAnalysis.directCompetitors && briefData.competitiveAnalysis.directCompetitors.length > 0 ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 INTELLIGENCE CONCURRENTIELLE STRATÉGIQUE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CONCURRENTS DIRECTS ANALYSÉS:
+${briefData.competitiveAnalysis.directCompetitors.map((comp: any) => `
+• ${comp.name}
+  Forces: ${comp.strengths?.join(', ')}
+  Faiblesses: ${comp.weaknesses?.join(', ')}
+  Stratégies: ${comp.strategies?.join(', ')}
+`).join('\n')}
+
+NOTRE POSITIONNEMENT MARCHÉ:
+${briefData.competitiveAnalysis.marketPosition}
+
+DIFFÉRENCIATEURS CLÉS (NOS ATOUTS):
+${briefData.competitiveAnalysis.differentiators?.map((d: string) => `✓ ${d}`).join('\n')}
+
+OPPORTUNITÉS STRATÉGIQUES:
+${briefData.competitiveAnalysis.opportunities?.map((o: string) => `→ ${o}`).join('\n')}
+
+⚠️ IMPÉRATIF CRÉATIF:
+- Se différencier RADICALEMENT par l'angle créatif (Blue Ocean Strategy)
+- NE PAS imiter les concurrents, créer un angle mort unique
+- Exploiter les faiblesses concurrentes comme opportunités
+- Capitaliser sur nos différenciateurs de manière créative
+` : brand.competitors && brand.competitors.length > 0 ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔍 CONTEXTE CONCURRENTIEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Concurrents principaux: ${brand.competitors.join(', ')}
+
+→ IMPÉRATIF: Se différencier radicalement par l'angle créatif
 → Trouver un angle mort du marché (Blue Ocean Strategy)
-` : '- Analyse concurrentielle non fournie → Créer une proposition unique'}
+` : ''}
+
+${briefData.previousCampaigns && briefData.previousCampaigns.length > 0 ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 LEARNINGS DES CAMPAGNES PRÉCÉDENTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${briefData.previousCampaigns.map((campaign: any) => `
+📌 Campagne: ${campaign.name} (${campaign.period})
+
+Résultats Mesurés:
+${campaign.results?.map((r: string) => `✓ ${r}`).join('\n')}
+
+Apprentissages Clés:
+${campaign.learnings?.map((l: string) => `💡 ${l}`).join('\n')}
+`).join('\n')}
+
+⚠️ IMPÉRATIF: Appliquer ces insights pour maximiser la performance
+→ Reproduire ce qui a fonctionné
+→ Éviter ce qui n'a pas performé
+→ Innover sur de nouvelles opportunités identifiées
+` : ''}
+
+${briefData.legalConstraints && (briefData.legalConstraints.regulations?.length > 0 || briefData.legalConstraints.compliance?.length > 0 || briefData.legalConstraints.disclaimers?.length > 0) ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚖️ CONTRAINTES LÉGALES & CONFORMITÉ SECTORIELLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${briefData.legalConstraints.regulations && briefData.legalConstraints.regulations.length > 0 ? `
+RÉGLEMENTATIONS APPLICABLES:
+${briefData.legalConstraints.regulations.map((r: string) => `⚖️ ${r}`).join('\n')}
+` : ''}
+
+${briefData.legalConstraints.compliance && briefData.legalConstraints.compliance.length > 0 ? `
+NORMES DE CONFORMITÉ OBLIGATOIRES:
+${briefData.legalConstraints.compliance.map((c: string) => `✓ ${c}`).join('\n')}
+` : ''}
+
+${briefData.legalConstraints.disclaimers && briefData.legalConstraints.disclaimers.length > 0 ? `
+MENTIONS OBLIGATOIRES / DISCLAIMERS:
+${briefData.legalConstraints.disclaimers.map((d: string) => `⚠️ ${d}`).join('\n')}
+` : ''}
+
+🚨 CRITIQUE: Le contenu DOIT respecter ces contraintes légales
+→ Aucune allégation non prouvée ou illégale
+→ Respecter les normes sectorielles
+→ Inclure les mentions obligatoires si nécessaire
+` : ''}
 
 📱 EXCELLENCE PAR PLATEFORME - ${platform.toUpperCase()}:
 
@@ -519,13 +618,41 @@ Pour chaque image, vous DEVEZ spécifier:
 8. **PRODUCT INTEGRATION** (subtile):
    Le produit = enabler silencieux (30-40% du cadre max, JAMAIS en gros plan commercial)
 
-🎯 PARAMÈTRES AVANCÉS:
-- Thèmes: ${calendar.generationSettings?.themes?.join(', ') || 'Universaux'}
-- Mots-clés: ${calendar.generationSettings?.keywords?.join(', ') || 'Contextuels'}
-- Longueur: ${calendar.generationSettings?.contentLength || 'Adaptée'}
-- Style image: ${calendar.generationSettings?.imageStyle || 'Authentique, aspirationnel'}
+${calendar.generationSettings?.themes && calendar.generationSettings.themes.length > 0 ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎨 THÉMATIQUES PRIORITAIRES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${calendar.generationSettings.themes.map(theme => `• ${theme}`).join('\n')}
+
+⚠️ IMPÉRATIF: Intégrer ces thématiques de manière naturelle dans le storytelling.
+` : ''}
+
+${calendar.generationSettings?.keywords && calendar.generationSettings.keywords.length > 0 ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔑 MOTS-CLÉS SEO (à intégrer organiquement)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${calendar.generationSettings.keywords.join(', ')}
+
+⚠️ IMPÉRATIF: Ces mots-clés DOIVENT apparaître naturellement pour optimiser le SEO.
+` : ''}
+
+${calendar.generationSettings?.imageStyle && calendar.generationSettings.imageStyle.length > 0 ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📸 STYLES D'IMAGE PRÉFÉRÉS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${calendar.generationSettings.imageStyle.join(', ')}
+
+⚠️ IMPÉRATIF: Le prompt d'image DOIT refléter ces préférences stylistiques.
+` : ''}
+
 ${calendar.contentPlan?.contentMix ? `
-- Mix de contenu: ${Object.entries(calendar.contentPlan.contentMix).map(([type, percentage]) => `${type} ${percentage}%`).join(', ')}` : ''}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 MIX DE CONTENU (Distribution optimale)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${calendar.contentPlan.contentMix.map((mix: any) => `• ${mix.type}: ${mix.percentage}%`).join('\n')}
+
+⚠️ NOTE: Cette distribution guide le format à privilégier.
+` : ''}
 
 ⚖️ CONTRAINTES LÉGALES & ÉTHIQUES:
 1. **Véracité Absolue**: Ne JAMAIS faire de fausses promesses
@@ -632,18 +759,34 @@ ${Object.keys(product.specifications).length > 0 ? `- Spécifications: ${Object.
 Assurez-vous d'intégrer ces produits dans votre contenu de manière naturelle et persuasive.
 ` : ''}
 
-AUDIENCE CIBLE
+AUDIENCE CIBLE & INSIGHTS PSYCHOGRAPHIQUES
 - Marché : ${calendar.targetCountry}
 - Langues : ${calendar.targetLanguages.map(lang => {
   const dialectInfo = isDialect(lang) ? getDialectInfo(lang) : null;
   return dialectInfo ? dialectInfo.name : getLanguageName(lang);
 }).join(', ')}
 - Profil démographique : ${briefData.targetAudience.demographic?.join(', ') || 'Non spécifié'}
+${briefData.audienceNeeds ? `
+- Besoins & Désirs de l'Audience : ${briefData.audienceNeeds}
+→ IMPÉRATIF: Créer du contenu qui résonne avec ces besoins profonds
+` : ''}
+${briefData.productSolution ? `
+- Solution Apportée par le Produit : ${briefData.productSolution}
+→ IMPÉRATIF: Présenter le produit comme enabler de transformation, pas comme objet
+` : ''}
             
-OBJECTIFS STRATÉGIQUES
+OBJECTIFS STRATÉGIQUES & PERFORMANCE
 - Objectifs business : ${briefData.socialMediaGoals.join(', ')}
 - Période de campagne : du ${calendar.startDate.toLocaleDateString()} au ${calendar.endDate.toLocaleDateString()}
 - KPIs prioritaires : Engagement, Conversion, Mémorisation de marque
+${briefData.successMetrics && briefData.successMetrics.length > 0 ? `
+- Métriques de Succès à Optimiser : ${briefData.successMetrics.join(', ')}
+→ Le contenu DOIT être optimisé pour ces KPIs spécifiques
+` : ''}
+${briefData.roiExpectations && briefData.roiExpectations.length > 0 ? `
+- Attentes ROI : ${briefData.roiExpectations.join(', ')}
+→ Créer du contenu orienté performance pour atteindre ces objectifs mesurables
+` : ''}
 
 ${keyDateSection}
             

@@ -3,6 +3,9 @@ export interface BriefData {
   email: string;
   sector: string;
   companyDescription: string;
+  businessType?: string;
+  companyStage?: string;
+  pricePositioning?: string;
   // Propriétés à déplacer ou supprimer, mais qui doivent rester non-optionnelles pour éviter les erreurs
   logo: File | null;
   brandGuidelines: File | null;
@@ -10,6 +13,12 @@ export interface BriefData {
   currentSocialNetworks: string[];
   contentTypes: string[];
   communicationStyle: string;
+  // Couleurs de marque
+  colors?: {
+    primary?: string;
+    secondary?: string;
+    accent?: string;
+  };
   targetAudience: {
     demographic: string[];
     professional: string[];

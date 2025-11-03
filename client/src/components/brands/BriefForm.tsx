@@ -433,6 +433,11 @@ export const BriefForm: React.FC = () => {
         sector: formData.sector,
         description: formData.companyDescription,
         tone: formData.communicationStyle,
+        colors: formData.colors ? {
+          primary: formData.colors.primary || '#000000',
+          secondary: formData.colors.secondary || '#FFFFFF',
+          accent: formData.colors.accent || '#FF0000'
+        } : undefined,
         targetAudience: [
           ...(formData.targetAudience?.demographic || []),
           ...(formData.targetAudience?.professional || []),
@@ -577,6 +582,185 @@ export const BriefForm: React.FC = () => {
           </div>
         </section>
 
+        {/* Identité Visuelle - Couleurs de Marque */}
+        <section className="space-y-6">
+          <h3 className="text-xl font-semibold text-white border-b border-white/20 pb-4">Identité Visuelle</h3>
+          
+          <p className="text-sm text-white/60 mb-4">
+            Définissez les couleurs principales de votre marque. Ces couleurs seront utilisées dans toutes les créations visuelles générées.
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label htmlFor="colorPrimary" className="block text-sm font-medium text-white mb-2">
+                Couleur Principale *
+              </label>
+              <div className="space-y-2">
+                <input
+                  type="color"
+                  id="colorPrimary"
+                  className="w-full h-12 rounded-lg cursor-pointer border-2 border-white/20"
+                  value={formData.colors?.primary || '#000000'}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    colors: { ...prev.colors, primary: e.target.value }
+                  }))}
+                />
+                <input
+                  type="text"
+                  placeholder="#000000"
+                  className="w-full px-4 py-2 bg-white/10 border-2 border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  value={formData.colors?.primary || ''}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    colors: { ...prev.colors, primary: e.target.value }
+                  }))}
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label htmlFor="colorSecondary" className="block text-sm font-medium text-white mb-2">
+                Couleur Secondaire
+              </label>
+              <div className="space-y-2">
+                <input
+                  type="color"
+                  id="colorSecondary"
+                  className="w-full h-12 rounded-lg cursor-pointer border-2 border-white/20"
+                  value={formData.colors?.secondary || '#FFFFFF'}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    colors: { ...prev.colors, secondary: e.target.value }
+                  }))}
+                />
+                <input
+                  type="text"
+                  placeholder="#FFFFFF"
+                  className="w-full px-4 py-2 bg-white/10 border-2 border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  value={formData.colors?.secondary || ''}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    colors: { ...prev.colors, secondary: e.target.value }
+                  }))}
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label htmlFor="colorAccent" className="block text-sm font-medium text-white mb-2">
+                Couleur d'Accent
+              </label>
+              <div className="space-y-2">
+                <input
+                  type="color"
+                  id="colorAccent"
+                  className="w-full h-12 rounded-lg cursor-pointer border-2 border-white/20"
+                  value={formData.colors?.accent || '#FF0000'}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    colors: { ...prev.colors, accent: e.target.value }
+                  }))}
+                />
+                <input
+                  type="text"
+                  placeholder="#FF0000"
+                  className="w-full px-4 py-2 bg-white/10 border-2 border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  value={formData.colors?.accent || ''}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    colors: { ...prev.colors, accent: e.target.value }
+                  }))}
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex items-start space-x-2 bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+            <svg className="w-5 h-5 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+            <p className="text-sm text-blue-300">
+              Ces couleurs seront automatiquement intégrées dans toutes les images et vidéos générées pour maintenir la cohérence de votre identité visuelle.
+            </p>
+          </div>
+        </section>
+
+        {/* Positionnement Stratégique */}
+        <section className="space-y-6">
+          <h3 className="text-xl font-semibold text-white border-b border-white/20 pb-4">Positionnement Stratégique</h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label htmlFor="businessType" className="block text-sm font-medium text-white mb-2">
+                Type d'Entreprise
+              </label>
+              <select
+                id="businessType"
+                className="w-full px-4 py-3 bg-white/10 border-2 border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:bg-white/20"
+                value={formData.businessType || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, businessType: e.target.value }))}
+              >
+                <option value="">Sélectionner</option>
+                <option value="B2B">B2B (Business to Business)</option>
+                <option value="B2C">B2C (Business to Consumer)</option>
+                <option value="B2B2C">B2B2C (Hybrid)</option>
+                <option value="SaaS">SaaS (Software as a Service)</option>
+                <option value="E-commerce">E-commerce</option>
+                <option value="Marketplace">Marketplace</option>
+                <option value="Service">Entreprise de Services</option>
+                <option value="Manufacturing">Industrie/Manufacturing</option>
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="companyStage" className="block text-sm font-medium text-white mb-2">
+                Stage de l'Entreprise
+              </label>
+              <select
+                id="companyStage"
+                className="w-full px-4 py-3 bg-white/10 border-2 border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:bg-white/20"
+                value={formData.companyStage || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, companyStage: e.target.value }))}
+              >
+                <option value="">Sélectionner</option>
+                <option value="Startup">Startup (0-2 ans)</option>
+                <option value="Scale-up">Scale-up (2-5 ans)</option>
+                <option value="PME">PME (5-20 ans)</option>
+                <option value="ETI">ETI (Entreprise de Taille Intermédiaire)</option>
+                <option value="Grande Entreprise">Grande Entreprise</option>
+                <option value="Multinationale">Multinationale</option>
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="pricePositioning" className="block text-sm font-medium text-white mb-2">
+                Positionnement Prix
+              </label>
+              <select
+                id="pricePositioning"
+                className="w-full px-4 py-3 bg-white/10 border-2 border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 hover:bg-white/20"
+                value={formData.pricePositioning || ''}
+                onChange={(e) => setFormData(prev => ({ ...prev, pricePositioning: e.target.value }))}
+              >
+                <option value="">Sélectionner</option>
+                <option value="Budget">Budget / Entry-Level</option>
+                <option value="Milieu de gamme">Milieu de gamme</option>
+                <option value="Premium">Premium</option>
+                <option value="Luxury">Luxury / Haut de gamme</option>
+              </select>
+            </div>
+          </div>
+          
+          <div className="flex items-start space-x-2 bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+            <svg className="w-5 h-5 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+            <p className="text-sm text-blue-300">
+              Ces informations stratégiques permettent d'adapter automatiquement le ton, le style et l'approche marketing dans tous les contenus générés.
+            </p>
+          </div>
+        </section>
 
         {/* Objectifs */}
         <section className="space-y-6">

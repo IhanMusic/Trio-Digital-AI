@@ -53,7 +53,11 @@ interface Post {
     name: string;
   };
   videoType?: 'story' | 'reel' | 'short' | 'animation';
-  products?: Product[]; // Produits associés au post
+  products?: Product[];
+  audienceTargeting?: string;
+  competitiveEdge?: string;
+  legalCompliance?: string;
+  culturalRelevance?: string;
 }
 
 const platformIcons: Record<string, string> = {
@@ -473,6 +477,56 @@ const Results: React.FC = () => {
                           ))}
                         </div>
                       </div>
+                    )}
+                    
+                    {/* Insights Stratégiques */}
+                    {(post.competitiveEdge || post.audienceTargeting || post.culturalRelevance || post.legalCompliance) && (
+                      <details className="mt-4 group">
+                        <summary className="cursor-pointer text-sm font-medium text-[#53dfb2] hover:text-[#53dfb2]/80 transition-colors flex items-center">
+                          <svg className="w-4 h-4 mr-2 transform group-open:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                          </svg>
+                          Insights Stratégiques
+                        </summary>
+                        
+                        <div className="mt-3 space-y-3 pl-6">
+                          {post.audienceTargeting && (
+                            <div className="bg-blue-500/10 rounded-lg p-3 border border-blue-500/20">
+                              <h5 className="text-xs font-semibold text-blue-400 mb-1 flex items-center">
+                                🎯 Ciblage Audience
+                              </h5>
+                              <p className="text-xs text-white/70 leading-relaxed">{post.audienceTargeting}</p>
+                            </div>
+                          )}
+                          
+                          {post.competitiveEdge && (
+                            <div className="bg-purple-500/10 rounded-lg p-3 border border-purple-500/20">
+                              <h5 className="text-xs font-semibold text-purple-400 mb-1 flex items-center">
+                                ⚔️ Avantage Concurrentiel
+                              </h5>
+                              <p className="text-xs text-white/70 leading-relaxed">{post.competitiveEdge}</p>
+                            </div>
+                          )}
+                          
+                          {post.culturalRelevance && (
+                            <div className="bg-green-500/10 rounded-lg p-3 border border-green-500/20">
+                              <h5 className="text-xs font-semibold text-green-400 mb-1 flex items-center">
+                                🌍 Pertinence Culturelle
+                              </h5>
+                              <p className="text-xs text-white/70 leading-relaxed">{post.culturalRelevance}</p>
+                            </div>
+                          )}
+                          
+                          {post.legalCompliance && (
+                            <div className="bg-yellow-500/10 rounded-lg p-3 border border-yellow-500/20">
+                              <h5 className="text-xs font-semibold text-yellow-400 mb-1 flex items-center">
+                                ⚖️ Conformité Légale
+                              </h5>
+                              <p className="text-xs text-white/70 leading-relaxed">{post.legalCompliance}</p>
+                            </div>
+                          )}
+                        </div>
+                      </details>
                     )}
                   </div>
                 </div>
