@@ -105,19 +105,24 @@ export class BriefGenerationService {
   }
 
   private static generateBriefPrompt(briefData: BriefData, theme: Theme): string {
+    // Construction contexte opportunités
+    const opportunities = briefData.competitiveAnalysis 
+      ? briefData.competitiveAnalysis.opportunities.join(', ')
+      : 'Innovation, différenciation, croissance';
+
     return `En tant que copywriter créatif d'une agence de publicité primée, créez un brief créatif UNIQUE pour ${briefData.companyName}.
 
-CONTEXTE CRÉATIF
+CONTEXTE MARQUE (Brand Level)
 Thème : "${theme.name}"
 Objectif : ${theme.objective}
 Émotions : ${theme.emotions}
-Style : ${briefData.communicationStyle}
-Cible : ${briefData.targetAudience.demographic.join(', ')}
+Secteur : ${briefData.sector}
+ADN Marque : ${briefData.companyDescription}
+${briefData.values ? `Valeurs : ${briefData.values.join(', ')}` : ''}
 
 INSPIRATION SOCIALE
 Réseaux ciblés : ${theme.networks.join(', ')}
-Ton de voix : ${briefData.communicationStyle}
-Tendances : ${briefData.competitiveAnalysis.opportunities.join(', ')}
+Tendances marché : ${opportunities}
 
 FORMAT DEMANDÉ :
 

@@ -1,10 +1,22 @@
 import { BriefData } from '../../types/brief';
-import {
-  generateCompleteStrategy,
-  StrategyGenerationResult,
-  StrategyGenerationOptions
-} from '../../prompts/gpt/strategy';
+import { generateStrategicAnalysis } from '../../prompts/gpt/strategicAnalysis';
 import { config } from '../../config/env';
+
+interface StrategyGenerationResult {
+  marketAnalysis: string;
+  strategicAnalysis: string;
+  recommendations: string;
+  validation: {
+    isValid: boolean;
+    score: number;
+    feedback: string[];
+  };
+}
+
+interface StrategyGenerationOptions {
+  useCache?: boolean;
+  maxRetries?: number;
+}
 
 interface StrategyMetrics {
   executionTime: number;
@@ -69,7 +81,7 @@ export class StrategyGenerationService {
             body: JSON.stringify({
               messages: [{ 
                 role: 'user', 
-                content: generateCompleteStrategy(briefData)
+                content: generateStrategicAnalysis(briefData)
               }],
               maxTokens: this.TOKEN_LIMIT,
               type: 'strategy',

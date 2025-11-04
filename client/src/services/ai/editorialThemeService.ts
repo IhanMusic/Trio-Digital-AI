@@ -1,6 +1,11 @@
 import { BriefData, Theme, Strategy } from '../../types/brief';
 import { config } from '../../config/env';
 
+/**
+ * EDITORIAL THEME SERVICE - Adapté architecture 3 niveaux
+ * Note: Ce service utilise maintenant uniquement Brand data (BriefData)
+ * TODO: Étendre pour accepter Product et Calendar data en paramètres additionnels
+ */
 export class EditorialThemeService {
   private static readonly MAX_RETRIES = 3;
   private static readonly RETRY_DELAY = 2000;
@@ -94,60 +99,72 @@ export class EditorialThemeService {
   }
 
   private static generateThemePrompt(briefData: BriefData, strategy: Strategy, count: number): string {
-    // Extraire les apprentissages visuels des campagnes précédentes
-    const campaignLearnings = briefData.previousCampaigns
-      .map(campaign => `- ${campaign.name}:\n  Résultats : ${campaign.results.join(', ')}\n  Learnings : ${campaign.learnings.join(', ')}`)
-      .join('\n');
+    // Construction contexte historique
+    const campaignLearnings = briefData.previousCampaigns && briefData.previousCampaigns.length > 0
+      ? briefData.previousCampaigns.map(campaign => 
+          `- ${campaign.name}:\n  Résultats : ${campaign.results.join(', ')}\n  Learnings : ${campaign.learnings.join(', ')}`
+        ).join('\n')
+      : 'Aucune campagne précédente disponible';
+
+    // Construction contexte concurrentiel
+    const competitiveContext = briefData.competitiveAnalysis 
+      ? `- Position marché : ${briefData.competitiveAnalysis.marketPosition}
+- Différenciateurs : ${briefData.competitiveAnalysis.differentiators.join(', ')}
+- Opportunités : ${briefData.competitiveAnalysis.opportunities.join(', ')}`
+      : 'Analyse concurrentielle non disponible';
+
+    // Construction positionnement stratégique
+    const strategicPositioning = `- Type : ${briefData.businessType || 'Non spécifié'}
+- Stade : ${briefData.companyStage || 'Non spécifié'}
+- Prix : ${briefData.pricePositioning || 'Non spécifié'}`;
 
     return `En tant que directeur créatif d'une agence de publicité primée, créez ${count} thèmes créatifs pour ${briefData.companyName}.
 
-CONTEXTE RICHE :
+CONTEXTE MARQUE (Brand Level) :
 
-MARQUE & POSITIONNEMENT
+IDENTITÉ & ADN
 - Secteur : ${briefData.sector}
 - Description : ${briefData.companyDescription}
-- Style : ${briefData.communicationStyle}
-- USP : ${briefData.uniqueSellingPoints}
-- Position marché : ${briefData.competitiveAnalysis.marketPosition}
-- Différenciateurs : ${briefData.competitiveAnalysis.differentiators.join(', ')}
+${briefData.values ? `- Valeurs : ${briefData.values.join(', ')}` : ''}
+${briefData.mission ? `- Mission : ${briefData.mission}` : ''}
 
-CIBLE & INSIGHTS
-- Profil : ${briefData.targetAudience.demographic.join(', ')}
-- Comportement : ${briefData.targetAudience.behavioral.join(', ')}
-- Besoins : ${briefData.audienceNeeds}
-- Bénéfices : ${briefData.customerBenefits}
+POSITIONNEMENT STRATÉGIQUE
+${strategicPositioning}
+
+CONCURRENCE & MARCHÉ
+${competitiveContext}
 
 APPRENTISSAGES PRÉCÉDENTS
 ${campaignLearnings}
 
-OBJECTIFS & OPPORTUNITÉS
-- Objectifs : ${briefData.socialMediaGoals.join(', ')}
-- Opportunités : ${briefData.competitiveAnalysis.opportunities.join(', ')}
-- Métriques : ${briefData.successMetrics.join(', ')}
+NOTE IMPORTANTE : 
+Les données PRODUIT (target audience, USP) et CALENDRIER (réseaux sociaux, ton) 
+seront intégrées ultérieurement. Concentrez-vous sur des thèmes alignés avec 
+l'ADN DE MARQUE.
 
 MISSION :
 Créez ${count} thèmes créatifs RADICALEMENT DIFFÉRENTS en :
-1. Explorant des territoires créatifs variés
-2. Utilisant les insights de la cible
-3. Capitalisant sur les différenciateurs
-4. S'appuyant sur les apprentissages
-5. Visant les objectifs fixés
+1. Explorant des territoires créatifs variés alignés avec l'ADN marque
+2. Capitalisant sur les différenciateurs concurrentiels
+3. S'appuyant sur les apprentissages des campagnes passées
+4. Restant cohérent avec le positionnement stratégique (type, stade, prix)
+5. Visant l'excellence créative niveau Cannes Lions
 
 FORMAT DE RÉPONSE :
 THEME 1:
 "[Nom créatif]"
-- Objectif: [Objectif SMART]
-- Angle: [Approche unique]
-- Émotions: [2-3 émotions]
-- Formats: [Formats adaptés]
-- Réseaux: [Réseaux pertinents]
+- Objectif: [Objectif SMART aligné avec ADN marque]
+- Angle: [Approche unique basée sur différenciateurs]
+- Émotions: [2-3 émotions cohérentes avec valeurs marque]
+- Formats: [Formats suggérés - seront affinés avec data Calendar]
+- Réseaux: [Réseaux suggérés - seront affinés avec data Calendar]
 
 RÈGLES :
 - Chaque thème doit explorer un territoire UNIQUE
-- Utiliser les insights pour créer des angles pertinents
+- Rester fidèle à l'ADN et valeurs de marque
 - S'appuyer sur les apprentissages passés
-- Oser des concepts audacieux
-- Rester aligné avec le positionnement`;
+- Oser des concepts audacieux mais cohérents
+- Viser excellence créative niveau Cannes Lions`;
   }
 
   private static parseThemes(content: string): Theme[] {
@@ -240,10 +257,10 @@ RÈGLES :
     return baseThemes.slice(0, count).map(name => ({
       name,
       objective: `Mettre en avant ${name.toLowerCase()} de ${briefData.companyName}`,
-      approach: 'Contenu authentique et engageant',
+      approach: 'Contenu authentique et engageant aligné avec ADN marque',
       emotions: 'Confiance, Expertise, Innovation',
       formats: ['Photos', 'Vidéos', 'Stories'],
-      networks: briefData.currentSocialNetworks
+      networks: ['Instagram', 'Facebook', 'LinkedIn'] // Default, sera affiné avec Calendar data
     }));
   }
 }

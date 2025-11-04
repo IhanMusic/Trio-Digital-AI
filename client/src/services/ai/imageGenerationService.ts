@@ -1,13 +1,5 @@
 import { BriefData } from '../../types/brief';
 import { config } from '../../config/env';
-import {
-  formatPromptForStability,
-  SectorType,
-  createAdvertisingPrompt
-} from '../../prompts/stability/utils';
-import { generateSectorPrompt } from '../../prompts/stability/sectorPrompts';
-import { getNegativePromptWithStyle } from '../../prompts/stability/negativePrompts';
-import { getStylePreset, PresetType } from '../../prompts/stability/stylePresets';
 import { ImageValidationService } from './imageValidationService';
 import { ImageGenerationHistoryService } from './imageGenerationHistoryService';
 import { ImageCacheService } from './imageCacheService';
@@ -394,43 +386,6 @@ export class ImageGenerationService {
     return 'emotional';
   }
 
-  private static determineStylePreset(brief: BriefData, purpose: string, useAdvertisingStyle: boolean = false): PresetType {
-    if (useAdvertisingStyle) {
-      const adStyle = this.determineAdvertisingStyle(brief);
-      
-      // Mapper le style publicitaire au preset correspondant
-      switch (adStyle) {
-        case 'minimalist':
-          return 'ad_minimalist';
-        case 'emotional':
-          return 'ad_emotional';
-        case 'authentic':
-          return 'ad_authentic';
-        case 'bold':
-          return 'ad_bold';
-        case 'corporate':
-          return 'ad_corporate';
-        default:
-          return 'ad_emotional';
-      }
-    }
-    
-    // Comportement standard
-    if (brief.pricePositioning?.toLowerCase().includes('premium') || brief.pricePositioning?.toLowerCase().includes('luxury')) {
-      return 'premium';
-    }
-
-    switch (purpose) {
-      case 'product':
-        return 'product';
-      case 'lifestyle':
-        return 'lifestyle';
-      case 'social':
-        return brief.sector === 'Banque et Finance' ? 'corporate' : 'social';
-      default:
-        return 'editorial';
-    }
-  }
 
   private static determineQuality(score: number): 'low' | 'medium' | 'high' {
     if (score >= QUALITY_THRESHOLDS.HIGH) {
@@ -546,7 +501,6 @@ export class ImageGenerationService {
     briefData: BriefData,
     options: GenerationOptions = {}
   ): Promise<{ url: string; quality: 'low' | 'medium' | 'high' }> {
-    // Utiliser le mode publicitaire par défaut pour des résultats de qualité professionnelle
     const useAdvertisingStyle = true;
 
     const {
@@ -556,46 +510,21 @@ export class ImageGenerationService {
       generationId = `${briefData.companyName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`
     } = options;
 
-    // Photos produit ne sont plus dans brief mais seraient passées séparément si nécessaire
-    let productOptions;
-    // Cette fonctionnalité devrait être adaptée pour recevoir les images produit
-    // depuis le backend ou comme paramètre séparé
-
     if (attempt > MAX_ATTEMPTS) {
       throw new Error(`Nombre maximum de tentatives (${MAX_ATTEMPTS}) atteint`);
     }
 
-    // Construire le prompt enrichi
+    // Construire le prompt enrichi simplifié pour Gemini
     const compositionPrompt = this.getCompositionPrompt(briefData, purpose, useAdvertisingStyle);
     const lightingPrompt = this.getLightingPrompt(briefData, timeOfDay, useAdvertisingStyle);
     const colorPrompt = this.getColorPrompt(briefData, useAdvertisingStyle);
-    const stylePreset = this.determineStylePreset(briefData, purpose, useAdvertisingStyle);
-    const preset = getStylePreset(stylePreset);
-    const styleModifiers = preset.promptModifiers.join(', ');
     
-    const basePrompt = `${description}, ${compositionPrompt}, ${lightingPrompt}, ${colorPrompt}, ${styleModifiers}`;
-    const sectorPrompt = generateSectorPrompt(briefData, basePrompt);
+    // Prompt final simplifié pour Gemini
+    const finalPrompt = `${description}, ${compositionPrompt}, ${lightingPrompt}, ${colorPrompt}, professional advertising photography, high quality, award-winning, ${briefData.sector} industry`;
 
-    // Construire le negative prompt (communicationStyle n'existe plus dans brief, utiliser businessType)
-    const negativePrompt = getNegativePromptWithStyle(briefData.sector as SectorType, briefData.businessType || 'B2C');
-
-    // Déterminer le style publicitaire à utiliser
-    const adStyle = this.determineAdvertisingStyle(briefData);
-    
-    // Formater les prompts pour Stability avec les options publicitaires
-    const formattedPrompts = formatPromptForStability(
-      sectorPrompt, 
-      negativePrompt,
-      {
-        isAdvertising: useAdvertisingStyle,
-        adStyle: adStyle,
-        useAdvancedStructure: true
-      }
-    );
-
-    // Vérifier le cache avant de générer
+    // Vérifier le cache
     const cachedImage = await ImageCacheService.findInCache(
-      formattedPrompts.prompt,
+      finalPrompt,
       { samples: 1 },
       {
         purpose,
@@ -612,18 +541,17 @@ export class ImageGenerationService {
       };
     }
 
-    // Démarrer une nouvelle session de génération
+    // Démarrer session de génération
     await ImageGenerationHistoryService.startSession(generationId);
 
     try {
       const result = await this.generateWithParams(
-        formattedPrompts.prompt,
-        formattedPrompts.negative_prompt || '',
-        purpose,
-        productOptions
+        finalPrompt,
+        '', // Gemini n'utilise pas de negative prompt
+        purpose
       );
       
-      // Validation et enregistrement
+      // Validation
       const validation = await ImageValidationService.validateImage(result.url, briefData);
       
       const metadata: GenerationMetadata = {
@@ -636,14 +564,14 @@ export class ImageGenerationService {
       await ImageGenerationHistoryService.recordAttempt(
         generationId,
         result.url,
-        formattedPrompts.prompt,
-        { cfgScale: 0, steps: 0, samples: 1 }, // Ultra gère ses propres paramètres
+        finalPrompt,
+        { cfgScale: 0, steps: 0, samples: 1 },
         validation.score,
         validation,
         metadata
       );
 
-      // Si le score est suffisant, on réessaie avec un meilleur score requis
+      // Retry si score insuffisant
       if (validation.score < MIN_VALIDATION_SCORE - (attempt - 1) * SCORE_DECAY_PER_ATTEMPT) {
         await ImageGenerationHistoryService.completeSession(generationId, false);
         return this.generateOptimizedImage(description, briefData, {
@@ -653,9 +581,9 @@ export class ImageGenerationService {
         });
       }
 
-      // Ajouter au cache si le score est bon
+      // Ajouter au cache
       await ImageCacheService.addToCache(
-        formattedPrompts.prompt,
+        finalPrompt,
         generationId,
         { samples: 1 },
         result.url,

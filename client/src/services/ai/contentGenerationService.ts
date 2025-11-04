@@ -206,7 +206,7 @@ export class ContentGenerationService {
         approach: 'Contenu informatif et professionnel',
         emotions: 'Confiance, Expertise',
         formats: ['Photos', 'Articles'],
-        networks: briefData.currentSocialNetworks
+        networks: ['Instagram', 'Facebook', 'LinkedIn'] // Default networks, will be refined with Calendar data
       },
       {
         name: 'Innovation et Technologie',
@@ -214,7 +214,7 @@ export class ContentGenerationService {
         approach: 'Présentation des solutions innovantes',
         emotions: 'Surprise, Intérêt',
         formats: ['Vidéos', 'Infographies'],
-        networks: briefData.currentSocialNetworks
+        networks: ['Instagram', 'Facebook', 'LinkedIn'] // Default networks, will be refined with Calendar data
       }
     ];
   }
