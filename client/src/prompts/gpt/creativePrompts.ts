@@ -53,13 +53,13 @@ ${campaign.name} (${campaign.period}):
   // Construction analyse concurrentielle
   const competitiveSection = briefData.competitiveAnalysis ? `
 ANALYSE CONCURRENTIELLE VISUELLE:
-${briefData.competitiveAnalysis.directCompetitors.map(competitor => `
+${briefData.competitiveAnalysis.directCompetitors?.map(competitor => `
 ${competitor.name}:
 - Signatures visuelles: ${competitor.strengths.join(', ')}
-- Stratégies créatives: ${competitor.strategies.join(', ')}`).join('\n')}
+- Stratégies créatives: ${competitor.strategies.join(', ')}`).join('\n') || 'Aucun concurrent direct analysé'}
 
-Position différenciante: ${briefData.competitiveAnalysis.marketPosition}
-Opportunités créatives: ${briefData.competitiveAnalysis.opportunities.join(', ')}
+Position différenciante: ${briefData.competitiveAnalysis.marketPosition || 'Non définie'}
+Opportunités créatives: ${briefData.competitiveAnalysis.opportunities?.join(', ') || 'À identifier'}
 ` : '';
 
   // Construction cadre légal
