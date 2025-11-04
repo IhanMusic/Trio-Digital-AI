@@ -48,6 +48,8 @@ export interface CreativePreset {
     reference: string;
     composition: string;
     lighting: string;
+    requiresHands?: boolean;
+    handsJustification?: string;
   };
   lighting: {
     name: string;
@@ -141,7 +143,7 @@ export class CannesLionsImageOptimizer {
     sections.push(this.generateCompositionBlock(essence, preset));
     
     // SECTION 2: SUJET & ANATOMIE (30% priorité) - LE PLUS CRITIQUE
-    sections.push(this.generateSubjectBlock(essence, hasProductRef));
+    sections.push(this.generateSubjectBlock(essence, hasProductRef, preset));
     
     // SECTION 3: ÉCLAIRAGE & ATMOSPHÈRE (20% priorité)
     sections.push(this.generateLightingBlock(essence, preset));
@@ -185,15 +187,29 @@ SETTING & CONTEXT:
   /**
    * Génère le bloc sujet avec contraintes anatomiques ULTRA-PRÉCISES
    */
-  private static generateSubjectBlock(essence: CreativeEssence, hasProductRef: boolean): string {
+  private static generateSubjectBlock(
+    essence: CreativeEssence, 
+    hasProductRef: boolean,
+    preset: CreativePreset
+  ): string {
     let block = `═══════════════════════════════════════════════════════════════
 PRIORITY 2: SUBJECT & ANATOMICAL ACCURACY (CRITICAL)
 ═══════════════════════════════════════════════════════════════
 
 Subject: ${essence.subjectDescription}`;
 
-    // CONTRAINTES ANATOMIQUES MAINS (si applicable)
-    if (essence.involvesHands) {
+    // CONTRAINTES ANATOMIQUES MAINS - UNIQUEMENT SI JUSTIFIÉ PAR LE PRESET
+    const shouldIncludeHands = preset.style.requiresHands === true;
+    
+    if (shouldIncludeHands && preset.style.handsJustification) {
+      block += `
+
+HANDS INTERACTION JUSTIFIED:
+Justification: ${preset.style.handsJustification}
+`;
+    }
+    
+    if (shouldIncludeHands) {
       block += `
 
 ⚠️  CRITICAL: HAND ANATOMY SPECIFICATIONS (NON-NEGOTIABLE)

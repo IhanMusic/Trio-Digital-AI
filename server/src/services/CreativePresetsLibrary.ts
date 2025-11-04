@@ -11,6 +11,8 @@ export interface PhotographicStyle {
   composition: string;
   mood: string;
   technicalSpecs: string;
+  requiresHands?: boolean;
+  handsJustification?: string;
 }
 
 export interface ColorPalette {
