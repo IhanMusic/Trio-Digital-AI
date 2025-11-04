@@ -14,20 +14,20 @@ ANALYSE CONCURRENTIELLE APPROFONDIE
 ═══════════════════════════════════════
 
 POSITION MARCHÉ ACTUELLE:
-${briefData.competitiveAnalysis.marketPosition}
+${briefData.competitiveAnalysis.marketPosition || 'À définir'}
 
 DIFFÉRENCIATEURS STRATÉGIQUES:
-${briefData.competitiveAnalysis.differentiators.map((d, i) => `${i + 1}. ${d}`).join('\n')}
+${briefData.competitiveAnalysis.differentiators?.map((d, i) => `${i + 1}. ${d}`).join('\n') || 'Non spécifiés'}
 
 OPPORTUNITÉS MARCHÉ:
-${briefData.competitiveAnalysis.opportunities.map((o, i) => `${i + 1}. ${o}`).join('\n')}
+${briefData.competitiveAnalysis.opportunities?.map((o, i) => `${i + 1}. ${o}`).join('\n') || 'À identifier'}
 
 CONCURRENTS DIRECTS - ANALYSE SWOT:
-${briefData.competitiveAnalysis.directCompetitors.map(comp => `
+${briefData.competitiveAnalysis.directCompetitors?.map(comp => `
 → ${comp.name}
   ✓ Forces: ${comp.strengths.join(', ')}
   ✗ Faiblesses: ${comp.weaknesses.join(', ')}
-  ⚡ Stratégies actives: ${comp.strategies.join(', ')}`).join('\n\n')}
+  ⚡ Stratégies actives: ${comp.strategies.join(', ')}`).join('\n\n') || 'Aucune analyse SWOT disponible'}
 ` : `
 CONCURRENTS PRINCIPAUX:
 ${briefData.competitors}

@@ -14,20 +14,20 @@ ANALYSE CONCURRENTIELLE STRATÉGIQUE
 ═══════════════════════════════════════
 
 POSITIONNEMENT MARCHÉ:
-${briefData.competitiveAnalysis.marketPosition}
+${briefData.competitiveAnalysis.marketPosition || 'Non défini'}
 
 DIFFÉRENCIATEURS CLÉS:
-${briefData.competitiveAnalysis.differentiators.map(d => `✓ ${d}`).join('\n')}
+${briefData.competitiveAnalysis.differentiators?.map(d => `✓ ${d}`).join('\n') || 'Non spécifiés'}
 
 CONCURRENTS DIRECTS:
-${briefData.competitiveAnalysis.directCompetitors.map(comp => `
+${briefData.competitiveAnalysis.directCompetitors?.map(comp => `
 → ${comp.name}
   Forces: ${comp.strengths.join(', ')}
   Faiblesses: ${comp.weaknesses.join(', ')}
-  Stratégies: ${comp.strategies.join(', ')}`).join('\n')}
+  Stratégies: ${comp.strategies.join(', ')}`).join('\n') || 'Aucun concurrent analysé'}
 
 OPPORTUNITÉS IDENTIFIÉES:
-${briefData.competitiveAnalysis.opportunities.map(o => `• ${o}`).join('\n')}
+${briefData.competitiveAnalysis.opportunities?.map(o => `• ${o}`).join('\n') || 'À identifier'}
 ` : '';
 
   // Construction de l'historique des campagnes
