@@ -1956,57 +1956,448 @@ export const CREATIVE_FRAMEWORKS: CreativeFramework[] = [
 ];
 
 // ==========================================
-// 🌍 CONTEXTES CRÉATIFS (12 variations)
+// 🌍 CONTEXTES CRÉATIFS CANNES LIONS (50 variations)
 // ==========================================
 
 export const CREATIVE_CONTEXTS: CreativeContext[] = [
+  // ========== CONTEXTES GÉNÉRIQUES ESSENTIELS (12 contextes originaux) ==========
   {
     name: "Modern Kitchen Bright",
-    description: "Cuisine moderne lumineuse, surfaces blanches épurées, lumière naturelle abondante, équipement contemporain"
+    description: "Cuisine moderne lumineuse, surfaces blanches épurées, lumière naturelle abondante, équipement contemporain, îlot central design, électroménagers haut de gamme intégrés"
   },
   {
     name: "Rustic Countryside",
-    description: "Campagne rustique, textures bois naturel, ambiance artisanale, authenticité rurale"
+    description: "Campagne rustique, textures bois naturel, ambiance artisanale, authenticité rurale, ferme traditionnelle, champs cultivés en arrière-plan, atmosphère bucolique"
   },
   {
     name: "Spa Wellness Zen",
-    description: "Spa wellness zen, minimalisme apaisant, plantes vertes, atmosphère de sérénité"
+    description: "Spa wellness zen, minimalisme apaisant, plantes vertes luxuriantes, atmosphère de sérénité, pierres naturelles, bougies parfumées, tranquillité absolue"
   },
   {
     name: "Urban Loft Industrial",
-    description: "Loft urbain industriel, briques apparentes, métal et béton, style contemporain chic"
+    description: "Loft urbain industriel, briques apparentes rouges, métal et béton brut, style contemporain chic, grandes fenêtres d'usine, poutres métalliques apparentes, design urbain sophistiqué"
   },
   {
     name: "Luxury Hotel Suite",
-    description: "Suite hôtel luxe, tissus premium, design sophistiqué, raffinement cinq étoiles"
+    description: "Suite hôtel luxe cinq étoiles, tissus premium (soie, velours), design sophistiqué, raffinement absolu, vue panoramique, mobilier sur-mesure, service d'exception"
   },
   {
     name: "Botanical Garden Natural",
-    description: "Jardin botanique naturel, verdure luxuriante, lumière filtrée, connexion nature"
+    description: "Jardin botanique naturel, verdure luxuriante tropicale, lumière filtrée à travers feuillage, connexion nature profonde, serres victoriennes, collection de plantes exotiques"
   },
   {
     name: "Minimalist Studio White",
-    description: "Studio minimaliste blanc, lignes épurées, espace négatif, pureté visuelle"
+    description: "Studio minimaliste blanc immaculé, lignes épurées géométriques, espace négatif maximal, pureté visuelle absolue, éclairage indirect, design scandinave"
   },
   {
     name: "Cozy Home Comfort",
-    description: "Maison confortable cosy, textiles douillets, atmosphère chaleureuse, intimité familiale"
+    description: "Maison confortable cosy, textiles douillets (plaids, coussins), atmosphère chaleureuse, intimité familiale, cheminée crépitante, décoration personnelle, refuge douillet"
   },
   {
     name: "Modern Office Workspace",
-    description: "Bureau moderne workspace, design contemporain, technologie intégrée, productivité optimisée"
+    description: "Bureau moderne workspace, design contemporain épuré, technologie intégrée invisible, productivité optimisée, espaces collaboratifs, ergonomie premium, lumière naturelle abondante"
   },
   {
     name: "Outdoor Nature Setting",
-    description: "Extérieur nature, paysage naturel, lumière du jour, connexion environnementale"
+    description: "Extérieur nature sauvage, paysage naturel préservé, lumière du jour changeante, connexion environnementale authentique, biodiversité visible, air pur"
   },
   {
     name: "Boutique Retail Chic",
-    description: "Boutique retail chic, présentation soignée, éclairage commercial, expérience shopping"
+    description: "Boutique retail chic haut de gamme, présentation soignée merchandising, éclairage commercial sophistiqué, expérience shopping premium, architecture intérieure design, service personnalisé"
   },
   {
     name: "Street Urban Authentic",
-    description: "Rue urbaine authentique, vie citadine, énergie urbaine, contexte métropolitain"
+    description: "Rue urbaine authentique métropolitaine, vie citadine vibrante, énergie urbaine palpable, contexte métropolitain multiculturel, street art, architecture urbaine éclectique"
+  },
+
+  // ========== CATÉGORIE A : CONTEXTES SECTORIELS SPÉCIFIQUES (15 nouveaux) ==========
+  {
+    name: "Automotive Showroom Premium",
+    description: "Showroom automobile premium, éclairage architectural sophistiqué, sols réfléchissants miroir, design minimaliste luxueux, véhicules mis en scène comme sculptures, technologie interactive, ambiance exclusive"
+  },
+  {
+    name: "Racing Circuit Dynamic",
+    description: "Circuit automobile professionnel, asphalte lisse, virages inclinés, stands de course, drapeaux à damier, atmosphère compétitive, adrénaline palpable, technologie de pointe visible"
+  },
+  {
+    name: "Vintage Garage Heritage",
+    description: "Garage vintage authentique, outils anciens accrochés, établis en bois patiné, odeur d'huile moteur, affiches rétro automobiles, lumière naturelle poussiéreuse, nostalgie mécanique"
+  },
+  {
+    name: "Medical Laboratory Clinical",
+    description: "Laboratoire médical clinique, surfaces stériles blanches, équipements scientifiques de précision, éclairage froid professionnel, microscopes et éprouvettes, rigueur scientifique, propreté absolue"
+  },
+  {
+    name: "Hospital Room Compassionate",
+    description: "Chambre d'hôpital moderne, design apaisant non-clinique, lumière naturelle douce, équipement médical discret, couleurs chaleureuses, confort patient prioritaire, humanité médicale"
+  },
+  {
+    name: "Pharmacy Modern Clean",
+    description: "Pharmacie moderne épurée, comptoirs blancs immaculés, étagères organisées méthodiquement, éclairage LED uniforme, signalétique claire, professionnalisme rassurant, accessibilité optimale"
+  },
+  {
+    name: "Tech Startup Garage",
+    description: "Garage startup technologique, tables de ping-pong, post-its colorés partout, écrans multiples, câbles apparents, énergie entrepreneuriale, chaos créatif organisé, innovation en action"
+  },
+  {
+    name: "Data Center Futuristic",
+    description: "Centre de données futuriste, serveurs alignés à l'infini, lumières LED bleues, câblage structuré, climatisation visible, technologie de pointe, architecture high-tech, puissance computationnelle"
+  },
+  {
+    name: "Innovation Lab Cutting-Edge",
+    description: "Laboratoire d'innovation, prototypes en développement, imprimantes 3D actives, tableaux blancs couverts d'équations, matériaux expérimentaux, recherche en cours, créativité scientifique"
+  },
+  {
+    name: "Trading Floor Energy",
+    description: "Salle des marchés financiers, écrans multiples affichant données en temps réel, téléphones sonnant, traders concentrés, énergie frénétique, tension palpable, capitalisme en action"
+  },
+  {
+    name: "Bank Vault Security",
+    description: "Coffre-fort bancaire, porte blindée massive, boîtes de sécurité alignées, éclairage tamisé, silence absolu, sécurité maximale, confiance institutionnelle, protection des actifs"
+  },
+  {
+    name: "Fintech Office Modern",
+    description: "Bureau fintech moderne, open space lumineux, écrans affichant cryptomonnaies, design scandinave, plantes vertes, café specialty, disruption financière, jeunesse entrepreneuriale"
+  },
+  {
+    name: "Fashion Runway Backstage",
+    description: "Coulisses défilé mode, mannequins en préparation, maquilleurs et coiffeurs affairés, vêtements suspendus, miroirs éclairés, chaos organisé pré-show, tension créative, glamour en construction"
+  },
+  {
+    name: "Art Gallery Contemporary",
+    description: "Galerie d'art contemporain, murs blancs immaculés, éclairage directionnel précis, œuvres espacées stratégiquement, sols en béton ciré, silence contemplatif, élégance minimaliste"
+  },
+  {
+    name: "Recording Studio Creative",
+    description: "Studio d'enregistrement professionnel, panneaux acoustiques, console de mixage imposante, instruments variés, cabine d'isolation vitrée, ambiance tamisée, créativité musicale, technologie audio"
+  },
+
+  // ========== CATÉGORIE B : CONTEXTES ÉMOTIONNELS/STORYTELLING (10 nouveaux) ==========
+  {
+    name: "Childhood Memory Nostalgic",
+    description: "Souvenir d'enfance nostalgique, chambre d'enfant vintage, jouets anciens, lumière douce filtrée, couleurs pastel fanées, innocence perdue, douceur du passé, émotion pure"
+  },
+  {
+    name: "Dream Sequence Surreal",
+    description: "Séquence onirique surréaliste, logique défiant la réalité, couleurs saturées irréelles, perspectives impossibles, flou artistique, symbolisme visuel, inconscient visualisé"
+  },
+  {
+    name: "Time Travel Portal",
+    description: "Portail temporel mystérieux, fusion passé-présent-futur, éléments anachroniques juxtaposés, lumière étrange, distorsion temporelle visible, voyage dans le temps suggéré"
+  },
+  {
+    name: "Underwater Fantasy",
+    description: "Fantaisie sous-marine, lumière bleue filtrée, bulles flottantes, mouvement fluide, silence aquatique, monde parallèle subaquatique, apesanteur liquide, mystère des profondeurs"
+  },
+  {
+    name: "Cloud Kingdom Ethereal",
+    description: "Royaume des nuages éthéré, ciel infini, lumière céleste dorée, légèreté absolue, perspective aérienne, rêve éveillé, paradis imaginaire, élévation spirituelle"
+  },
+  {
+    name: "Desert Mirage Mysterious",
+    description: "Mirage désertique mystérieux, chaleur ondulante visible, sable doré infini, solitude contemplative, illusion d'optique, beauté aride, silence absolu, spiritualité du vide"
+  },
+  {
+    name: "Forest Enchanted Magical",
+    description: "Forêt enchantée magique, lumière verte filtrée, mousse luxuriante, arbres centenaires, brume matinale, conte de fées vivant, nature mystique, magie naturelle"
+  },
+  {
+    name: "Mountain Peak Achievement",
+    description: "Sommet montagneux conquis, vue panoramique à 360°, air raréfié, accomplissement personnel, dépassement de soi, nature majestueuse, solitude triomphante, perspective élevée"
+  },
+  {
+    name: "Beach Sunset Romance",
+    description: "Coucher de soleil romantique sur plage, sable doré, vagues douces, ciel orangé-rose, intimité partagée, moment suspendu, beauté éphémère, amour visualisé"
+  },
+  {
+    name: "Northern Lights Wonder",
+    description: "Aurores boréales spectaculaires, ciel dansant vert-violet, froid arctique, émerveillement cosmique, phénomène naturel rare, magie céleste, beauté extraterrestre"
+  },
+
+  // ========== CATÉGORIE C : CONTEXTES CULTURELS AUTHENTIQUES (10 nouveaux) ==========
+  {
+    name: "Japanese Temple Zen",
+    description: "Temple japonais zen traditionnel, jardin de pierres ratissé, architecture en bois, tatamis, encens subtil, méditation silencieuse, harmonie parfaite, spiritualité orientale"
+  },
+  {
+    name: "Moroccan Souk Vibrant",
+    description: "Souk marocain vibrant, épices colorées en pyramides, tapis suspendus, lumière filtrée, négociations animées, artisanat local, odeurs exotiques, chaos organisé oriental"
+  },
+  {
+    name: "Parisian Café Classic",
+    description: "Café parisien classique, terrasse avec chaises bistrot, serveurs en tablier noir, croissants frais, architecture haussmannienne, vie de quartier, élégance décontractée française"
+  },
+  {
+    name: "New York Rooftop Urban",
+    description: "Rooftop new-yorkais, skyline iconique, gratte-ciels illuminés, coucher de soleil urbain, cocktails sophistiqués, énergie métropolitaine, rêve américain visualisé"
+  },
+  {
+    name: "Tokyo Neon Cyberpunk",
+    description: "Tokyo néon cyberpunk, enseignes lumineuses kanji, foule dense, technologie omniprésente, pluie réfléchissante, futur présent, énergie électrique, modernité extrême"
+  },
+  {
+    name: "Scandinavian Hygge Cozy",
+    description: "Hygge scandinave cosy, bougies multiples, couvertures en laine, bois clair, design minimaliste chaleureux, confort nordique, simplicité élégante, bien-être danois"
+  },
+  {
+    name: "Mediterranean Villa Luxury",
+    description: "Villa méditerranéenne luxueuse, vue mer azur, architecture blanche, bougainvilliers roses, terrasse en pierre, dolce vita, élégance côtière, paradis ensoleillé"
+  },
+  {
+    name: "African Savanna Wild",
+    description: "Savane africaine sauvage, herbes dorées ondulantes, acacia solitaire, faune visible, coucher de soleil rouge, nature brute, liberté absolue, beauté primitive"
+  },
+  {
+    name: "Indian Bazaar Colorful",
+    description: "Bazar indien coloré, tissus éclatants, bijoux scintillants, épices aromatiques, foule dense, musique traditionnelle, richesse sensorielle, chaos joyeux"
+  },
+  {
+    name: "Brazilian Carnival Energy",
+    description: "Carnaval brésilien énergique, costumes à plumes, samba rythmée, foule dansante, couleurs explosives, joie contagieuse, célébration de la vie, énergie tropicale"
+  },
+
+  // ========== CATÉGORIE D : CONTEXTES TENDANCE/FUTURISTES (8 nouveaux) ==========
+  {
+    name: "Metaverse Digital World",
+    description: "Monde numérique métaverse, réalité virtuelle immersive, avatars personnalisés, architecture impossible, physique défiant la gravité, futur digital, connexion globale virtuelle"
+  },
+  {
+    name: "Gaming Room RGB",
+    description: "Salle gaming RGB, éclairage LED multicolore, écrans multiples, chaise gaming ergonomique, clavier mécanique, setup streamer, culture gamer, technologie gaming"
+  },
+  {
+    name: "Streaming Studio Setup",
+    description: "Studio streaming professionnel, fond vert, ring light, microphone podcast, caméra HD, écran de contrôle, créateur de contenu, production digitale, influence moderne"
+  },
+  {
+    name: "TikTok House Gen-Z",
+    description: "Maison TikTok Gen-Z, décor Instagram-worthy, néons colorés, coins photo optimisés, énergie jeune, contenu viral en création, culture internet, créativité digitale"
+  },
+  {
+    name: "Sustainable Eco-Home",
+    description: "Maison écologique durable, panneaux solaires, jardin potager, matériaux recyclés, compost visible, minimalisme conscient, vie zéro déchet, responsabilité environnementale"
+  },
+  {
+    name: "Zero-Waste Lifestyle",
+    description: "Mode de vie zéro déchet, bocaux en verre réutilisables, produits en vrac, composteur, minimalisme intentionnel, consommation responsable, écologie pratique"
+  },
+  {
+    name: "Solar Punk Future",
+    description: "Futur solarpunk optimiste, technologie verte intégrée, jardins verticaux, énergie solaire omniprésente, architecture biomimétique, utopie écologique, harmonie tech-nature"
+  },
+  {
+    name: "Biophilic Design Nature-Tech",
+    description: "Design biophilique nature-tech, plantes intégrées architecture, lumière naturelle maximisée, matériaux organiques, technologie invisible, bien-être humain, connexion nature urbaine"
+  },
+
+  // ========== CATÉGORIE E : CONTEXTES B2B & ENTREPRISE (10 nouveaux) ==========
+  {
+    name: "Corporate Boardroom Executive",
+    description: "Salle de conseil d'administration corporate, table en bois massif, fauteuils en cuir premium, écrans de présentation high-tech, vue panoramique sur skyline, décisions stratégiques, pouvoir exécutif, leadership d'entreprise"
+  },
+  {
+    name: "Conference Center Professional",
+    description: "Centre de conférences professionnel, auditorium moderne, sièges ergonomiques alignés, scène avec éclairage professionnel, écrans géants, networking business, événements corporate, professionnalisme institutionnel"
+  },
+  {
+    name: "Coworking Space Collaborative",
+    description: "Espace coworking collaboratif, bureaux partagés modulables, zones de brainstorming créatives, café intégré, wifi haut débit, communauté entrepreneuriale, flexibilité workspace, innovation collective"
+  },
+  {
+    name: "Industrial Warehouse Logistics",
+    description: "Entrepôt industriel logistique, rayonnages métalliques hauts, chariots élévateurs en action, codes-barres et scanners, organisation optimisée, supply chain visible, efficacité opérationnelle, B2B distribution"
+  },
+  {
+    name: "Business Lunch Restaurant",
+    description: "Restaurant business lunch, tables espacées pour confidentialité, service rapide et discret, menu exécutif, ambiance feutrée professionnelle, deals et négociations, networking déjeuner, cuisine raffinée business"
+  },
+  {
+    name: "Airport Business Lounge",
+    description: "Salon business aéroport, fauteuils confortables premium, wifi gratuit, prises électriques multiples, buffet gastronomique, douches privées, calme et productivité, voyageurs d'affaires, luxe fonctionnel"
+  },
+  {
+    name: "Hotel Conference Room",
+    description: "Salle de conférence hôtel, configuration modulable, équipement audiovisuel professionnel, service traiteur intégré, lumière naturelle contrôlable, séminaires d'entreprise, formations professionnelles, événements corporate"
+  },
+  {
+    name: "Trade Show Exhibition",
+    description: "Salon professionnel exposition, stands design attractifs, démonstrations produits live, badges et networking, foule professionnelle, innovation sectorielle, B2B marketplace, opportunités business"
+  },
+  {
+    name: "Corporate Training Center",
+    description: "Centre de formation corporate, salles équipées technologie, tableaux interactifs, espaces travaux pratiques, matériel pédagogique professionnel, développement compétences, formation continue, montée en compétence"
+  },
+  {
+    name: "Business District Skyline",
+    description: "Quartier d'affaires skyline, gratte-ciels modernes, architecture corporate imposante, rues animées professionnels, terrasses rooftop, énergie business, ambition urbaine, centre économique métropolitain"
+  },
+
+  // ========== CATÉGORIE F : CONTEXTES RETAIL & COMMERCE (10 nouveaux) ==========
+  {
+    name: "Supermarket Aisle Bright",
+    description: "Allée supermarché lumineuse, rayonnages remplis produits, éclairage LED uniforme, chariots et paniers, promotions affichées, choix abondant, courses familiales, consommation quotidienne"
+  },
+  {
+    name: "Convenience Store 24/7",
+    description: "Supérette 24/7, ouverture non-stop, produits essentiels accessibles, éclairage nocturne, snacks et boissons, dépannage rapide, proximité urbaine, service continu"
+  },
+  {
+    name: "Department Store Luxury",
+    description: "Grand magasin luxe, étages multiples élégants, escalators design, marques premium, service personnalisé, shopping experience haut de gamme, architecture retail sophistiquée, destination shopping"
+  },
+  {
+    name: "Pop-Up Store Trendy",
+    description: "Boutique éphémère trendy, installation temporaire créative, design innovant, exclusivité limitée, buzz marketing, expérience immersive, concept store, nouveauté et rareté"
+  },
+  {
+    name: "Market Stall Authentic",
+    description: "Étal de marché authentique, produits frais locaux, vendeur passionné, ambiance conviviale, négociation prix, produits saisonniers, commerce traditionnel, authenticité terroir"
+  },
+  {
+    name: "Shopping Mall Atrium",
+    description: "Atrium centre commercial, verrière lumineuse, fontaines décoratives, boutiques multiples visibles, escalators croisés, foule shopping, destination loisirs, architecture retail moderne"
+  },
+  {
+    name: "Duty-Free Airport Shop",
+    description: "Boutique duty-free aéroport, produits détaxés, marques internationales, voyageurs pressés, luxe accessible, derniers achats voyage, shopping international, zone transit"
+  },
+  {
+    name: "Vending Machine Urban",
+    description: "Distributeur automatique urbain, disponibilité 24/7, paiement sans contact, snacks et boissons, solution rapide, technologie self-service, consommation instantanée, vie urbaine moderne"
+  },
+  {
+    name: "Drive-Through Fast Service",
+    description: "Drive-through service rapide, commande depuis voiture, rapidité et efficacité, menu visible, paiement fenêtre, consommation nomade, fast-food moderne, commodité automobile"
+  },
+  {
+    name: "Online Shopping Studio",
+    description: "Studio e-commerce shooting, fond blanc professionnel, éclairage produit optimal, packshot parfait, photographie commerciale, vente en ligne, marketplace digital, retail transformation"
+  },
+
+  // ========== CATÉGORIE G : CONTEXTES LIFESTYLE SPÉCIFIQUES (10 nouveaux) ==========
+  {
+    name: "Home Office Remote Work",
+    description: "Bureau à domicile télétravail, setup ergonomique, écran double, plantes vertes, lumière naturelle, séparation vie pro-perso, productivité home, flexibilité travail, nouvelle normalité"
+  },
+  {
+    name: "Student Dorm Campus",
+    description: "Chambre étudiante campus, espace optimisé compact, bureau études, posters muraux, budget limité, vie étudiante, communauté universitaire, indépendance jeunesse, années formation"
+  },
+  {
+    name: "Baby Nursery Tender",
+    description: "Chambre bébé tendre, couleurs pastel douces, mobile musical, table à langer, sécurité maximale, douceur parentale, premiers mois vie, cocon protecteur, amour familial"
+  },
+  {
+    name: "Teenager Bedroom Personal",
+    description: "Chambre adolescent personnelle, posters idoles, console gaming, bureau devoirs, espace privé, expression identité, refuge personnel, transition enfance-adulte, univers propre"
+  },
+  {
+    name: "Senior Living Comfort",
+    description: "Résidence seniors confort, accessibilité adaptée, sécurité renforcée, communauté bienveillante, activités sociales, autonomie préservée, bien-vieillir, dignité âge d'or"
+  },
+  {
+    name: "Pet-Friendly Home",
+    description: "Maison pet-friendly, aménagements animaux, jouets et accessoires, espace extérieur sécurisé, famille élargie, amour inconditionnel, compagnons fidèles, vie avec animaux"
+  },
+  {
+    name: "Minimalist Apartment Urban",
+    description: "Appartement minimaliste urbain, espace optimisé, rangements cachés, design épuré, fonctionnalité maximale, vie simplifiée, moins c'est plus, élégance urbaine"
+  },
+  {
+    name: "Family Kitchen Busy",
+    description: "Cuisine familiale animée, repas préparation collective, enfants aidant, désordre organisé, rires et conversations, cœur de maison, moments partagés, vie familiale quotidienne"
+  },
+  {
+    name: "Bachelor Pad Modern",
+    description: "Appartement célibataire moderne, design masculin, technologie intégrée, bar à domicile, espace entertainment, indépendance assumée, style personnel, liberté lifestyle"
+  },
+  {
+    name: "Shared Apartment Roommates",
+    description: "Appartement colocation, espaces communs partagés, chambres privées, organisation collective, économies loyer, amitiés colocataires, vie communautaire, jeunesse urbaine"
+  },
+
+  // ========== CATÉGORIE H : CONTEXTES ÉVÉNEMENTIELS (10 nouveaux) ==========
+  {
+    name: "Wedding Reception Elegant",
+    description: "Réception mariage élégante, décoration florale raffinée, tables dressées perfectionnées, piste de danse, photobooth, célébration amour, union familles, jour inoubliable, romance célébrée"
+  },
+  {
+    name: "Birthday Party Celebration",
+    description: "Fête anniversaire célébration, ballons colorés, gâteau bougies, cadeaux emballés, invités joyeux, musique festive, moments mémorables, joie partagée, année de plus"
+  },
+  {
+    name: "Corporate Event Networking",
+    description: "Événement corporate networking, cocktail professionnel, badges nominatifs, conversations business, cartes de visite échangées, opportunités collaboration, relations professionnelles, développement réseau"
+  },
+  {
+    name: "Music Festival Outdoor",
+    description: "Festival musique outdoor, scène principale imposante, foule dansante, food trucks variés, camping festivaliers, liberté et musique, énergie collective, expérience immersive, été musical"
+  },
+  {
+    name: "Sports Stadium Energy",
+    description: "Stade sportif énergie, gradins remplis supporters, drapeaux et écharpes, chants encouragements, tension compétitive, passion sportive, communion fans, spectacle vivant"
+  },
+  {
+    name: "Theater Performance Arts",
+    description: "Théâtre performance arts, scène éclairée dramatiquement, rideaux velours rouge, fauteuils confortables, silence respectueux, culture et émotion, art vivant, soirée culturelle"
+  },
+  {
+    name: "Gallery Opening Vernissage",
+    description: "Vernissage galerie art, œuvres exposées, champagne et canapés, artiste présent, collectionneurs et critiques, discussions artistiques, découverte culturelle, soirée mondaine"
+  },
+  {
+    name: "Charity Gala Fundraising",
+    description: "Gala charité fundraising, tenue de soirée élégante, enchères silencieuses, discours émouvants, cause noble, générosité collective, impact social, soirée philanthropique"
+  },
+  {
+    name: "Product Launch Event",
+    description: "Événement lancement produit, présentation scénographiée, démonstrations live, presse et influenceurs, buzz médiatique, innovation dévoilée, stratégie marketing, moment clé marque"
+  },
+  {
+    name: "Award Ceremony Prestige",
+    description: "Cérémonie remise prix, tapis rouge, trophées brillants, discours remerciements, reconnaissance excellence, moment gloire, célébration réussite, prestige et honneur"
+  },
+
+  // ========== CATÉGORIE I : CONTEXTES SAISONNIERS & MOMENTS (10 nouveaux) ==========
+  {
+    name: "Christmas Holiday Festive",
+    description: "Fêtes Noël festives, sapin décoré illuminé, cadeaux emballés sous sapin, guirlandes scintillantes, repas famille, magie hivernale, traditions célébrées, esprit Noël"
+  },
+  {
+    name: "Summer Beach Vacation",
+    description: "Vacances été plage, sable chaud, mer turquoise, parasols colorés, détente absolue, bronzage et baignade, liberté estivale, souvenirs vacances, évasion soleil"
+  },
+  {
+    name: "Autumn Harvest Cozy",
+    description: "Automne récolte cosy, feuilles dorées tombantes, citrouilles décoratives, pulls confortables, boissons chaudes, ambiance chaleureuse, transition saisons, nostalgie douce"
+  },
+  {
+    name: "Spring Renewal Fresh",
+    description: "Printemps renouveau frais, fleurs éclosion, bourgeons verts, nettoyage printemps, énergie nouvelle, renaissance nature, optimisme saisonnier, vie qui reprend"
+  },
+  {
+    name: "Winter Sports Mountain",
+    description: "Sports hiver montagne, neige poudreuse, ski et snowboard, chalet refuge, chocolat chaud, adrénaline altitude, paysages enneigés, vacances hivernales"
+  },
+  {
+    name: "Back-to-School September",
+    description: "Rentrée scolaire septembre, cartable neuf, fournitures fraîches, excitation apprentissage, nouveaux camarades, routine retrouvée, année académique, éducation reprise"
+  },
+  {
+    name: "Valentine's Day Romantic",
+    description: "Saint-Valentin romantique, roses rouges, chocolats cœur, dîner chandelles, déclarations amour, couples amoureux, romance célébrée, amour exprimé"
+  },
+  {
+    name: "Halloween Spooky Fun",
+    description: "Halloween amusement effrayant, citrouilles sculptées, déguisements créatifs, bonbons distribués, décoration macabre, fête costumée, frissons ludiques, tradition américaine"
+  },
+  {
+    name: "New Year's Eve Celebration",
+    description: "Réveillon Nouvel An, compte à rebours minuit, champagne pétillant, feux d'artifice, résolutions nouvelles, espoir année future, fête jusqu'à l'aube, transition temporelle"
+  },
+  {
+    name: "Mother's Father's Day Family",
+    description: "Fête mères/pères famille, cadeaux faits main, repas famille réuni, reconnaissance parentale, amour filial, générations ensemble, gratitude exprimée, liens familiaux célébrés"
   }
 ];
 
@@ -2127,39 +2518,113 @@ export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
 
 /**
  * Mapping des occasions d'usage vers les contextes visuels pertinents
+ * ENRICHI avec les 100 contextes disponibles
  */
 export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
-  // Moments alimentaires
-  'breakfast': ['Modern Kitchen Bright', 'Cozy Home Comfort', 'Minimalist Studio White'],
-  'lunch': ['Modern Kitchen Bright', 'Outdoor Nature Setting', 'Urban Loft Industrial'],
-  'dinner': ['Cozy Home Comfort', 'Luxury Hotel Suite', 'Rustic Countryside'],
-  'snack': ['Modern Kitchen Bright', 'Outdoor Nature Setting', 'Street Urban Authentic'],
+  // ========== MOMENTS ALIMENTAIRES ==========
+  'breakfast': ['Modern Kitchen Bright', 'Cozy Home Comfort', 'Family Kitchen Busy', 'Home Office Remote Work'],
+  'lunch': ['Modern Kitchen Bright', 'Business Lunch Restaurant', 'Outdoor Nature Setting', 'Coworking Space Collaborative'],
+  'dinner': ['Cozy Home Comfort', 'Luxury Hotel Suite', 'Rustic Countryside', 'Family Kitchen Busy'],
+  'snack': ['Modern Kitchen Bright', 'Outdoor Nature Setting', 'Street Urban Authentic', 'Convenience Store 24/7'],
+  'coffee': ['Parisian Café Classic', 'Coworking Space Collaborative', 'Home Office Remote Work', 'Airport Business Lounge'],
+  'dessert': ['Cozy Home Comfort', 'Parisian Café Classic', 'Luxury Hotel Suite', 'Birthday Party Celebration'],
   
-  // Sport & bien-être
-  'sport': ['Outdoor Nature Setting', 'Modern Office Workspace', 'Minimalist Studio White'],
-  'workout': ['Outdoor Nature Setting', 'Modern Office Workspace', 'Urban Loft Industrial'],
-  'yoga': ['Spa Wellness Zen', 'Outdoor Nature Setting', 'Botanical Garden Natural'],
-  'wellness': ['Spa Wellness Zen', 'Botanical Garden Natural', 'Cozy Home Comfort'],
+  // ========== SPORT & BIEN-ÊTRE ==========
+  'sport': ['Outdoor Nature Setting', 'Sports Stadium Energy', 'Mountain Peak Achievement', 'Beach Sunset Romance'],
+  'workout': ['Outdoor Nature Setting', 'Modern Office Workspace', 'Urban Loft Industrial', 'Home Office Remote Work'],
+  'yoga': ['Spa Wellness Zen', 'Outdoor Nature Setting', 'Botanical Garden Natural', 'Beach Sunset Romance'],
+  'wellness': ['Spa Wellness Zen', 'Botanical Garden Natural', 'Cozy Home Comfort', 'Forest Enchanted Magical'],
+  'meditation': ['Spa Wellness Zen', 'Japanese Temple Zen', 'Forest Enchanted Magical', 'Mountain Peak Achievement'],
+  'running': ['Outdoor Nature Setting', 'Beach Sunset Romance', 'Mountain Peak Achievement', 'Urban Loft Industrial'],
   
-  // Beauté & soins
-  'morning-routine': ['Modern Kitchen Bright', 'Spa Wellness Zen', 'Minimalist Studio White'],
-  'evening-routine': ['Spa Wellness Zen', 'Cozy Home Comfort', 'Luxury Hotel Suite'],
-  'skincare': ['Spa Wellness Zen', 'Minimalist Studio White', 'Botanical Garden Natural'],
+  // ========== BEAUTÉ & SOINS ==========
+  'morning-routine': ['Modern Kitchen Bright', 'Spa Wellness Zen', 'Minimalist Studio White', 'Home Office Remote Work'],
+  'evening-routine': ['Spa Wellness Zen', 'Cozy Home Comfort', 'Luxury Hotel Suite', 'Baby Nursery Tender'],
+  'skincare': ['Spa Wellness Zen', 'Minimalist Studio White', 'Botanical Garden Natural', 'Luxury Hotel Suite'],
+  'makeup': ['Minimalist Studio White', 'Fashion Runway Backstage', 'Luxury Hotel Suite', 'Boutique Retail Chic'],
+  'haircare': ['Spa Wellness Zen', 'Fashion Runway Backstage', 'Parisian Café Classic', 'Luxury Hotel Suite'],
   
-  // Travail & productivité
-  'work': ['Modern Office Workspace', 'Urban Loft Industrial', 'Minimalist Studio White'],
-  'office': ['Modern Office Workspace', 'Minimalist Studio White', 'Urban Loft Industrial'],
+  // ========== TRAVAIL & PRODUCTIVITÉ ==========
+  'work': ['Modern Office Workspace', 'Home Office Remote Work', 'Coworking Space Collaborative', 'Corporate Boardroom Executive'],
+  'office': ['Modern Office Workspace', 'Corporate Boardroom Executive', 'Conference Center Professional', 'Business District Skyline'],
+  'meeting': ['Corporate Boardroom Executive', 'Conference Center Professional', 'Hotel Conference Room', 'Business Lunch Restaurant'],
+  'remote-work': ['Home Office Remote Work', 'Coworking Space Collaborative', 'Parisian Café Classic', 'Airport Business Lounge'],
+  'business-travel': ['Airport Business Lounge', 'Luxury Hotel Suite', 'Business District Skyline', 'Hotel Conference Room'],
   
-  // Loisirs & social
-  'party': ['Urban Loft Industrial', 'Luxury Hotel Suite', 'Street Urban Authentic'],
-  'celebration': ['Luxury Hotel Suite', 'Boutique Retail Chic', 'Modern Kitchen Bright'],
-  'relaxation': ['Spa Wellness Zen', 'Cozy Home Comfort', 'Botanical Garden Natural'],
+  // ========== LOISIRS & SOCIAL ==========
+  'party': ['Urban Loft Industrial', 'Luxury Hotel Suite', 'Birthday Party Celebration', 'Music Festival Outdoor'],
+  'celebration': ['Birthday Party Celebration', 'Wedding Reception Elegant', 'Award Ceremony Prestige', 'Luxury Hotel Suite'],
+  'relaxation': ['Spa Wellness Zen', 'Cozy Home Comfort', 'Beach Sunset Romance', 'Forest Enchanted Magical'],
+  'entertainment': ['Music Festival Outdoor', 'Theater Performance Arts', 'Sports Stadium Energy', 'Urban Loft Industrial'],
+  'dating': ['Parisian Café Classic', 'Beach Sunset Romance', 'Luxury Hotel Suite', 'Art Gallery Contemporary'],
+  'friends': ['Urban Loft Industrial', 'Parisian Café Classic', 'Music Festival Outdoor', 'Shared Apartment Roommates'],
   
-  // Shopping & retail
-  'shopping': ['Boutique Retail Chic', 'Street Urban Authentic', 'Urban Loft Industrial'],
+  // ========== SHOPPING & RETAIL ==========
+  'shopping': ['Boutique Retail Chic', 'Shopping Mall Atrium', 'Department Store Luxury', 'Street Urban Authentic'],
+  'grocery': ['Supermarket Aisle Bright', 'Market Stall Authentic', 'Convenience Store 24/7', 'Modern Kitchen Bright'],
+  'luxury-shopping': ['Department Store Luxury', 'Boutique Retail Chic', 'Duty-Free Airport Shop', 'Pop-Up Store Trendy'],
+  'online-shopping': ['Online Shopping Studio', 'Home Office Remote Work', 'Cozy Home Comfort', 'Minimalist Studio White'],
   
-  // Fallback
-  'default': ['Minimalist Studio White', 'Modern Kitchen Bright', 'Cozy Home Comfort']
+  // ========== VOYAGE & DÉCOUVERTE ==========
+  'travel': ['Airport Business Lounge', 'Luxury Hotel Suite', 'Beach Sunset Romance', 'Mountain Peak Achievement'],
+  'vacation': ['Beach Sunset Romance', 'Luxury Hotel Suite', 'Mountain Peak Achievement', 'Mediterranean Villa Luxury'],
+  'adventure': ['Mountain Peak Achievement', 'Forest Enchanted Magical', 'Desert Mirage Mysterious', 'African Savanna Wild'],
+  'city-break': ['New York Rooftop Urban', 'Parisian Café Classic', 'Tokyo Neon Cyberpunk', 'Business District Skyline'],
+  
+  // ========== FAMILLE & MAISON ==========
+  'family': ['Cozy Home Comfort', 'Family Kitchen Busy', 'Outdoor Nature Setting', 'Birthday Party Celebration'],
+  'parenting': ['Baby Nursery Tender', 'Family Kitchen Busy', 'Cozy Home Comfort', 'Outdoor Nature Setting'],
+  'home': ['Cozy Home Comfort', 'Modern Kitchen Bright', 'Minimalist Apartment Urban', 'Family Kitchen Busy'],
+  'kids': ['Teenager Bedroom Personal', 'Outdoor Nature Setting', 'Birthday Party Celebration', 'Student Dorm Campus'],
+  'pets': ['Pet-Friendly Home', 'Outdoor Nature Setting', 'Cozy Home Comfort', 'Botanical Garden Natural'],
+  
+  // ========== ÉDUCATION & APPRENTISSAGE ==========
+  'study': ['Student Dorm Campus', 'Modern Office Workspace', 'Home Office Remote Work', 'Coworking Space Collaborative'],
+  'learning': ['Student Dorm Campus', 'Modern Office Workspace', 'Corporate Training Center', 'Conference Center Professional'],
+  'education': ['Student Dorm Campus', 'Corporate Training Center', 'Conference Center Professional', 'Modern Office Workspace'],
+  
+  // ========== ÉVÉNEMENTS SPÉCIAUX ==========
+  'wedding': ['Wedding Reception Elegant', 'Luxury Hotel Suite', 'Beach Sunset Romance', 'Mediterranean Villa Luxury'],
+  'birthday': ['Birthday Party Celebration', 'Cozy Home Comfort', 'Urban Loft Industrial', 'Music Festival Outdoor'],
+  'holiday': ['Christmas Holiday Festive', 'Cozy Home Comfort', 'Family Kitchen Busy', 'Mountain Peak Achievement'],
+  'festival': ['Music Festival Outdoor', 'Brazilian Carnival Energy', 'Indian Bazaar Colorful', 'Street Urban Authentic'],
+  
+  // ========== SAISONS ==========
+  'summer': ['Beach Sunset Romance', 'Summer Beach Vacation', 'Outdoor Nature Setting', 'Music Festival Outdoor'],
+  'winter': ['Winter Sports Mountain', 'Christmas Holiday Festive', 'Cozy Home Comfort', 'Mountain Peak Achievement'],
+  'spring': ['Spring Renewal Fresh', 'Botanical Garden Natural', 'Outdoor Nature Setting', 'Forest Enchanted Magical'],
+  'autumn': ['Autumn Harvest Cozy', 'Rustic Countryside', 'Forest Enchanted Magical', 'Cozy Home Comfort'],
+  
+  // ========== CONTEXTES PROFESSIONNELS B2B ==========
+  'corporate': ['Corporate Boardroom Executive', 'Conference Center Professional', 'Business District Skyline', 'Hotel Conference Room'],
+  'conference': ['Conference Center Professional', 'Hotel Conference Room', 'Corporate Training Center', 'Trade Show Exhibition'],
+  'networking': ['Corporate Event Networking', 'Business Lunch Restaurant', 'Airport Business Lounge', 'Coworking Space Collaborative'],
+  'presentation': ['Corporate Boardroom Executive', 'Conference Center Professional', 'Modern Office Workspace', 'Trade Show Exhibition'],
+  
+  // ========== CONTEXTES CULTURELS ==========
+  'art': ['Art Gallery Contemporary', 'Gallery Opening Vernissage', 'Urban Loft Industrial', 'Fashion Runway Backstage'],
+  'culture': ['Japanese Temple Zen', 'Moroccan Souk Vibrant', 'Parisian Café Classic', 'Indian Bazaar Colorful'],
+  'music': ['Music Festival Outdoor', 'Recording Studio Creative', 'Theater Performance Arts', 'Brazilian Carnival Energy'],
+  'fashion': ['Fashion Runway Backstage', 'Boutique Retail Chic', 'Pop-Up Store Trendy', 'New York Rooftop Urban'],
+  
+  // ========== CONTEXTES TECHNOLOGIQUES ==========
+  'tech': ['Tech Startup Garage', 'Data Center Futuristic', 'Innovation Lab Cutting-Edge', 'Fintech Office Modern'],
+  'gaming': ['Gaming Room RGB', 'Streaming Studio Setup', 'TikTok House Gen-Z', 'Metaverse Digital World'],
+  'digital': ['Streaming Studio Setup', 'Online Shopping Studio', 'Metaverse Digital World', 'Tech Startup Garage'],
+  
+  // ========== CONTEXTES DURABLES ==========
+  'eco': ['Sustainable Eco-Home', 'Zero-Waste Lifestyle', 'Solar Punk Future', 'Biophilic Design Nature-Tech'],
+  'organic': ['Rustic Countryside', 'Market Stall Authentic', 'Botanical Garden Natural', 'Sustainable Eco-Home'],
+  'natural': ['Botanical Garden Natural', 'Forest Enchanted Magical', 'Outdoor Nature Setting', 'Beach Sunset Romance'],
+  
+  // ========== CONTEXTES ÉMOTIONNELS ==========
+  'romantic': ['Beach Sunset Romance', 'Parisian Café Classic', 'Luxury Hotel Suite', 'Valentine\'s Day Romantic'],
+  'nostalgic': ['Childhood Memory Nostalgic', 'Vintage Garage Heritage', 'Rustic Countryside', 'Parisian Café Classic'],
+  'dreamy': ['Dream Sequence Surreal', 'Cloud Kingdom Ethereal', 'Underwater Fantasy', 'Northern Lights Wonder'],
+  'energetic': ['Music Festival Outdoor', 'Sports Stadium Energy', 'Brazilian Carnival Energy', 'Tokyo Neon Cyberpunk'],
+  
+  // ========== FALLBACK ENRICHI ==========
+  'default': ['Minimalist Studio White', 'Modern Kitchen Bright', 'Cozy Home Comfort', 'Outdoor Nature Setting', 'Urban Loft Industrial', 'Boutique Retail Chic']
 };
 
 // ==========================================

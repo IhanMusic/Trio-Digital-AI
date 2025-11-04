@@ -327,9 +327,10 @@ class PostGenerationService {
         logger.info(`\nGénération du contenu pour ${platform} - Post #${i + 1} (${date.toLocaleDateString()})`);
         
         // 🎨 SÉLECTIONNER UN PRESET CRÉATIF UNIQUE POUR CE POST AVEC GPT-5
+        // ⚠️ IMPORTANT: Cette sélection est DANS la boucle pour garantir la diversité
         logger.info('🤖 Pré-filtrage des presets pour GPT-5...');
         
-        // Étape 1: Pré-filtrer les presets pertinents
+        // Étape 1: Pré-filtrer les presets pertinents (POUR CE POST SPÉCIFIQUE)
         const filteredPresets = getRelevantPresetsForGPT(
           brand,
           products.length > 0 ? products[0] : { category: 'general', usageOccasions: [] },
