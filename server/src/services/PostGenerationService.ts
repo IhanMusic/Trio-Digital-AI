@@ -235,17 +235,17 @@ class PostGenerationService {
       companyName: brand.name,
       sector: brand.sector,
       companyDescription: brand.description,
-      communicationStyle: brand.tone,
+      communicationStyle: calendar.communicationStyle || calendar.generationSettings?.tone || 'professionnel',
       businessType: undefined as string | undefined,
       companyStage: undefined as string | undefined,
       pricePositioning: undefined as string | undefined,
       targetAudience: {
-        demographic: brand.targetAudience,
+        demographic: [],
         professional: [],
         behavioral: [],
         geographic: [calendar.targetCountry]
       },
-      currentSocialNetworks: brand.socialMediaAccounts?.map(acc => acc.platform) || [],
+      currentSocialNetworks: calendar.socialMediaAccounts?.map(acc => acc.platform) || [],
       socialMediaGoals: brand.values || [],
       contentTypes: ['Photos', 'Vidéos', 'Stories'],
       uniqueSellingPoints: '',
@@ -274,7 +274,6 @@ class PostGenerationService {
         specifications: product.technicalSheet?.specifications || {},
         flavors: product.flavors || [],
         scents: product.scents || [],
-        variants: product.variants || [],
         technicalDetails: {
           ingredients: product.technicalSheet?.ingredients || [],
           nutritionalInfo: product.technicalSheet?.nutritionalInfo,
@@ -490,7 +489,6 @@ ${brand.colors?.primary ? `
 - Couleur Accent: ${brand.colors.accent || 'Non spécifié'}
 → Ces couleurs DOIVENT être dominantes dans le prompt d'image
 ` : '🎨 PALETTE: Créer une palette cohérente basée sur le secteur et le ton'}
-- Ton de Marque: ${brand.tone || 'À définir selon le secteur'}
 ${brand.values && brand.values.length > 0 ? `- Valeurs: ${brand.values.join(', ')}` : ''}
 
 ${briefData.businessType || briefData.companyStage || briefData.pricePositioning ? `
@@ -839,7 +837,6 @@ Produit ${index + 1}: ${product.name}
 - Bénéfices client: ${product.customerBenefits.join(', ')}
 ${product.flavors.length > 0 ? `- Arômes: ${product.flavors.join(', ')}` : ''}
 ${product.scents.length > 0 ? `- Parfums: ${product.scents.join(', ')}` : ''}
-${product.variants.length > 0 ? `- Variantes: ${product.variants.join(', ')}` : ''}
 ${product.technicalDetails.ingredients.length > 0 ? `- Ingrédients clés: ${product.technicalDetails.ingredients.join(', ')}` : ''}
 ${product.technicalDetails.highlights ? `- Points clés: ${product.technicalDetails.highlights}` : ''}
 ${product.technicalDetails.usage ? `- Utilisation: ${product.technicalDetails.usage}` : ''}
@@ -947,7 +944,7 @@ DIRECTIVES CRÉATIVES
           try {
             logger.info('=== Début de la génération d\'image avec Gemini ===');
             logger.info(`Génération d'image pour ${platform}`);
-            logger.info(`Marque: ${brand.name}, Secteur: ${brand.sector}, Style: ${brand.tone}`);
+            logger.info(`Marque: ${brand.name}, Secteur: ${brand.sector}`);
             
             // Récupérer le prompt d'image
             const prompt = parsedPost.imagePrompt;
@@ -1166,7 +1163,7 @@ ${brand.colors?.primary ? `- Color palette: ${brand.colors.primary}${brand.color
 ${productDetails && productDetails.customerBenefits && productDetails.customerBenefits.length > 0 ? `- Visual storytelling conveys: ${productDetails.customerBenefits.join(', ')}` : ''}
 
 ⚡ STYLE & MOOD:
-- Tone: ${brand.tone || 'Professional and aspirational'}
+- Tone: Professional and aspirational
 - Style: High-end commercial product video
 - Mood: ${productDetails?.category === 'food' ? 'Appetizing and fresh' : productDetails?.category === 'cosmetic' ? 'Luxurious and elegant' : 'Modern and premium'}
 - Quality: Cinema-grade, 1080p resolution, professional color grading

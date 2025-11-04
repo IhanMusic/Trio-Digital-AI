@@ -1,64 +1,35 @@
+// ============================================
+// TYPES OPTIMISÉS - ARCHITECTURE 3 NIVEAUX
+// ============================================
+
+// ============================================
+// NIVEAU 1: MARQUE (BriefData)
+// ADN de la marque - Informations stables
+// ============================================
+
 export interface BriefData {
+  // Identité de base
   companyName: string;
   email: string;
   sector: string;
   companyDescription: string;
-  businessType?: string;
-  companyStage?: string;
-  pricePositioning?: string;
-  // Propriétés à déplacer ou supprimer, mais qui doivent rester non-optionnelles pour éviter les erreurs
   logo: File | null;
-  brandGuidelines: File | null;
-  productPhotos: File[];
-  currentSocialNetworks: string[];
-  contentTypes: string[];
-  communicationStyle: string;
-  // Couleurs de marque
+  
+  // Identité visuelle
   colors?: {
     primary?: string;
     secondary?: string;
     accent?: string;
   };
-  targetAudience: {
-    demographic: string[];
-    professional: string[];
-    behavioral: string[];
-    geographic: string[];
-  };
-  socialMediaGoals: string[];
-  uniqueSellingPoints: string;
-  customerBenefits: string;
-  audienceNeeds: string;
-  productSolution: string;
-  competitors: string;
-  competitorStrategies: string[];
-  successMetrics: string[];
-  roiExpectations: string[];
-  specificThemes: string;
-  additionalInfo: string;
-  // Nouveaux champs
-  legalConstraints: {
-    regulations: string[];
-    compliance: string[];
-    disclaimers: string[];
-  };
-  budget: {
-    totalBudget: string;
-    allocation: Record<string, number>;
-    constraints: string[];
-  };
-  resources: {
-    internalTeam: string[];
-    externalPartners: string[];
-    tools: string[];
-  };
-  previousCampaigns: {
-    name: string;
-    period: string;
-    results: string[];
-    learnings: string[];
-  }[];
-  competitiveAnalysis: {
+  
+  // Positionnement stratégique
+  businessType?: string; // B2B, B2C, SaaS, E-commerce, Marketplace, Service, Manufacturing, etc.
+  companyStage?: string; // Startup, Scale-up, PME, ETI, Grande Entreprise, Multinationale
+  pricePositioning?: string; // Budget, Milieu de gamme, Premium, Luxury
+  
+  // Contexte concurrentiel
+  competitors: string; // Liste séparée par virgules
+  competitiveAnalysis?: {
     directCompetitors: {
       name: string;
       strengths: string[];
@@ -69,7 +40,146 @@ export interface BriefData {
     differentiators: string[];
     opportunities: string[];
   };
+  
+  // Historique marketing
+  previousCampaigns?: {
+    name: string;
+    period: string;
+    results: string[];
+    learnings: string[];
+  }[];
+  
+  // Contraintes légales sectorielles
+  legalConstraints?: {
+    regulations: string[];
+    compliance: string[];
+    disclaimers: string[];
+  };
+  
+  // Valeurs et mission (optionnel)
+  values?: string[];
+  mission?: string;
 }
+
+// ============================================
+// NIVEAU 2: PRODUIT (ProductData)
+// Spécificités du produit - Variable par produit
+// ============================================
+
+export interface ProductData {
+  // Informations de base
+  name: string;
+  description: string;
+  category: string;
+  brandId: string; // Référence à la marque
+  
+  // Images
+  mainImage: File | null;
+  mainImageUrl?: string;
+  galleryImages: File[];
+  galleryImageUrls: string[];
+  
+  // Caractéristiques spécifiques
+  flavors: string[]; // Arômes (pour alimentaire)
+  scents: string[]; // Parfums (pour cosmétique)
+  
+  // Proposition de valeur
+  uniqueSellingPoints: string[]; // 3-5 points forts
+  customerBenefits: string[]; // 3-5 bénéfices clients
+  
+  // Target audience SPÉCIFIQUE au produit
+  targetAudience: {
+    demographic: string[]; // Âge, genre
+    lifestyle: string[]; // Occasions d'usage, moments de vie
+    psychographic: string[]; // Valeurs, aspirations
+    geographic: string[]; // Zones géographiques
+  };
+  
+  // Occasions d'usage
+  usageOccasions: string[]; // Ex: "Petit-déjeuner", "Après sport", "Soin du soir"
+  
+  // SEO & Keywords
+  keywords: string[]; // 3-5 mots-clés principaux
+  
+  // Fiche technique
+  technicalSheet: {
+    ingredients: string[];
+    nutritionalInfo?: string;
+    usage?: string;
+    storage?: string;
+    highlights?: string;
+  };
+  
+  // Certifications & Labels
+  certifications: string[];
+  labels: string[];
+}
+
+// ============================================
+// NIVEAU 3: CALENDRIER (CalendarData)
+// Configuration tactique par campagne
+// ============================================
+
+export interface CalendarData {
+  // Informations de base
+  name: string;
+  brandId: string;
+  startDate: string;
+  endDate: string;
+  
+  // Localisation
+  country: string;
+  languages: string[]; // Plusieurs langues possibles
+  
+  // Sélection tactique
+  selectedProducts: string[]; // IDs des produits à mettre en avant
+  socialNetworks: string[]; // Réseaux pour cette campagne
+  
+  // Ton de communication pour cette campagne
+  communicationStyle: string; // Peut varier par campagne
+  
+  // Objectif de la campagne
+  campaignObjective?: 'awareness' | 'consideration' | 'conversion' | 'loyalty' | 'launch';
+  
+  // Fréquence de publication
+  frequency: 'daily' | 'twice_daily' | 'three_per_week' | 'weekly';
+  
+  // Mix de contenu (simplifié)
+  contentMix: {
+    imagePercentage: number; // 0-100
+    videoPercentage: number; // 0-100 (total doit = 100)
+  };
+  
+  // Heures de publication préférées par réseau
+  preferredTimes: {
+    facebook?: string[];
+    instagram?: string[];
+    twitter?: string[];
+    linkedin?: string[];
+    tiktok?: string[];
+  };
+  
+  // Configuration créative
+  creativeSettings: {
+    themes: string[]; // 3-5 thématiques prioritaires
+    visualStyles: string[]; // Styles visuels préférés
+    integrateProductImages: boolean; // Auto-intégrer photos produit
+  };
+  
+  // Dates clés spécifiques (optionnel)
+  customKeyDates?: {
+    name: string;
+    date: string;
+    description: string;
+  }[];
+  
+  // CTA préféré (optionnel)
+  preferredCTA?: string;
+}
+
+// ============================================
+// TYPES EXISTANTS (conservés pour compatibilité)
+// ============================================
 
 export interface AIError {
   code: string;

@@ -224,8 +224,8 @@ router.post('/:id/copy-social-accounts', authenticate, async (req: Request, res:
       });
     }
     
-    // Copier les comptes de réseaux sociaux
-    calendar.socialMediaAccounts = brand.socialMediaAccounts || [];
+    // Note: socialMediaAccounts sont maintenant gérés uniquement au niveau du calendrier
+    // Pas de copie depuis la marque nécessaire
     await calendar.save();
     
     res.json({

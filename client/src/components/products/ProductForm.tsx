@@ -2,40 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { config } from '../../config/env';
-import { TARGET_AUDIENCES } from '../../constants/formOptions';
-
-// Types pour le formulaire
-interface ProductFormData {
-  name: string;
-  description: string;
-  category: string;
-  flavors: string[];
-  scents: string[];
-  variants: string[];
-  uniqueSellingPoints: string[];
-  customerBenefits: string[];
-  certifications: string[];
-  labels: string[];
-  technicalSheet: {
-    ingredients: string[];
-    nutritionalInfo: string;
-    usage: string;
-    storage: string;
-    highlights: string;
-  };
-  logo?: File | null;
-  logoUrl?: string;
-  mainImage?: File | null;
-  mainImageUrl?: string;
-  galleryImages: File[];
-  galleryImageUrls: string[];
-  targetAudience: {
-    demographic: string[];
-    professional: string[];
-    behavioral: string[];
-    geographic: string[];
-  };
-}
+import { ProductData } from '../../types/brief';
 
 // Catégories de produits
 const PRODUCT_CATEGORIES = [
@@ -51,6 +18,64 @@ const PRODUCT_CATEGORIES = [
   'Autre'
 ];
 
+// Target audience pour les produits
+const TARGET_AUDIENCE_OPTIONS = {
+  demographic: [
+    '18-24 ans',
+    '25-34 ans',
+    '35-44 ans',
+    '45-54 ans',
+    '55+ ans',
+    'Hommes',
+    'Femmes',
+    'Familles'
+  ],
+  lifestyle: [
+    'Sportifs',
+    'Étudiants',
+    'Professionnels actifs',
+    'Parents',
+    'Retraités',
+    'Voyageurs',
+    'Créatifs',
+    'Eco-conscients'
+  ],
+  psychographic: [
+    'Soucieux de leur santé',
+    'Recherchent la qualité',
+    'Sensibles au prix',
+    'Innovateurs',
+    'Traditionalistes',
+    'Aventuriers',
+    'Pragmatiques'
+  ],
+  geographic: [
+    'Urbain',
+    'Périurbain',
+    'Rural',
+    'National',
+    'International'
+  ]
+};
+
+// Occasions d'usage courantes
+const COMMON_USAGE_OCCASIONS = [
+  'Petit-déjeuner',
+  'Déjeuner',
+  'Dîner',
+  'Collation',
+  'Avant sport',
+  'Après sport',
+  'Au travail',
+  'À la maison',
+  'En déplacement',
+  'Moment détente',
+  'Soin du matin',
+  'Soin du soir',
+  'Occasion spéciale',
+  'Quotidien'
+];
+
 const ProductForm: React.FC = () => {
   const navigate = useNavigate();
   const { brandId, productId } = useParams<{ brandId: string; productId: string }>();
@@ -60,28 +85,37 @@ const ProductForm: React.FC = () => {
   const [error, setError] = useState('');
   const [isEditMode] = useState(!!productId);
   
-  // État pour les champs dynamiques
+  // États pour les champs dynamiques
   const [newFlavor, setNewFlavor] = useState('');
   const [newScent, setNewScent] = useState('');
-  const [newVariant, setNewVariant] = useState('');
   const [newUSP, setNewUSP] = useState('');
   const [newBenefit, setNewBenefit] = useState('');
   const [newIngredient, setNewIngredient] = useState('');
   const [newCertification, setNewCertification] = useState('');
   const [newLabel, setNewLabel] = useState('');
+  const [newKeyword, setNewKeyword] = useState('');
   
-  // État principal du formulaire
-  const [formData, setFormData] = useState<ProductFormData>({
+  const [formData, setFormData] = useState<ProductData>({
     name: '',
     description: '',
     category: '',
+    brandId: brandId || '',
+    mainImage: null,
+    mainImageUrl: '',
+    galleryImages: [],
+    galleryImageUrls: [],
     flavors: [],
     scents: [],
-    variants: [],
     uniqueSellingPoints: [],
     customerBenefits: [],
-    certifications: [],
-    labels: [],
+    targetAudience: {
+      demographic: [],
+      lifestyle: [],
+      psychographic: [],
+      geographic: []
+    },
+    usageOccasions: [],
+    keywords: [],
     technicalSheet: {
       ingredients: [],
       nutritionalInfo: '',
@@ -89,18 +123,8 @@ const ProductForm: React.FC = () => {
       storage: '',
       highlights: ''
     },
-    logo: null,
-    logoUrl: '',
-    mainImage: null,
-    mainImageUrl: '',
-    galleryImages: [],
-    galleryImageUrls: [],
-    targetAudience: {
-      demographic: [],
-      professional: [],
-      behavioral: [],
-      geographic: []
-    }
+    certifications: [],
+    labels: []
   });
   
   // Charger les données du produit si on est en mode édition
@@ -126,18 +150,27 @@ const ProductForm: React.FC = () => {
           
           const product = result.data;
           
-          // Convertir les données du produit au format du formulaire
           setFormData({
             name: product.name || '',
             description: product.description || '',
             category: product.category || '',
+            brandId: product.brandId || brandId || '',
+            mainImage: null,
+            mainImageUrl: product.images?.main || '',
+            galleryImages: [],
+            galleryImageUrls: product.images?.gallery || [],
             flavors: product.flavors || [],
             scents: product.scents || [],
-            variants: product.variants || [],
             uniqueSellingPoints: product.uniqueSellingPoints || [],
             customerBenefits: product.customerBenefits || [],
-            certifications: product.certifications || [],
-            labels: product.labels || [],
+            targetAudience: product.targetAudience || {
+              demographic: [],
+              lifestyle: [],
+              psychographic: [],
+              geographic: []
+            },
+            usageOccasions: product.usageOccasions || [],
+            keywords: product.keywords || [],
             technicalSheet: {
               ingredients: product.technicalSheet?.ingredients || [],
               nutritionalInfo: product.technicalSheet?.nutritionalInfo || '',
@@ -145,18 +178,8 @@ const ProductForm: React.FC = () => {
               storage: product.technicalSheet?.storage || '',
               highlights: product.technicalSheet?.highlights || ''
             },
-            logoUrl: product.logo || '',
-            mainImageUrl: product.images?.main || '',
-            galleryImageUrls: product.images?.gallery || [],
-            logo: null,
-            mainImage: null,
-            galleryImages: [],
-            targetAudience: {
-              demographic: product.targetAudience?.demographic || [],
-              professional: product.targetAudience?.professional || [],
-              behavioral: product.targetAudience?.behavioral || [],
-              geographic: product.targetAudience?.geographic || []
-            }
+            certifications: product.certifications || [],
+            labels: product.labels || []
           });
         } catch (error) {
           setError(error instanceof Error ? error.message : 'Une erreur est survenue');
@@ -167,19 +190,17 @@ const ProductForm: React.FC = () => {
       
       fetchProductDetails();
     }
-  }, [productId, token]);
+  }, [productId, token, brandId]);
   
-  // Gestionnaires pour les champs simples
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
-    // Gestion des champs imbriqués
     if (name.includes('.')) {
       const [parent, child] = name.split('.');
       setFormData(prev => ({
         ...prev,
         [parent]: {
-          ...(prev[parent as keyof ProductFormData] as any),
+          ...(prev[parent as keyof ProductData] as any),
           [child]: value
         }
       }));
@@ -191,90 +212,73 @@ const ProductForm: React.FC = () => {
     }
   };
   
-  // Gestionnaire pour les fichiers
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: 'logo' | 'mainImage' | 'galleryImages') => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: 'mainImage' | 'galleryImages') => {
     const files = e.target.files;
     if (!files) return;
     
     if (field === 'galleryImages') {
-      // Pour les champs qui acceptent plusieurs fichiers
       setFormData(prev => ({
         ...prev,
         [field]: [...prev[field], ...Array.from(files)]
       }));
     } else {
-      // Pour les champs qui acceptent un seul fichier
       setFormData(prev => ({
         ...prev,
-        [field]: files[0]
+        [field]: files[0],
+        mainImageUrl: URL.createObjectURL(files[0])
       }));
-      
-      // Créer une URL pour prévisualiser l'image
-      if (field === 'logo') {
-        setFormData(prev => ({
-          ...prev,
-          logoUrl: URL.createObjectURL(files[0])
-        }));
-      } else if (field === 'mainImage') {
-        setFormData(prev => ({
-          ...prev,
-          mainImageUrl: URL.createObjectURL(files[0])
-        }));
-      }
     }
   };
   
-  // Gestionnaires pour les tableaux
-  const handleAddItem = (field: 'flavors' | 'scents' | 'variants' | 'uniqueSellingPoints' | 'customerBenefits' | 'certifications' | 'labels' | 'technicalSheet.ingredients', value: string) => {
+  const handleAddItem = (field: keyof Pick<ProductData, 'flavors' | 'scents' | 'uniqueSellingPoints' | 'customerBenefits' | 'usageOccasions' | 'keywords' | 'certifications' | 'labels'>, value: string) => {
     if (!value.trim()) return;
     
-    if (field.includes('.')) {
-      const [parent, child] = field.split('.');
-      setFormData(prev => ({
-        ...prev,
-        [parent]: {
-          ...(prev[parent as keyof ProductFormData] as any),
-          [child]: [...(prev[parent as keyof ProductFormData] as any)[child], value]
-        }
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [field]: [...(prev[field as keyof ProductFormData] as string[]), value]
-      }));
-    }
+    setFormData(prev => ({
+      ...prev,
+      [field]: [...(prev[field] as string[]), value]
+    }));
     
     // Réinitialiser le champ d'entrée
     if (field === 'flavors') setNewFlavor('');
     else if (field === 'scents') setNewScent('');
-    else if (field === 'variants') setNewVariant('');
     else if (field === 'uniqueSellingPoints') setNewUSP('');
     else if (field === 'customerBenefits') setNewBenefit('');
     else if (field === 'certifications') setNewCertification('');
     else if (field === 'labels') setNewLabel('');
-    else if (field === 'technicalSheet.ingredients') setNewIngredient('');
+    else if (field === 'keywords') setNewKeyword('');
   };
   
-  const handleRemoveItem = (field: 'flavors' | 'scents' | 'variants' | 'uniqueSellingPoints' | 'customerBenefits' | 'certifications' | 'labels' | 'technicalSheet.ingredients', index: number) => {
-    if (field.includes('.')) {
-      const [parent, child] = field.split('.');
-      setFormData(prev => ({
-        ...prev,
-        [parent]: {
-          ...(prev[parent as keyof ProductFormData] as any),
-          [child]: (prev[parent as keyof ProductFormData] as any)[child].filter((_: any, i: number) => i !== index)
-        }
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [field]: (prev[field as keyof ProductFormData] as string[]).filter((_, i) => i !== index)
-      }));
-    }
+  const handleAddIngredient = () => {
+    if (!newIngredient.trim()) return;
+    
+    setFormData(prev => ({
+      ...prev,
+      technicalSheet: {
+        ...prev.technicalSheet,
+        ingredients: [...prev.technicalSheet.ingredients, newIngredient]
+      }
+    }));
+    setNewIngredient('');
+  };
+  
+  const handleRemoveItem = (field: keyof Pick<ProductData, 'flavors' | 'scents' | 'uniqueSellingPoints' | 'customerBenefits' | 'usageOccasions' | 'keywords' | 'certifications' | 'labels'>, index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: (prev[field] as string[]).filter((_, i) => i !== index)
+    }));
+  };
+  
+  const handleRemoveIngredient = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      technicalSheet: {
+        ...prev.technicalSheet,
+        ingredients: prev.technicalSheet.ingredients.filter((_, i) => i !== index)
+      }
+    }));
   };
 
-  // Gestionnaire pour le public cible
-  const handleTargetAudienceChange = (category: keyof ProductFormData['targetAudience'], value: string) => {
+  const handleTargetAudienceChange = (category: keyof ProductData['targetAudience'], value: string) => {
     setFormData(prev => {
       const currentValues = prev.targetAudience[category];
       const newValues = currentValues.includes(value)
@@ -290,7 +294,6 @@ const ProductForm: React.FC = () => {
     });
   };
   
-  // Gestionnaire pour la soumission du formulaire
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -302,93 +305,60 @@ const ProductForm: React.FC = () => {
     try {
       setSaving(true);
       
-      // Créer un FormData pour envoyer les fichiers
       const formDataToSend = new FormData();
       
-      // Ajouter les champs simples
       formDataToSend.append('name', formData.name);
       formDataToSend.append('description', formData.description);
       formDataToSend.append('category', formData.category);
-      formDataToSend.append('brandId', brandId || '');
+      formDataToSend.append('brandId', formData.brandId);
       
-      // Ajouter les tableaux
-      formData.flavors.forEach((flavor, index) => {
-        formDataToSend.append(`flavors[${index}]`, flavor);
-      });
+      // Tableaux simples
+      formData.flavors.forEach((item, index) => formDataToSend.append(`flavors[${index}]`, item));
+      formData.scents.forEach((item, index) => formDataToSend.append(`scents[${index}]`, item));
+      formData.uniqueSellingPoints.forEach((item, index) => formDataToSend.append(`uniqueSellingPoints[${index}]`, item));
+      formData.customerBenefits.forEach((item, index) => formDataToSend.append(`customerBenefits[${index}]`, item));
+      formData.usageOccasions.forEach((item, index) => formDataToSend.append(`usageOccasions[${index}]`, item));
+      formData.keywords.forEach((item, index) => formDataToSend.append(`keywords[${index}]`, item));
+      formData.certifications.forEach((item, index) => formDataToSend.append(`certifications[${index}]`, item));
+      formData.labels.forEach((item, index) => formDataToSend.append(`labels[${index}]`, item));
       
-      formData.scents.forEach((scent, index) => {
-        formDataToSend.append(`scents[${index}]`, scent);
-      });
-      
-      formData.variants.forEach((variant, index) => {
-        formDataToSend.append(`variants[${index}]`, variant);
-      });
-      
-      formData.uniqueSellingPoints.forEach((usp, index) => {
-        formDataToSend.append(`uniqueSellingPoints[${index}]`, usp);
-      });
-      
-      formData.customerBenefits.forEach((benefit, index) => {
-        formDataToSend.append(`customerBenefits[${index}]`, benefit);
-      });
-      
-      // Ajouter certifications et labels
-      formData.certifications.forEach((cert, index) => {
-        formDataToSend.append(`certifications[${index}]`, cert);
-      });
-      
-      formData.labels.forEach((label, index) => {
-        formDataToSend.append(`labels[${index}]`, label);
-      });
-      
-      // Ajouter la fiche technique
-      formData.technicalSheet.ingredients.forEach((ingredient, index) => {
-        formDataToSend.append(`technicalSheet[ingredients][${index}]`, ingredient);
-      });
-      
-      formDataToSend.append('technicalSheet[nutritionalInfo]', formData.technicalSheet.nutritionalInfo);
-      formDataToSend.append('technicalSheet[usage]', formData.technicalSheet.usage);
-      formDataToSend.append('technicalSheet[storage]', formData.technicalSheet.storage);
-      formDataToSend.append('technicalSheet[highlights]', formData.technicalSheet.highlights);
-      
-      // Ajouter le public cible
+      // Target audience
       formData.targetAudience.demographic.forEach((item, index) => {
         formDataToSend.append(`targetAudience[demographic][${index}]`, item);
       });
-      
-      formData.targetAudience.professional.forEach((item, index) => {
-        formDataToSend.append(`targetAudience[professional][${index}]`, item);
+      formData.targetAudience.lifestyle.forEach((item, index) => {
+        formDataToSend.append(`targetAudience[lifestyle][${index}]`, item);
       });
-      
-      formData.targetAudience.behavioral.forEach((item, index) => {
-        formDataToSend.append(`targetAudience[behavioral][${index}]`, item);
+      formData.targetAudience.psychographic.forEach((item, index) => {
+        formDataToSend.append(`targetAudience[psychographic][${index}]`, item);
       });
-      
       formData.targetAudience.geographic.forEach((item, index) => {
         formDataToSend.append(`targetAudience[geographic][${index}]`, item);
       });
       
-      // Ajouter les fichiers
-      if (formData.logo) {
-        formDataToSend.append('logo', formData.logo);
-      }
+      // Fiche technique
+      formData.technicalSheet.ingredients.forEach((item, index) => {
+        formDataToSend.append(`technicalSheet[ingredients][${index}]`, item);
+      });
+      formDataToSend.append('technicalSheet[nutritionalInfo]', formData.technicalSheet.nutritionalInfo || '');
+      formDataToSend.append('technicalSheet[usage]', formData.technicalSheet.usage || '');
+      formDataToSend.append('technicalSheet[storage]', formData.technicalSheet.storage || '');
+      formDataToSend.append('technicalSheet[highlights]', formData.technicalSheet.highlights || '');
       
+      // Fichiers
       if (formData.mainImage) {
         formDataToSend.append('mainImage', formData.mainImage);
       }
-      
       formData.galleryImages.forEach((image, index) => {
         formDataToSend.append(`galleryImages[${index}]`, image);
       });
       
-      // Déterminer l'URL et la méthode
       const url = isEditMode
         ? `${config.apiUrl}/products/${productId}`
         : `${config.apiUrl}/products`;
       
       const method = isEditMode ? 'PUT' : 'POST';
       
-      // Envoyer la requête
       const response = await fetch(url, {
         method,
         headers: {
@@ -406,7 +376,6 @@ const ProductForm: React.FC = () => {
         throw new Error(result.message || `Erreur lors de la ${isEditMode ? 'mise à jour' : 'création'} du produit`);
       }
       
-      // Rediriger vers la page de détail de la marque
       navigate(`/brands/${brandId}`);
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Une erreur est survenue');
@@ -516,13 +485,22 @@ const ProductForm: React.FC = () => {
           </div>
         </section>
         
-        {/* Public cible */}
+        {/* Target Audience SPÉCIFIQUE au produit */}
         <section className="glass-panel p-6 rounded-xl">
           <h2 className="text-xl font-semibold text-white mb-6 border-b border-white/20 pb-2">
-            Public Cible
+            Public Cible du Produit
           </h2>
           
-          {Object.entries(TARGET_AUDIENCES).map(([category, options]) => (
+          <div className="flex items-start space-x-2 bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-6">
+            <svg className="w-5 h-5 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+            <p className="text-sm text-blue-300">
+              Définissez la cible spécifique de ce produit. Une marque peut avoir plusieurs produits avec des audiences différentes.
+            </p>
+          </div>
+          
+          {Object.entries(TARGET_AUDIENCE_OPTIONS).map(([category, options]) => (
             <div key={category} className="mb-6">
               <label className="block text-sm font-medium text-white/80 mb-4">
                 {category.charAt(0).toUpperCase() + category.slice(1)}
@@ -533,8 +511,8 @@ const ProductForm: React.FC = () => {
                     <input
                       type="checkbox"
                       className="form-checkbox h-5 w-5 text-pink-500"
-                      checked={formData.targetAudience[category as keyof ProductFormData['targetAudience']].includes(option)}
-                      onChange={() => handleTargetAudienceChange(category as keyof ProductFormData['targetAudience'], option)}
+                      checked={formData.targetAudience[category as keyof ProductData['targetAudience']].includes(option)}
+                      onChange={() => handleTargetAudienceChange(category as keyof ProductData['targetAudience'], option)}
                     />
                     <span className="text-white">{option}</span>
                   </label>
@@ -542,6 +520,169 @@ const ProductForm: React.FC = () => {
               </div>
             </div>
           ))}
+        </section>
+
+        {/* Occasions d'usage */}
+        <section className="glass-panel p-6 rounded-xl">
+          <h2 className="text-xl font-semibold text-white mb-6 border-b border-white/20 pb-2">
+            Occasions d'Usage
+          </h2>
+          
+          <p className="text-sm text-white/60 mb-4">
+            Sélectionnez les moments ou situations où ce produit est utilisé
+          </p>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {COMMON_USAGE_OCCASIONS.map((occasion) => (
+              <label key={occasion} className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-4 w-4 text-[#53dfb2]"
+                  checked={formData.usageOccasions.includes(occasion)}
+                  onChange={() => {
+                    if (formData.usageOccasions.includes(occasion)) {
+                      setFormData(prev => ({
+                        ...prev,
+                        usageOccasions: prev.usageOccasions.filter(o => o !== occasion)
+                      }));
+                    } else {
+                      setFormData(prev => ({
+                        ...prev,
+                        usageOccasions: [...prev.usageOccasions, occasion]
+                      }));
+                    }
+                  }}
+                />
+                <span className="text-white text-sm">{occasion}</span>
+              </label>
+            ))}
+          </div>
+        </section>
+        
+        {/* Proposition de valeur */}
+        <section className="glass-panel p-6 rounded-xl">
+          <h2 className="text-xl font-semibold text-white mb-6 border-b border-white/20 pb-2">
+            Proposition de Valeur
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* USPs */}
+            <div>
+              <label className="block text-sm font-medium text-white/80 mb-2">
+                Points Forts (USPs)
+              </label>
+              <div className="flex items-center space-x-2 mb-2">
+                <input
+                  type="text"
+                  className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#53dfb2] focus:border-transparent"
+                  value={newUSP}
+                  onChange={(e) => setNewUSP(e.target.value)}
+                  placeholder="Ex: 100% naturel"
+                />
+                <button
+                  type="button"
+                  className="glass-button px-3 py-2"
+                  onClick={() => handleAddItem('uniqueSellingPoints', newUSP)}
+                >
+                  +
+                </button>
+              </div>
+              <div className="space-y-2 max-h-40 overflow-y-auto">
+                {formData.uniqueSellingPoints.map((usp, index) => (
+                  <div key={index} className="flex items-center justify-between bg-white/10 px-3 py-2 rounded-lg">
+                    <span className="text-white/80">{usp}</span>
+                    <button
+                      type="button"
+                      className="text-red-400 hover:text-red-300"
+                      onClick={() => handleRemoveItem('uniqueSellingPoints', index)}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Bénéfices clients */}
+            <div>
+              <label className="block text-sm font-medium text-white/80 mb-2">
+                Bénéfices Clients
+              </label>
+              <div className="flex items-center space-x-2 mb-2">
+                <input
+                  type="text"
+                  className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#53dfb2] focus:border-transparent"
+                  value={newBenefit}
+                  onChange={(e) => setNewBenefit(e.target.value)}
+                  placeholder="Ex: Améliore l'énergie"
+                />
+                <button
+                  type="button"
+                  className="glass-button px-3 py-2"
+                  onClick={() => handleAddItem('customerBenefits', newBenefit)}
+                >
+                  +
+                </button>
+              </div>
+              <div className="space-y-2 max-h-40 overflow-y-auto">
+                {formData.customerBenefits.map((benefit, index) => (
+                  <div key={index} className="flex items-center justify-between bg-white/10 px-3 py-2 rounded-lg">
+                    <span className="text-white/80">{benefit}</span>
+                    <button
+                      type="button"
+                      className="text-red-400 hover:text-red-300"
+                      onClick={() => handleRemoveItem('customerBenefits', index)}
+                    >
+                      &times;
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* SEO & Keywords */}
+        <section className="glass-panel p-6 rounded-xl">
+          <h2 className="text-xl font-semibold text-white mb-6 border-b border-white/20 pb-2">
+            SEO & Mots-clés
+          </h2>
+          
+          <div>
+            <label className="block text-sm font-medium text-white/80 mb-2">
+              Mots-clés principaux (3-5 recommandés)
+            </label>
+            <div className="flex items-center space-x-2 mb-2">
+              <input
+                type="text"
+                className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#53dfb2] focus:border-transparent"
+                value={newKeyword}
+                onChange={(e) => setNewKeyword(e.target.value)}
+                placeholder="Ex: bio, sans gluten, protéines"
+              />
+              <button
+                type="button"
+                className="glass-button px-3 py-2"
+                onClick={() => handleAddItem('keywords', newKeyword)}
+              >
+                +
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {formData.keywords.map((keyword, index) => (
+                <span key={index} className="inline-flex items-center bg-[#53dfb2]/20 text-[#53dfb2] px-3 py-1 rounded-full text-sm">
+                  {keyword}
+                  <button
+                    type="button"
+                    className="ml-2 hover:text-red-400"
+                    onClick={() => handleRemoveItem('keywords', index)}
+                  >
+                    &times;
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
         </section>
         
         {/* Caractéristiques */}

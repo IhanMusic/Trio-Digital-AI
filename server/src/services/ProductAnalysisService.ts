@@ -18,8 +18,6 @@ export interface ProductFeatures {
   };
   shape: 'rectangle' | 'ellipse' | 'irregular';
   colors: {
-    primary?: string;
-    secondary?: string;
     dominant?: string[];
   };
   texture?: string;
@@ -77,13 +75,9 @@ class ProductAnalysisService {
       description: product.description,
       category: product.category,
       
-      // Caractéristiques visuelles
-      colors: product.colors || {},
-      
       // Caractéristiques spécifiques
       flavors: product.flavors || [],
       scents: product.scents || [],
-      variants: product.variants || [],
       
       // Points forts et bénéfices
       uniqueSellingPoints: product.uniqueSellingPoints || [],
@@ -101,8 +95,7 @@ class ProductAnalysisService {
       
       // Images disponibles
       hasMainImage: !!product.images?.main,
-      hasGallery: Array.isArray(product.images?.gallery) && product.images.gallery.length > 0,
-      hasPackagingImages: Array.isArray(product.images?.packaging) && product.images.packaging.length > 0
+      hasGallery: Array.isArray(product.images?.gallery) && product.images.gallery.length > 0
     };
   }
   
@@ -154,10 +147,8 @@ INFORMATIONS PRODUIT:
 - Nom: ${product.name}
 - Description: ${product.description}
 - Catégorie: ${product.category}
-- Couleurs: ${JSON.stringify(product.colors || {})}
 ${product.flavors?.length ? `- Arômes/Saveurs: ${product.flavors.join(', ')}` : ''}
 ${product.scents?.length ? `- Parfums/Odeurs: ${product.scents.join(', ')}` : ''}
-${product.variants?.length ? `- Variantes: ${product.variants.join(', ')}` : ''}
 ${product.uniqueSellingPoints?.length ? `- Points forts: ${product.uniqueSellingPoints.join(', ')}` : ''}
 ${product.customerBenefits?.length ? `- Bénéfices client: ${product.customerBenefits.join(', ')}` : ''}
 
@@ -206,10 +197,8 @@ Générez une description détaillée en anglais qui capture tous les aspects vi
   ): string {
     logger.info(`Génération d'une analyse de base pour ${product.name}`);
     
-    // Construire une description de base
-    const colorInfo = product.colors?.primary 
-      ? `with ${product.colors.primary} as primary color` 
-      : '';
+    // Construire une description de base (les couleurs sont maintenant au niveau de la marque)
+    const colorInfo = '';
     
     const categoryInfo = product.category 
       ? `in the ${product.category} category` 
@@ -314,8 +303,6 @@ ${product.description}`;
         },
         shape,
         colors: {
-          primary: product?.colors?.primary,
-          secondary: product?.colors?.secondary,
           dominant: dominantColors
         },
         texture: 'smooth', // Valeur par défaut
@@ -340,8 +327,6 @@ ${product.description}`;
         },
         shape: 'rectangle',
         colors: {
-          primary: product?.colors?.primary,
-          secondary: product?.colors?.secondary,
           dominant: []
         }
       };
@@ -360,14 +345,8 @@ ${product.description}`;
   ): string {
     logger.info(`Génération d'un prompt détaillé pour l'intégration du produit: ${features.name}`);
     
-    // Construire la description des couleurs
+    // Construire la description des couleurs (basé sur les couleurs dominantes extraites de l'image)
     let colorDescription = '';
-    if (features.colors.primary) {
-      colorDescription += `primary color ${features.colors.primary}`;
-    }
-    if (features.colors.secondary) {
-      colorDescription += colorDescription ? `, secondary color ${features.colors.secondary}` : `secondary color ${features.colors.secondary}`;
-    }
     if (features.colors.dominant && features.colors.dominant.length > 0) {
       colorDescription += colorDescription ? `, with dominant colors ${features.colors.dominant.join(', ')}` : `with dominant colors ${features.colors.dominant.join(', ')}`;
     }

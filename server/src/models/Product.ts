@@ -8,23 +8,27 @@ export interface IProduct extends Document {
   description: string;
   category: string;
   
-  // Identité visuelle du produit
-  logo?: string;
-  brandGuidelines?: string;
-  colors?: {
-    primary: string;
-    secondary?: string;
-    accent?: string;
+  // Caractéristiques spécifiques
+  flavors: string[]; // Arômes (pour alimentaire)
+  scents: string[]; // Parfums (pour cosmétique)
+  
+  // Proposition de valeur
+  uniqueSellingPoints: string[]; // 3-5 points forts
+  customerBenefits: string[]; // 3-5 bénéfices clients
+  
+  // Target audience SPÉCIFIQUE au produit
+  targetAudience: {
+    demographic: string[]; // Âge, genre
+    lifestyle: string[]; // Occasions d'usage, moments de vie
+    psychographic: string[]; // Valeurs, aspirations
+    geographic: string[]; // Zones géographiques
   };
   
-  // Caractéristiques spécifiques
-  flavors: string[]; // Arômes
-  scents: string[]; // Parfums
-  variants: string[]; // Autres variantes
+  // Occasions d'usage
+  usageOccasions: string[]; // Ex: "Petit-déjeuner", "Après sport", "Soin du soir"
   
-  // Points forts et bénéfices
-  uniqueSellingPoints: string[];
-  customerBenefits: string[];
+  // SEO & Keywords
+  keywords: string[]; // 3-5 mots-clés principaux
   
   // Fiche technique
   technicalSheet: {
@@ -33,14 +37,17 @@ export interface IProduct extends Document {
     usage?: string;
     storage?: string;
     highlights?: string;
-    specifications?: Record<string, string>; // Dimensions, poids, etc.
+    specifications?: Record<string, string>;
   };
+  
+  // Certifications & Labels
+  certifications: string[];
+  labels: string[];
   
   // Images
   images: {
     main: string; // URL de l'image principale
     gallery: string[]; // URLs des images supplémentaires
-    packaging?: string[]; // Images du packaging
   };
   
   createdBy: IUser['_id'];
@@ -70,25 +77,6 @@ const ProductSchema: Schema = new Schema({
     trim: true
   },
   
-  // Identité visuelle du produit
-  logo: {
-    type: String
-  },
-  brandGuidelines: {
-    type: String
-  },
-  colors: {
-    primary: {
-      type: String
-    },
-    secondary: {
-      type: String
-    },
-    accent: {
-      type: String
-    }
-  },
-  
   // Caractéristiques spécifiques
   flavors: [{
     type: String,
@@ -98,17 +86,45 @@ const ProductSchema: Schema = new Schema({
     type: String,
     trim: true
   }],
-  variants: [{
-    type: String,
-    trim: true
-  }],
   
-  // Points forts et bénéfices
+  // Proposition de valeur
   uniqueSellingPoints: [{
     type: String,
     trim: true
   }],
   customerBenefits: [{
+    type: String,
+    trim: true
+  }],
+  
+  // Target audience SPÉCIFIQUE au produit
+  targetAudience: {
+    demographic: [{
+      type: String,
+      trim: true
+    }],
+    lifestyle: [{
+      type: String,
+      trim: true
+    }],
+    psychographic: [{
+      type: String,
+      trim: true
+    }],
+    geographic: [{
+      type: String,
+      trim: true
+    }]
+  },
+  
+  // Occasions d'usage
+  usageOccasions: [{
+    type: String,
+    trim: true
+  }],
+  
+  // SEO & Keywords
+  keywords: [{
     type: String,
     trim: true
   }],
@@ -141,15 +157,22 @@ const ProductSchema: Schema = new Schema({
     }
   },
   
+  // Certifications & Labels
+  certifications: [{
+    type: String,
+    trim: true
+  }],
+  labels: [{
+    type: String,
+    trim: true
+  }],
+  
   // Images
   images: {
     main: {
       type: String
     },
     gallery: [{
-      type: String
-    }],
-    packaging: [{
       type: String
     }]
   },

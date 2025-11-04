@@ -9,32 +9,34 @@ export interface ICalendar extends Document {
   endDate: Date;
   createdBy: IUser['_id'];
   status: 'draft' | 'active' | 'completed' | 'archived';
+  
+  // Localisation
   targetCountry: string;
   targetLanguages: string[];
+  
+  // Sélection tactique
   selectedProducts: mongoose.Types.ObjectId[];
   socialMediaAccounts: {
     platform: string;
     handle: string;
   }[];
-  ethnicDetails: {
-    languages: string[];
-    culturalEvents: {
-      name: string;
-      date: Date;
-      description: string;
-    }[];
-    localHolidays: {
-      name: string;
-      date: Date;
-      description: string;
-    }[];
-    demographics: {
-      languages: string[];
-      religions: string[];
-      customs: string[];
-    };
-  };
+  
+  // Ton de communication pour cette campagne
+  communicationStyle: string;
+  
+  // Objectif de la campagne
+  campaignObjective?: 'awareness' | 'consideration' | 'conversion' | 'loyalty' | 'launch';
+  
+  // Fréquence de publication
   frequency: 'daily' | 'twice_daily' | 'three_per_week' | 'weekly';
+  
+  // Mix de contenu (simplifié)
+  contentMix: {
+    imagePercentage: number;
+    videoPercentage: number;
+  };
+  
+  // Heures de publication préférées par réseau
   contentPlan: {
     frequency: {
       facebook?: number;
@@ -55,6 +57,8 @@ export interface ICalendar extends Document {
       percentage: number;
     }>;
   };
+  
+  // Configuration créative
   generationSettings: {
     tone: string;
     themes: string[];
@@ -66,26 +70,17 @@ export interface ICalendar extends Document {
     imageStyle: string[];
     integrateProductImages?: boolean;
   };
-  approvalWorkflow: {
-    enabled: boolean;
-    approvers: {
-      userId: IUser['_id'];
-      role: string;
-      order: number;
-    }[];
-  };
-  metrics: {
-    targetReach: number;
-    targetEngagement: number;
-    targetConversions: number;
-  };
-  budget: {
-    total: number;
-    allocation: {
-      organic: number;
-      paid: number;
-    };
-  };
+  
+  // Dates clés spécifiques (optionnel)
+  customKeyDates?: {
+    name: string;
+    date: Date;
+    description: string;
+  }[];
+  
+  // CTA préféré (optionnel)
+  preferredCTA?: string;
+  
   notes: string;
   createdAt: Date;
   updatedAt: Date;
@@ -120,6 +115,8 @@ const CalendarSchema: Schema = new Schema({
     enum: ['draft', 'active', 'completed', 'archived'],
     default: 'draft'
   },
+  
+  // Localisation
   targetCountry: {
     type: String,
     required: [true, 'Le pays cible est requis']
@@ -134,6 +131,12 @@ const CalendarSchema: Schema = new Schema({
       message: 'Au moins une langue cible est requise'
     }
   },
+  
+  // Sélection tactique
+  selectedProducts: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Product'
+  }],
   socialMediaAccounts: [{
     platform: {
       type: String,
@@ -146,30 +149,45 @@ const CalendarSchema: Schema = new Schema({
       trim: true
     }
   }],
-  ethnicDetails: {
-    languages: [String],
-    culturalEvents: [{
-      name: String,
-      date: Date,
-      description: String
-    }],
-    localHolidays: [{
-      name: String,
-      date: Date,
-      description: String
-    }],
-    demographics: {
-      languages: [String],
-      religions: [String],
-      customs: [String]
-    }
+  
+  // Ton de communication pour cette campagne
+  communicationStyle: {
+    type: String,
+    trim: true
   },
+  
+  // Objectif de la campagne
+  campaignObjective: {
+    type: String,
+    enum: ['awareness', 'consideration', 'conversion', 'loyalty', 'launch'],
+    trim: true
+  },
+  
+  // Fréquence de publication
   frequency: {
     type: String,
     enum: ['daily', 'twice_daily', 'three_per_week', 'weekly'],
     required: [true, 'La fréquence de publication est requise'],
     default: 'daily'
   },
+  
+  // Mix de contenu (simplifié)
+  contentMix: {
+    imagePercentage: {
+      type: Number,
+      default: 70,
+      min: 0,
+      max: 100
+    },
+    videoPercentage: {
+      type: Number,
+      default: 30,
+      min: 0,
+      max: 100
+    }
+  },
+  
+  // Heures de publication (conservé pour compatibilité)
   contentPlan: {
     frequency: {
       facebook: Number,
@@ -199,6 +217,8 @@ const CalendarSchema: Schema = new Schema({
       }
     }]
   },
+  
+  // Configuration créative
   generationSettings: {
     tone: String,
     themes: [String],
@@ -213,37 +233,29 @@ const CalendarSchema: Schema = new Schema({
       default: false
     }
   },
-  approvalWorkflow: {
-    enabled: {
-      type: Boolean,
-      default: false
+  
+  // Dates clés spécifiques
+  customKeyDates: [{
+    name: {
+      type: String,
+      trim: true
     },
-    approvers: [{
-      userId: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-      },
-      role: String,
-      order: Number
-    }]
-  },
-  metrics: {
-    targetReach: Number,
-    targetEngagement: Number,
-    targetConversions: Number
-  },
-  budget: {
-    total: Number,
-    allocation: {
-      organic: Number,
-      paid: Number
+    date: {
+      type: Date
+    },
+    description: {
+      type: String,
+      trim: true
     }
+  }],
+  
+  // CTA préféré
+  preferredCTA: {
+    type: String,
+    trim: true
   },
-  notes: String,
-  selectedProducts: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Product'
-  }]
+  
+  notes: String
 }, {
   timestamps: true
 });

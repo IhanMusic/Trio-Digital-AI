@@ -11,19 +11,51 @@ export interface IBrand extends Document {
   lastGenerationDate: Date;
   contentGenerated: number;
   team: mongoose.Types.ObjectId[];
+  
+  // Identité visuelle
   colors?: {
     primary: string;
     secondary?: string;
     accent?: string;
   };
-  tone?: string;
-  targetAudience?: string[];
+  
+  // Positionnement stratégique
+  businessType?: string;
+  companyStage?: string;
+  pricePositioning?: string;
+  
+  // Contexte concurrentiel
   competitors?: string[];
-  values?: string[];
-  socialMediaAccounts?: {
-    platform: string;
-    handle: string;
+  competitiveAnalysis?: {
+    directCompetitors: {
+      name: string;
+      strengths: string[];
+      weaknesses: string[];
+      strategies: string[];
+    }[];
+    marketPosition: string;
+    differentiators: string[];
+    opportunities: string[];
+  };
+  
+  // Historique marketing
+  previousCampaigns?: {
+    name: string;
+    period: string;
+    results: string[];
+    learnings: string[];
   }[];
+  
+  // Contraintes légales
+  legalConstraints?: {
+    regulations: string[];
+    compliance: string[];
+    disclaimers: string[];
+  };
+  
+  // Valeurs et mission
+  values?: string[];
+  mission?: string;
 }
 
 const BrandSchema: Schema = new Schema({
@@ -49,6 +81,8 @@ const BrandSchema: Schema = new Schema({
   logo: {
     type: String
   },
+  
+  // Identité visuelle
   colors: {
     primary: {
       type: String
@@ -60,34 +94,105 @@ const BrandSchema: Schema = new Schema({
       type: String
     }
   },
-  tone: {
+  
+  // Positionnement stratégique
+  businessType: {
     type: String,
     trim: true
   },
-  targetAudience: [{
+  companyStage: {
     type: String,
     trim: true
-  }],
+  },
+  pricePositioning: {
+    type: String,
+    trim: true
+  },
+  
+  // Contexte concurrentiel
   competitors: [{
     type: String,
     trim: true
   }],
+  competitiveAnalysis: {
+    directCompetitors: [{
+      name: {
+        type: String,
+        trim: true
+      },
+      strengths: [{
+        type: String,
+        trim: true
+      }],
+      weaknesses: [{
+        type: String,
+        trim: true
+      }],
+      strategies: [{
+        type: String,
+        trim: true
+      }]
+    }],
+    marketPosition: {
+      type: String,
+      trim: true
+    },
+    differentiators: [{
+      type: String,
+      trim: true
+    }],
+    opportunities: [{
+      type: String,
+      trim: true
+    }]
+  },
+  
+  // Historique marketing
+  previousCampaigns: [{
+    name: {
+      type: String,
+      trim: true
+    },
+    period: {
+      type: String,
+      trim: true
+    },
+    results: [{
+      type: String,
+      trim: true
+    }],
+    learnings: [{
+      type: String,
+      trim: true
+    }]
+  }],
+  
+  // Contraintes légales
+  legalConstraints: {
+    regulations: [{
+      type: String,
+      trim: true
+    }],
+    compliance: [{
+      type: String,
+      trim: true
+    }],
+    disclaimers: [{
+      type: String,
+      trim: true
+    }]
+  },
+  
+  // Valeurs et mission
   values: [{
     type: String,
     trim: true
   }],
-  socialMediaAccounts: [{
-    platform: {
-      type: String,
-      required: true,
-      trim: true
-    },
-    handle: {
-      type: String,
-      required: true,
-      trim: true
-    }
-  }],
+  mission: {
+    type: String,
+    trim: true
+  },
+  
   lastGenerationDate: {
     type: Date,
     default: new Date(),

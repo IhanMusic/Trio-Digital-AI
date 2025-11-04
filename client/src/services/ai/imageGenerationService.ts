@@ -238,7 +238,7 @@ export class ImageGenerationService {
     };
   }
 
-  private static getCompositionPrompt(brief: BriefData, useAdvertisingStyle: boolean = false): string {
+  private static getCompositionPrompt(brief: BriefData, purpose: string = 'social', useAdvertisingStyle: boolean = false): string {
     if (useAdvertisingStyle) {
       const adStyle = this.determineAdvertisingStyle(brief);
       const adRules = COMPOSITION_RULES.filter(rule => rule.type === 'advertising');
@@ -268,8 +268,8 @@ export class ImageGenerationService {
       return rule?.prompt || adRules[0].prompt;
     }
     
-    // Comportement standard
-    const rule = brief.contentTypes.includes('Product') 
+    // Comportement standard basé sur le purpose
+    const rule = purpose === 'product'
       ? COMPOSITION_RULES[1] // Point focal pour les produits
       : COMPOSITION_RULES[0]; // Règle des tiers pour le reste
     
@@ -309,7 +309,7 @@ export class ImageGenerationService {
     // Comportement standard
     const setup = timeOfDay 
       ? LIGHTING_SETUPS.find(s => s.timeOfDay === timeOfDay && s.type === 'standard')
-      : brief.communicationStyle.toLowerCase().includes('premium')
+      : brief.pricePositioning?.toLowerCase().includes('luxury') || brief.pricePositioning?.toLowerCase().includes('premium')
         ? LIGHTING_SETUPS[0]
         : LIGHTING_SETUPS[1];
     
@@ -351,7 +351,9 @@ export class ImageGenerationService {
   }
   
   private static determineAdvertisingStyle(brief: BriefData): AdvertisingStyle {
-    const style = brief.communicationStyle.toLowerCase();
+    // communicationStyle n'est plus dans BriefData, utiliser une valeur par défaut
+    // ou le recevoir comme paramètre
+    const style = brief.businessType?.toLowerCase() || '';
     const sector = brief.sector.toLowerCase();
     
     // Déterminer le style en fonction du style de communication
@@ -414,7 +416,7 @@ export class ImageGenerationService {
     }
     
     // Comportement standard
-    if (brief.communicationStyle.toLowerCase().includes('premium')) {
+    if (brief.pricePositioning?.toLowerCase().includes('premium') || brief.pricePositioning?.toLowerCase().includes('luxury')) {
       return 'premium';
     }
 
@@ -554,23 +556,17 @@ export class ImageGenerationService {
       generationId = `${briefData.companyName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`
     } = options;
 
-    // TOUJOURS utiliser les photos produit si elles sont disponibles
-    // Gemini intègrera intelligemment le produit dans la scène générée
+    // Photos produit ne sont plus dans brief mais seraient passées séparément si nécessaire
     let productOptions;
-    if (briefData.productPhotos.length > 0) {
-      const base64Image = await this.fileToBase64(briefData.productPhotos[0]);
-      productOptions = {
-        image: base64Image
-      };
-      console.log('Photo produit détectée et ajoutée comme référence pour Gemini');
-    }
+    // Cette fonctionnalité devrait être adaptée pour recevoir les images produit
+    // depuis le backend ou comme paramètre séparé
 
     if (attempt > MAX_ATTEMPTS) {
       throw new Error(`Nombre maximum de tentatives (${MAX_ATTEMPTS}) atteint`);
     }
 
     // Construire le prompt enrichi
-    const compositionPrompt = this.getCompositionPrompt(briefData, useAdvertisingStyle);
+    const compositionPrompt = this.getCompositionPrompt(briefData, purpose, useAdvertisingStyle);
     const lightingPrompt = this.getLightingPrompt(briefData, timeOfDay, useAdvertisingStyle);
     const colorPrompt = this.getColorPrompt(briefData, useAdvertisingStyle);
     const stylePreset = this.determineStylePreset(briefData, purpose, useAdvertisingStyle);
@@ -580,8 +576,8 @@ export class ImageGenerationService {
     const basePrompt = `${description}, ${compositionPrompt}, ${lightingPrompt}, ${colorPrompt}, ${styleModifiers}`;
     const sectorPrompt = generateSectorPrompt(briefData, basePrompt);
 
-    // Construire le negative prompt
-    const negativePrompt = getNegativePromptWithStyle(briefData.sector as SectorType, briefData.communicationStyle);
+    // Construire le negative prompt (communicationStyle n'existe plus dans brief, utiliser businessType)
+    const negativePrompt = getNegativePromptWithStyle(briefData.sector as SectorType, briefData.businessType || 'B2C');
 
     // Déterminer le style publicitaire à utiliser
     const adStyle = this.determineAdvertisingStyle(briefData);
@@ -605,7 +601,7 @@ export class ImageGenerationService {
         purpose,
         timeOfDay,
         sector: briefData.sector,
-        style: briefData.communicationStyle
+        style: briefData.businessType || 'B2C'
       }
     );
 
@@ -669,7 +665,7 @@ export class ImageGenerationService {
           purpose,
           timeOfDay,
           sector: briefData.sector,
-          style: briefData.communicationStyle,
+          style: briefData.businessType || 'B2C',
           quality: result.quality
         }
       );
