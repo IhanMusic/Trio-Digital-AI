@@ -1,152 +1,285 @@
 import { BriefData } from '../../types/brief';
 
+/**
+ * PROMPT ANALYSE STRATÉGIQUE NIVEAU CANNES LIONS
+ * Architecture 3 niveaux: Brand (BriefData) + Product + Calendar
+ * Note: Ce prompt utilise uniquement les données de MARQUE
+ * Les données Produit et Calendrier seront intégrées par les services appropriés
+ */
 export const generateStrategicAnalysis = (briefData: BriefData): string => {
-  return `En tant que stratège en marketing digital pour ${briefData.companyName}, analysez ces informations et créez une stratégie de contenu cohérente :
+  // Construction du contexte concurrentiel
+  const competitiveSection = briefData.competitiveAnalysis ? `
+═══════════════════════════════════════
+ANALYSE CONCURRENTIELLE APPROFONDIE
+═══════════════════════════════════════
 
-CRITÈRES DE VALIDATION OBLIGATOIRES :
-- Chaque section doit être clairement identifiée et complète
-- Le positionnement recommandé doit faire au minimum 50 caractères
-- Chaque force et opportunité doit faire au minimum 30 caractères
-- Les recommandations doivent inclure au minimum 3 éléments par catégorie
-- Toutes les contraintes légales doivent être respectées et mentionnées
+POSITION MARCHÉ ACTUELLE:
+${briefData.competitiveAnalysis.marketPosition}
 
-CONTEXTE MARQUE
-${briefData.companyName} (${briefData.sector})
-Description : ${briefData.companyDescription}
-USP : ${briefData.uniqueSellingPoints}
-Bénéfices clients : ${briefData.customerBenefits}
+DIFFÉRENCIATEURS STRATÉGIQUES:
+${briefData.competitiveAnalysis.differentiators.map((d, i) => `${i + 1}. ${d}`).join('\n')}
 
-CIBLE & BESOINS
-Démographique : ${briefData.targetAudience.demographic.join(', ')}
-Professionnel : ${briefData.targetAudience.professional.join(', ')}
-Comportemental : ${briefData.targetAudience.behavioral.join(', ')}
-Géographique : ${briefData.targetAudience.geographic.join(', ')}
-Besoins identifiés : ${briefData.audienceNeeds}
+OPPORTUNITÉS MARCHÉ:
+${briefData.competitiveAnalysis.opportunities.map((o, i) => `${i + 1}. ${o}`).join('\n')}
 
-OBJECTIFS & CANAUX
-Réseaux actifs : ${briefData.currentSocialNetworks.join(', ')}
-Objectifs : ${briefData.socialMediaGoals.join(', ')}
-KPIs : ${briefData.successMetrics.join(', ')}
-ROI attendu : ${briefData.roiExpectations.join(', ')}
+CONCURRENTS DIRECTS - ANALYSE SWOT:
+${briefData.competitiveAnalysis.directCompetitors.map(comp => `
+→ ${comp.name}
+  ✓ Forces: ${comp.strengths.join(', ')}
+  ✗ Faiblesses: ${comp.weaknesses.join(', ')}
+  ⚡ Stratégies actives: ${comp.strategies.join(', ')}`).join('\n\n')}
+` : `
+CONCURRENTS PRINCIPAUX:
+${briefData.competitors}
+`;
 
-CONTENU & TON
-Style : ${briefData.communicationStyle}
-Formats : ${briefData.contentTypes.join(', ')}
+  // Construction de l'historique
+  const historySection = briefData.previousCampaigns && briefData.previousCampaigns.length > 0 ? `
+═══════════════════════════════════════
+HISTORIQUE & LEARNINGS
+═══════════════════════════════════════
 
-CONTRAINTES LÉGALES
-Réglementations : ${briefData.legalConstraints.regulations.join(', ')}
-Conformité : ${briefData.legalConstraints.compliance.join(', ')}
-Mentions obligatoires : ${briefData.legalConstraints.disclaimers.join(', ')}
-
-BUDGET & RESSOURCES
-Budget total : ${briefData.budget.totalBudget}
-Allocation : ${Object.entries(briefData.budget.allocation).map(([key, value]) => `${key}: ${value}%`).join(', ')}
-Contraintes budgétaires : ${briefData.budget.constraints.join(', ')}
-
-Équipe interne : ${briefData.resources.internalTeam.join(', ')}
-Partenaires externes : ${briefData.resources.externalPartners.join(', ')}
-Outils disponibles : ${briefData.resources.tools.join(', ')}
-
-HISTORIQUE CAMPAGNES
 ${briefData.previousCampaigns.map(campaign => `
-Campagne : ${campaign.name}
-Période : ${campaign.period}
-Résultats : ${campaign.results.join(', ')}
-Apprentissages : ${campaign.learnings.join(', ')}`).join('\n')}
+📊 ${campaign.name} | ${campaign.period}
 
-ANALYSE CONCURRENTIELLE
-Position sur le marché : ${briefData.competitiveAnalysis.marketPosition}
-Différenciateurs : ${briefData.competitiveAnalysis.differentiators.join(', ')}
-Opportunités marché : ${briefData.competitiveAnalysis.opportunities.join(', ')}
+RÉSULTATS MESURÉS:
+${campaign.results.map((r, i) => `  ${i + 1}. ${r}`).join('\n')}
 
-Concurrents directs :
-${briefData.competitiveAnalysis.directCompetitors.map(competitor => `
-- ${competitor.name}
-  Forces : ${competitor.strengths.join(', ')}
-  Faiblesses : ${competitor.weaknesses.join(', ')}
-  Stratégies : ${competitor.strategies.join(', ')}`).join('\n')}
+LEARNINGS STRATÉGIQUES:
+${campaign.learnings.map((l, i) => `  ${i + 1}. ${l}`).join('\n')}
+`).join('\n')}
 
-Générez une stratégie détaillée structurée comme suit :
+⚠️ IMPÉRATIF: S'appuyer sur ces données historiques pour optimiser la stratégie.
+` : '';
 
-1. ANALYSE STRATÉGIQUE
+  // Construction du cadre légal
+  const legalSection = briefData.legalConstraints ? `
+═══════════════════════════════════════
+CADRE LÉGAL & CONFORMITÉ
+═══════════════════════════════════════
 
-Positionnement recommandé (minimum 50 caractères)
-- Définissez clairement le positionnement de la marque sur les réseaux sociaux
-- Une phrase concise et impactante
-- Intégrez les contraintes légales et budgétaires
+RÉGLEMENTATIONS SECTORIELLES:
+${briefData.legalConstraints.regulations.map((r, i) => `  ${i + 1}. ${r}`).join('\n')}
 
-Forces à exploiter (minimum 30 caractères par force)
-- Listez 3-5 forces clés
-- Chaque force doit être actionnable sur les réseaux sociaux
-- Considérez les ressources disponibles
+EXIGENCES COMPLIANCE:
+${briefData.legalConstraints.compliance.map((c, i) => `  ${i + 1}. ${c}`).join('\n')}
 
-Opportunités à saisir (minimum 30 caractères par opportunité)
-- Identifiez 3-5 opportunités concrètes
-- Liez-les aux objectifs de la marque
-- Basez-vous sur l'analyse concurrentielle
+MENTIONS OBLIGATOIRES:
+${briefData.legalConstraints.disclaimers.map((d, i) => `  ${i + 1}. ${d}`).join('\n')}
 
-2. RECOMMANDATIONS
+⚠️ VALIDATION REQUISE: Toute recommandation doit intégrer ces contraintes.
+` : '';
 
-Style visuel global (minimum 3 recommandations)
-- Directives visuelles claires
-- Cohérence cross-plateforme
-- Éléments distinctifs
-- Conformité légale des visuels
+  // Positionnement stratégique
+  const positioningSection = `
+═══════════════════════════════════════
+POSITIONNEMENT STRATÉGIQUE
+═══════════════════════════════════════
 
-Ton de voix par réseau (minimum 3 recommandations)
-- Adaptations selon la plateforme
-- Vocabulaire recommandé
-- Style d'écriture
-- Mentions légales obligatoires
+Type d'entreprise: ${briefData.businessType || 'À définir'}
+Stade de maturité: ${briefData.companyStage || 'À définir'}  
+Positionnement prix: ${briefData.pricePositioning || 'À définir'}
+${briefData.values ? `\nValeurs fondamentales: ${briefData.values.join(' • ')}` : ''}
+${briefData.mission ? `\nMission d'entreprise: ${briefData.mission}` : ''}
+`;
 
-Hashtags stratégiques (minimum 3 hashtags)
-- 5-7 hashtags principaux
-- Catégories de hashtags
-- Usage recommandé
-- Conformité réglementaire
+  return `
+╔════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║          BRIEF STRATÉGIQUE - STANDARD CANNES LIONS                    ║
+║          Architecture 3 Niveaux: Brand / Product / Calendar           ║
+║                                                                        ║
+╚════════════════════════════════════════════════════════════════════════╝
 
-Tactiques d'engagement (minimum 3 tactiques)
-- Actions concrètes
-- Mécaniques d'interaction
-- Réponses types
-- Gestion des contraintes légales
-- Optimisation des ressources
+Vous êtes un stratège digital primé à Cannes Lions, reconnu pour :
+• Vision stratégique holistique et insights consommateurs
+• Analyse concurrentielle approfondie et data-driven
+• Création de stratégies différenciantes et performantes
+• Expertise en transformation digitale et brand building
 
-3. PLANNING & RESSOURCES
+═══════════════════════════════════════
+ADN DE LA MARQUE
+═══════════════════════════════════════
 
-Fréquence par réseau
-- Détaillez pour chaque réseau
-- Moments optimaux de publication
-- Types de contenus par créneau
-- Contraintes légales par type de contenu
+IDENTITÉ CORPORATE:
+${briefData.companyName}
+Secteur d'activité: ${briefData.sector}
+Contact: ${briefData.email}
 
-Allocation budgétaire
-- Répartition par réseau
-- Seuils d'alerte
-- Mécanismes d'ajustement
-- KPIs de performance
+DESCRIPTION ENTREPRISE:
+${briefData.companyDescription}
 
-Ressources et capacités
-- Plan de contingence
-- Formation nécessaire
-- Support externe requis
+${briefData.colors ? `
+PALETTE DE MARQUE:
+• Primaire: ${briefData.colors.primary || 'Non définie'}
+• Secondaire: ${briefData.colors.secondary || 'Non définie'}  
+• Accent: ${briefData.colors.accent || 'Non définie'}
+` : ''}
 
-4. GESTION DES RISQUES
+${positioningSection}
 
-Conformité légale
-- Process de validation
-- Points de contrôle
-- Documentation requise
+${competitiveSection}
 
-Format de réponse :
-- Utilisez des tirets pour les listes
-- Soyez précis et actionnable
-- Séparez clairement les sections
-- Intégrez systématiquement les aspects légaux et budgétaires
+${historySection}
 
-VALIDATION FINALE :
-- Vérifiez que le positionnement fait au moins 50 caractères
-- Confirmez que chaque force et opportunité fait au moins 30 caractères
-- Vérifiez que chaque section de recommandations contient au moins 3 éléments
-- Validez que toutes les contraintes légales sont respectées et mentionnées`;
+${legalSection}
+
+═══════════════════════════════════════
+MISSION STRATÉGIQUE
+═══════════════════════════════════════
+
+Sur la base de ces informations de MARQUE (Brand level), développez une stratégie 
+de contenu social media complète et différenciante.
+
+NOTE IMPORTANTE: 
+Les informations PRODUIT (target audience, USP, bénéfices) et CALENDRIER 
+(réseaux sociaux, ton, fréquence) seront intégrées ultérieurement par les 
+services appropriés. Concentrez-vous sur la stratégie de MARQUE globale.
+
+═══════════════════════════════════════
+FRAMEWORK STRATÉGIQUE ATTENDU
+═══════════════════════════════════════
+
+1️⃣ ANALYSE STRATÉGIQUE GLOBALE
+
+A. POSITIONNEMENT DIGITAL RECOMMANDÉ (min. 100 caractères)
+   → Définir LA Big Idea qui différencie la marque
+   → Positionnement unique et mémorable
+   → Ancré dans l'ADN de marque et insights marché
+   → Déclinable sur tous canaux digitaux
+   → Conforme au cadre légal sectoriel
+
+B. FORCES STRATÉGIQUES À EXPLOITER (min. 5 forces, 50 car. chacune)
+   → Forces intrinsèques de la marque (ADN, histoire, valeurs)
+   → Avantages concurrentiels identifiés
+   → Assets digitaux existants ou à créer
+   → Learnings des campagnes précédentes
+   → Opportunités liées au secteur/stade de l'entreprise
+
+C. OPPORTUNITÉS MARCHÉ À SAISIR (min. 5 opportunités, 50 car. chacune)
+   → White spaces dans le paysage concurrentiel
+   → Trends culturelles et sociétales émergentes
+   → Insights consommateurs inexploités
+   → Innovations technologiques applicables
+   → Moments marketing stratégiques (événements, saisons)
+
+D. RISQUES & MITIGATION (min. 3 risques)
+   → Risques concurrentiels identifiés
+   → Risques légaux/réglementaires
+   → Risques réputationnels
+   → Plans de mitigation pour chaque risque
+
+2️⃣ RECOMMANDATIONS CRÉATIVES CROSS-CANAL
+
+A. DIRECTION ARTISTIQUE GLOBALE (min. 5 guidelines)
+   → Territoires visuels de la marque
+   → Codes couleurs et typographies
+   → Style photographique/graphique
+   → Éléments de marque récurrents
+   → Évolutions créatives recommandées
+
+B. ARCHITECTURE DE CONTENU (min. 4 piliers)
+   → Piliers de contenu stratégiques (80/20 evergreen vs. tactical)
+   → Thématiques narratives principales
+   → Mix éditorial recommandé
+   → Storytelling brand vs. product
+   → Équilibre entre éducation, inspiration, promotion
+
+C. TONE OF VOICE & BRAND VOICE (min. 4 dimensions)
+   → Personnalité de marque (archétype)
+   → Vocabulaire & champ lexical de marque
+   → Do's & Don'ts éditoriaux
+   → Adaptations cross-canal (B2B vs B2C, formal vs casual)
+   → Guidelines mentions légales
+
+3️⃣ TACTIQUES D'ACTIVATION
+
+A. STRATÉGIE D'ENGAGEMENT (min. 5 tactiques)
+   → Mécaniques de conversation (comment dialoguer)
+   → Stratégie de community management
+   → Gestion des influenceurs/ambassadeurs
+   → Programmes de fidélisation digitale
+   → Activation événementielle (online/offline)
+
+B. HASHTAG STRATEGY (min. 10 hashtags)
+   → 3 hashtags de marque propriétaires
+   → 4 hashtags de catégorie (secteur)
+   → 3 hashtags de campagne (adaptables)
+   → Usage et guidelines par contexte
+   → KPIs de performance hashtag
+
+C. PARTENARIATS & COLLABORATIONS (min. 3 opportunités)
+   → Types de partenaires stratégiques
+   → Marques complémentaires (co-branding)
+   → Influenceurs/créateurs alignés
+   → Médias & plateformes
+   → Critères de sélection
+
+4️⃣ MESURE & OPTIMISATION
+
+A. FRAMEWORK KPIs (Catégories + exemples)
+   → Awareness: impressions, reach, brand mentions
+   → Considération: engagement rate, saves, shares
+   → Conversion: clicks, sign-ups, sales
+   → Fidélisation: retention, LTV, advocacy
+   → Spécifiques secteur (compliance rate si applicable)
+
+B. DASHBOARD & REPORTING
+   → Fréquence de reporting recommandée
+   → Métriques à tracker quotidiennement vs mensuellement
+   → Benchmarks concurrentiels
+   → Seuils d'alerte et triggers d'action
+   → A/B testing prioritaire
+
+C. STRATÉGIE D'OPTIMISATION CONTINUE
+   → Process de test & learn
+   → Allocation budgétaire adaptive (70% proven / 30% innovation)
+   → Veille concurrentielle organisée
+   → Innovation & expérimentation (nouveaux formats, plateformes)
+
+═══════════════════════════════════════
+VALIDATION QUALITÉ CANNES LIONS
+═══════════════════════════════════════
+
+Chaque section doit respecter :
+
+✓ INSIGHT-DRIVEN
+  → Basé sur analyse marché, concurrence, historique
+  → Pas de généralités - insights actionnables uniquement
+  
+✓ DIFFÉRENCIATION
+  → Stratégie unique vs. concurrents identifiés
+  → Exploitation des forces et opportunités spécifiques
+  
+✓ FAISABILITÉ
+  → Réaliste au vu du stade entreprise et positionnement prix
+  → Adaptable selon ressources disponibles
+  
+✓ COMPLIANCE
+  → Respect total cadre légal et réglementations sectorielles
+  → Intégration créative des contraintes
+  
+✓ MESURABILITÉ
+  → KPIs clairs et trackables
+  → Objectifs SMART (Specific, Measurable, Achievable, Relevant, Time-bound)
+
+✓ SCALABILITÉ
+  → Stratégie évolutive (startup → scale-up → enterprise)
+  → Déclinable multi-marchés si applicable
+
+═══════════════════════════════════════
+FORMAT DE RÉPONSE
+═══════════════════════════════════════
+
+• Structurer clairement avec numéros et lettres
+• Chaque point doit être actionnable et spécifique
+• Éviter jargon générique - être précis et concret
+• Citer les insights marché/concurrence qui justifient chaque recommandation
+• Intégrer systématiquement la dimension légale/compliance
+• Longueurs minimales STRICTEMENT respectées
+
+═══════════════════════════════════════
+
+READY TO BUILD A CANNES LIONS WINNING STRATEGY 🦁🎯
+`;
 };

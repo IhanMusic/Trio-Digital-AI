@@ -1,85 +1,230 @@
 import { BriefData } from '../../types/brief';
 
+/**
+ * PROMPT COPYWRITING NIVEAU CANNES LIONS
+ * Architecture 3 niveaux: Brand (BriefData) + Product + Calendar
+ * Note: Ce prompt utilise uniquement les données de MARQUE
+ * Les données Produit et Calendrier seront intégrées par PostGenerationService
+ */
 export const generateCopywriting = (briefData: BriefData): string => {
-  return `En tant que copywriter, créez du contenu pour : ${briefData.currentSocialNetworks.join(', ')}.
+  // Construction du contexte concurrentiel
+  const competitiveContext = briefData.competitiveAnalysis ? `
+═══════════════════════════════════════
+ANALYSE CONCURRENTIELLE STRATÉGIQUE
+═══════════════════════════════════════
 
-ENTREPRISE :
-${briefData.companyName} (${briefData.sector})
-${briefData.companyDescription}
-USP : ${briefData.uniqueSellingPoints}
+POSITIONNEMENT MARCHÉ:
+${briefData.competitiveAnalysis.marketPosition}
 
-CIBLE :
-${briefData.targetAudience.demographic.join(', ')}
-${briefData.targetAudience.professional.join(', ')}
+DIFFÉRENCIATEURS CLÉS:
+${briefData.competitiveAnalysis.differentiators.map(d => `✓ ${d}`).join('\n')}
 
-STYLE :
-- Ton : ${briefData.communicationStyle}
-- Types : ${briefData.contentTypes.join(', ')}
-- Objectifs : ${briefData.socialMediaGoals.join(', ')}
+CONCURRENTS DIRECTS:
+${briefData.competitiveAnalysis.directCompetitors.map(comp => `
+→ ${comp.name}
+  Forces: ${comp.strengths.join(', ')}
+  Faiblesses: ${comp.weaknesses.join(', ')}
+  Stratégies: ${comp.strategies.join(', ')}`).join('\n')}
 
-CONTRAINTES LÉGALES :
-- Réglementations : ${briefData.legalConstraints.regulations.join(', ')}
-- Mentions obligatoires : ${briefData.legalConstraints.disclaimers.join(', ')}
+OPPORTUNITÉS IDENTIFIÉES:
+${briefData.competitiveAnalysis.opportunities.map(o => `• ${o}`).join('\n')}
+` : '';
 
-RESSOURCES :
-- Budget alloué : ${briefData.budget.allocation["Contenu"]}% du budget total
-- Équipe : ${briefData.resources.internalTeam.join(', ')}
-- Outils : ${briefData.resources.tools.join(', ')}
+  // Construction de l'historique des campagnes
+  const campaignHistory = briefData.previousCampaigns && briefData.previousCampaigns.length > 0 ? `
+═══════════════════════════════════════
+APPRENTISSAGES CAMPAGNES PRÉCÉDENTES
+═══════════════════════════════════════
 
-APPRENTISSAGES PRÉCÉDENTS :
 ${briefData.previousCampaigns.map(campaign => `
-- ${campaign.name}:
-  Résultats : ${campaign.results.join(', ')}
-  Learnings : ${campaign.learnings.join(', ')}`).join('\n')}
+📊 ${campaign.name} (${campaign.period})
 
-ANALYSE CONCURRENTIELLE :
-- Notre position : ${briefData.competitiveAnalysis.marketPosition}
-- Différenciation : ${briefData.competitiveAnalysis.differentiators.join(', ')}
-- Opportunités : ${briefData.competitiveAnalysis.opportunities.join(', ')}
+RÉSULTATS:
+${campaign.results.map(r => `✓ ${r}`).join('\n')}
 
-THÈMES : ${briefData.specificThemes}
+LEARNINGS STRATÉGIQUES:
+${campaign.learnings.map(l => `→ ${l}`).join('\n')}
+`).join('\n')}
 
-Pour chaque réseau, créer (format strict) :
+⚠️ IMPÉRATIF: Capitaliser sur ces apprentissages pour maximiser performance.
+` : '';
 
-Post:
-- Platform: [réseau]
-- Content: [texte, max 280 car.]
-- Call to Action: [CTA court]
-- Hashtags: [3-5 max]
-- Mentions légales: [mentions obligatoires requises]
-- Validation: [points de contrôle légaux]
+  // Construction des contraintes légales
+  const legalContext = briefData.legalConstraints ? `
+═══════════════════════════════════════
+CADRE LÉGAL & CONFORMITÉ
+═══════════════════════════════════════
 
-Variation:
-- Short: [version courte avec mentions légales essentielles]
-- Detailed: [version détaillée incluant toutes les mentions]
-- Narrative: [version storytelling respectant les contraintes]
+RÉGLEMENTATIONS SECTORIELLES:
+${briefData.legalConstraints.regulations.map(r => `• ${r}`).join('\n')}
 
-Engagement:
-- Question: [1 question conforme aux régulations]
-- Poll: [1 sondage respectant les contraintes]
-- Response: [1 réponse type validée juridiquement]
+EXIGENCES DE CONFORMITÉ:
+${briefData.legalConstraints.compliance.map(c => `• ${c}`).join('\n')}
 
-Guidelines:
-1. Respecter les limites de caractères par plateforme
-2. Adapter le ton selon le réseau tout en maintenant la conformité
-3. Utiliser des hashtags pertinents et conformes
-4. Intégrer systématiquement les mentions légales requises
-5. S'appuyer sur les apprentissages des campagnes précédentes
-6. Se différencier de la concurrence
-7. Optimiser pour les ressources disponibles
+MENTIONS OBLIGATOIRES:
+${briefData.legalConstraints.disclaimers.map(d => `• ${d}`).join('\n')}
 
-Validation requise:
-- Conformité légale
-- Mentions obligatoires
-- Respect du budget
-- Faisabilité avec ressources disponibles
-- Cohérence avec positionnement concurrentiel
+⚠️ CRITIQUE: Toute création doit intégrer ces mentions de manière créative et conforme.
+` : '';
 
-Pour chaque contenu, vérifier:
-1. Conformité aux réglementations
-2. Présence des mentions obligatoires
-3. Respect des contraintes budgétaires
-4. Faisabilité avec les ressources
-5. Différenciation concurrentielle
-6. Application des apprentissages passés`;
+  // Construction du positionnement stratégique
+  const strategicPositioning = `
+═══════════════════════════════════════
+POSITIONNEMENT STRATÉGIQUE
+═══════════════════════════════════════
+
+Type d'entreprise: ${briefData.businessType || 'Non spécifié'}
+Stade de développement: ${briefData.companyStage || 'Non spécifié'}
+Positionnement prix: ${briefData.pricePositioning || 'Non spécifié'}
+${briefData.values ? `\nValeurs de marque: ${briefData.values.join(', ')}` : ''}
+${briefData.mission ? `\nMission: ${briefData.mission}` : ''}
+`;
+
+  return `
+╔═══════════════════════════════════════════════════════════════════════╗
+║                                                                       ║
+║         BRIEF COPYWRITING - STANDARD CANNES LIONS                    ║
+║         Architecture 3 Niveaux: Brand / Product / Calendar           ║
+║                                                                       ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+Vous êtes un copywriter stratégique primé à Cannes Lions, reconnu pour :
+• Excellence narrative et storytelling émotionnel
+• Maîtrise des codes culturels et insights consommateurs
+• Créativité disruptive respectant les contraintes légales
+• Capacité à générer des campagnes mémorables et performantes
+
+═══════════════════════════════════════
+ADN DE LA MARQUE
+═══════════════════════════════════════
+
+IDENTITÉ:
+${briefData.companyName}
+Secteur: ${briefData.sector}
+
+DESCRIPTION:
+${briefData.companyDescription}
+
+${briefData.colors ? `IDENTITÉ VISUELLE:
+• Couleur principale: ${briefData.colors.primary || 'Non définie'}
+• Couleur secondaire: ${briefData.colors.secondary || 'Non définie'}
+• Couleur accent: ${briefData.colors.accent || 'Non définie'}
+` : ''}
+
+${strategicPositioning}
+
+CONCURRENCE:
+${briefData.competitors}
+
+${competitiveContext}
+
+${campaignHistory}
+
+${legalContext}
+
+═══════════════════════════════════════
+FRAMEWORK CRÉATIF CANNES LIONS
+═══════════════════════════════════════
+
+1. INSIGHT CONSOMMATEUR
+   → Identifier le "why" profond
+   → Révéler une vérité humaine universelle
+   → Connecter émotionnellement avec l'audience
+
+2. IDÉE CRÉATIVE (Big Idea)
+   → Simple, mémorable, différenciante
+   → Déclinable sur tous les canaux
+   → Potentiel viral et culturel
+
+3. NARRATION STRATÉGIQUE
+   → Story arc captivant (hook → tension → résolution)
+   → Protagoniste identifiable
+   → Message implicite > explicite
+
+4. CRAFT D'EXCELLENCE
+   → Chaque mot compte
+   → Rythme, sonorités, fluidité
+   → Adapt ton selon réseau (LinkedIn corporatif ≠ TikTok spontané)
+
+5. CALL TO ACTION PSYCHOLOGIQUE
+   → Créer l'urgence sans être pushy
+   → Faciliter l'action (friction minimale)
+   → Aligner avec objectif campagne
+
+═══════════════════════════════════════
+CHECKLIST QUALITÉ CANNES LIONS
+═══════════════════════════════════════
+
+✓ PERTINENCE CULTURELLE
+  → Insight actuel, zeitgeist, tendances
+  → Authenticité culturelle (éviter appropriation)
+  
+✓ ORIGINALITÉ DISRUPTIVE
+  → Éviter clichés et lieux communs du secteur
+  → Approche fresh, inattendue, mémorable
+  
+✓ IMPACT ÉMOTIONNEL
+  → Susciter émotion authentique (joie, surprise, nostalgie, inspiration)
+  → Créer connexion, pas transaction
+  
+✓ CONFORMITÉ LÉGALE CRÉATIVE
+  → Intégrer mentions obligatoires avec style
+  → Respecter réglementations sans tuer créativité
+  
+✓ PERFORMANCE DATA-DRIVEN
+  → Capitaliser apprentissages campagnes passées
+  → Optimiser selon insights concurrentiels
+  → Maximiser ROI tout en visant excellence créative
+
+═══════════════════════════════════════
+STRUCTURE ATTENDUE
+═══════════════════════════════════════
+
+Pour chaque post:
+
+1. CONCEPT CRÉATIF
+   - Big Idea en 1 phrase
+   - Angle narratif
+   - Émotion cible
+
+2. COPYWRITING (adapté par réseau)
+   - Hook captivant (3 premiers mots critiques)
+   - Corps narratif (contexte + tension + résolution)
+   - CTA psychologique
+   - Hashtags stratégiques (max 3-5, pertinents > populaires)
+   
+3. VARIATIONS TACTIQUES
+   - Version courte (snackable, mobile-first)
+   - Version détaillée (desktop, storytelling approfondi)
+   - Version narrative (brand content, immersif)
+
+4. ENGAGEMENT PROACTIF
+   - 1 question ouverte (susciter conversation)
+   - 1 poll interactif (générer participation)
+   - 3 réponses types communauté (humaniser marque)
+
+5. CONFORMITÉ INTÉGRÉE
+   - Mentions légales organiques (pas "footer administratif")
+   - Validation checkpoints
+   - Risk mitigation
+
+═══════════════════════════════════════
+RÈGLES D'OR
+═══════════════════════════════════════
+
+1. Start with WHY (insight > produit)
+2. Show, don't tell (démonstration > déclaration)
+3. Less is more (clarté > complexité)
+4. Emotion first, logic second
+5. Authenticity beats perfection
+6. Mobile-first mindset (70%+ lecture mobile)
+7. Respectable disruption (provocant ≠ offensant)
+8. Cultural sensitivity (diversité, inclusion)
+9. Legal compliance by design (pas afterthought)
+10. Continuous optimization (test, learn, iterate)
+
+═══════════════════════════════════════
+
+READY TO CREATE CANNES LIONS LEVEL CONTENT 🦁✨
+`;
 };
