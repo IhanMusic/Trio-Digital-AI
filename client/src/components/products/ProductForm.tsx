@@ -305,53 +305,34 @@ const ProductForm: React.FC = () => {
     try {
       setSaving(true);
       
-      const formDataToSend = new FormData();
-      
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('category', formData.category);
-      formDataToSend.append('brandId', formData.brandId);
-      
-      // Tableaux simples
-      formData.flavors.forEach((item, index) => formDataToSend.append(`flavors[${index}]`, item));
-      formData.scents.forEach((item, index) => formDataToSend.append(`scents[${index}]`, item));
-      formData.uniqueSellingPoints.forEach((item, index) => formDataToSend.append(`uniqueSellingPoints[${index}]`, item));
-      formData.customerBenefits.forEach((item, index) => formDataToSend.append(`customerBenefits[${index}]`, item));
-      formData.usageOccasions.forEach((item, index) => formDataToSend.append(`usageOccasions[${index}]`, item));
-      formData.keywords.forEach((item, index) => formDataToSend.append(`keywords[${index}]`, item));
-      formData.certifications.forEach((item, index) => formDataToSend.append(`certifications[${index}]`, item));
-      formData.labels.forEach((item, index) => formDataToSend.append(`labels[${index}]`, item));
-      
-      // Target audience
-      formData.targetAudience.demographic.forEach((item, index) => {
-        formDataToSend.append(`targetAudience[demographic][${index}]`, item);
-      });
-      formData.targetAudience.lifestyle.forEach((item, index) => {
-        formDataToSend.append(`targetAudience[lifestyle][${index}]`, item);
-      });
-      formData.targetAudience.psychographic.forEach((item, index) => {
-        formDataToSend.append(`targetAudience[psychographic][${index}]`, item);
-      });
-      formData.targetAudience.geographic.forEach((item, index) => {
-        formDataToSend.append(`targetAudience[geographic][${index}]`, item);
-      });
-      
-      // Fiche technique
-      formData.technicalSheet.ingredients.forEach((item, index) => {
-        formDataToSend.append(`technicalSheet[ingredients][${index}]`, item);
-      });
-      formDataToSend.append('technicalSheet[nutritionalInfo]', formData.technicalSheet.nutritionalInfo || '');
-      formDataToSend.append('technicalSheet[usage]', formData.technicalSheet.usage || '');
-      formDataToSend.append('technicalSheet[storage]', formData.technicalSheet.storage || '');
-      formDataToSend.append('technicalSheet[highlights]', formData.technicalSheet.highlights || '');
-      
-      // Fichiers
-      if (formData.mainImage) {
-        formDataToSend.append('mainImage', formData.mainImage);
-      }
-      formData.galleryImages.forEach((image, index) => {
-        formDataToSend.append(`galleryImages[${index}]`, image);
-      });
+      // Préparer les données du produit en JSON (comme BriefForm)
+      const productData = {
+        name: formData.name,
+        description: formData.description,
+        category: formData.category,
+        brandId: formData.brandId,
+        flavors: formData.flavors,
+        scents: formData.scents,
+        uniqueSellingPoints: formData.uniqueSellingPoints,
+        customerBenefits: formData.customerBenefits,
+        targetAudience: formData.targetAudience,
+        usageOccasions: formData.usageOccasions,
+        keywords: formData.keywords,
+        technicalSheet: {
+          ingredients: formData.technicalSheet.ingredients,
+          nutritionalInfo: formData.technicalSheet.nutritionalInfo || '',
+          usage: formData.technicalSheet.usage || '',
+          storage: formData.technicalSheet.storage || '',
+          highlights: formData.technicalSheet.highlights || ''
+        },
+        certifications: formData.certifications,
+        labels: formData.labels,
+        // Conserver les URLs d'images existantes en mode édition
+        images: {
+          main: formData.mainImageUrl || '',
+          gallery: formData.galleryImageUrls || []
+        }
+      };
       
       const url = isEditMode
         ? `${config.apiUrl}/products/${productId}`
@@ -359,12 +340,14 @@ const ProductForm: React.FC = () => {
       
       const method = isEditMode ? 'PUT' : 'POST';
       
+      // Envoyer les données en JSON (comme BriefForm)
       const response = await fetch(url, {
         method,
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: formDataToSend
+        body: JSON.stringify(productData)
       });
       
       if (!response.ok) {
@@ -376,11 +359,46 @@ const ProductForm: React.FC = () => {
         throw new Error(result.message || `Erreur lors de la ${isEditMode ? 'mise à jour' : 'création'} du produit`);
       }
       
+      // Si on a de nouvelles images à uploader, les uploader après
+      const createdProductId = result.data._id;
+      if (formData.mainImage || formData.galleryImages.length > 0) {
+        await uploadProductImages(createdProductId);
+      }
+      
       navigate(`/brands/${brandId}`);
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Une erreur est survenue');
     } finally {
       setSaving(false);
+    }
+  };
+  
+  // Fonction pour uploader les images séparément
+  const uploadProductImages = async (productId: string) => {
+    try {
+      const formDataToSend = new FormData();
+      
+      if (formData.mainImage) {
+        formDataToSend.append('mainImage', formData.mainImage);
+      }
+      
+      formData.galleryImages.forEach((image) => {
+        formDataToSend.append('galleryImages', image);
+      });
+      
+      const response = await fetch(`${config.apiUrl}/products/${productId}/images`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formDataToSend
+      });
+      
+      if (!response.ok) {
+        console.error('Erreur lors de l\'upload des images');
+      }
+    } catch (error) {
+      console.error('Erreur lors de l\'upload des images:', error);
     }
   };
   

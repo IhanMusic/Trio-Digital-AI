@@ -43,7 +43,6 @@ export const BriefForm: React.FC = () => {
   
   const [formData, setFormData] = useState<BriefData>({
     companyName: '',
-    email: '',
     sector: '',
     companyDescription: '',
     logo: null,
@@ -81,7 +80,6 @@ export const BriefForm: React.FC = () => {
           
           setFormData({
             companyName: brand.name || '',
-            email: 'marketing@example.com', // Email non stocké dans Brand
             sector: brand.sector || '',
             companyDescription: brand.description || '',
             logo: null,

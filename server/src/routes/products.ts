@@ -140,14 +140,10 @@ router.get('/:id', authenticate, async (req: express.Request, res: express.Respo
 
 /**
  * @route POST /api/products
- * @desc Créer un nouveau produit
+ * @desc Créer un nouveau produit (données JSON uniquement)
  * @access Private
  */
-router.post('/', authenticate, upload.fields([
-  { name: 'logo', maxCount: 1 },
-  { name: 'mainImage', maxCount: 1 },
-  { name: 'galleryImages', maxCount: 10 }
-]), async (req: express.Request, res: express.Response) => {
+router.post('/', authenticate, async (req: express.Request, res: express.Response) => {
   try {
     const { brandId } = req.body;
     
@@ -167,52 +163,11 @@ router.post('/', authenticate, upload.fields([
       });
     }
     
-    // Traiter les fichiers uploadés
-    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-    
     // Préparer les données du produit
     const productData: any = {
       ...req.body,
       createdBy: req.user?._id
     };
-    
-    // Uploader les images vers Cloudinary
-    if (files.logo && files.logo.length > 0) {
-      logger.info('Upload du logo vers Cloudinary...');
-      const { url } = await FileStorageService.saveImage(files.logo[0].buffer, {
-        purpose: 'product',
-        useCloudinary: true
-      });
-      productData.logo = url;
-      logger.info('Logo uploadé:', url);
-    }
-    
-    if (files.mainImage && files.mainImage.length > 0) {
-      logger.info('Upload de l\'image principale vers Cloudinary...');
-      const { url } = await FileStorageService.saveImage(files.mainImage[0].buffer, {
-        purpose: 'product',
-        useCloudinary: true
-      });
-      if (!productData.images) productData.images = {};
-      productData.images.main = url;
-      logger.info('Image principale uploadée:', url);
-    }
-    
-    if (files.galleryImages && files.galleryImages.length > 0) {
-      logger.info(`Upload de ${files.galleryImages.length} images de galerie vers Cloudinary...`);
-      if (!productData.images) productData.images = {};
-      const galleryUrls = await Promise.all(
-        files.galleryImages.map(async (file) => {
-          const { url } = await FileStorageService.saveImage(file.buffer, {
-            purpose: 'product',
-            useCloudinary: true
-          });
-          return url;
-        })
-      );
-      productData.images.gallery = galleryUrls;
-      logger.info('Images de galerie uploadées');
-    }
     
     // Créer le produit
     const product = new Product(productData);
@@ -250,11 +205,76 @@ router.post('/', authenticate, upload.fields([
 
 /**
  * @route PUT /api/products/:id
- * @desc Mettre à jour un produit
+ * @desc Mettre à jour un produit (données JSON uniquement)
  * @access Private
  */
-router.put('/:id', authenticate, upload.fields([
-  { name: 'logo', maxCount: 1 },
+router.put('/:id', authenticate, async (req: express.Request, res: express.Response) => {
+  try {
+    const { id } = req.params;
+    
+    // Récupérer le produit
+    const product = await Product.findById(id)
+      .populate('brandId', 'userId team');
+    
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Produit non trouvé'
+      });
+    }
+    
+    // Vérifier que l'utilisateur a accès à ce produit
+    const brand = product.brandId as any;
+    if (brand.userId.toString() !== req.user?._id.toString() && 
+        !brand.team.includes(req.user?._id)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Accès non autorisé à ce produit'
+      });
+    }
+    
+    // Mettre à jour le produit avec les données JSON
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    
+    res.json({
+      success: true,
+      data: updatedProduct
+    });
+  } catch (error) {
+    // Gérer l'erreur de duplication (nom de produit déjà utilisé pour cette marque)
+    if (error instanceof mongoose.Error.ValidationError) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation échouée',
+        error: error.message
+      });
+    }
+    
+    if (error instanceof Error && error.name === 'MongoError' && (error as any).code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: 'Un produit avec ce nom existe déjà pour cette marque'
+      });
+    }
+    
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors de la mise à jour du produit',
+      error: error instanceof Error ? error.message : 'Erreur inconnue'
+    });
+  }
+});
+
+/**
+ * @route POST /api/products/:id/images
+ * @desc Uploader des images pour un produit existant
+ * @access Private
+ */
+router.post('/:id/images', authenticate, upload.fields([
   { name: 'mainImage', maxCount: 1 },
   { name: 'galleryImages', maxCount: 10 }
 ]), async (req: express.Request, res: express.Response) => {
@@ -284,37 +304,22 @@ router.put('/:id', authenticate, upload.fields([
     
     // Traiter les fichiers uploadés
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    const updateData: any = {};
     
-    // Préparer les données du produit
-    const productData: any = {
-      ...req.body
-    };
-    
-    // Uploader les nouvelles images vers Cloudinary
-    if (files.logo && files.logo.length > 0) {
-      logger.info('Upload du nouveau logo vers Cloudinary...');
-      const { url } = await FileStorageService.saveImage(files.logo[0].buffer, {
-        purpose: 'product',
-        useCloudinary: true
-      });
-      productData.logo = url;
-      logger.info('Nouveau logo uploadé:', url);
-    }
-    
+    // Uploader l'image principale
     if (files.mainImage && files.mainImage.length > 0) {
-      logger.info('Upload de la nouvelle image principale vers Cloudinary...');
+      logger.info('Upload de l\'image principale vers Cloudinary...');
       const { url } = await FileStorageService.saveImage(files.mainImage[0].buffer, {
         purpose: 'product',
         useCloudinary: true
       });
-      if (!productData.images) productData.images = {};
-      productData.images = { ...productData.images, main: url };
-      logger.info('Nouvelle image principale uploadée:', url);
+      updateData['images.main'] = url;
+      logger.info('Image principale uploadée:', url);
     }
     
+    // Uploader les images de galerie
     if (files.galleryImages && files.galleryImages.length > 0) {
-      logger.info(`Upload de ${files.galleryImages.length} nouvelles images de galerie vers Cloudinary...`);
-      if (!productData.images) productData.images = {};
+      logger.info(`Upload de ${files.galleryImages.length} images de galerie vers Cloudinary...`);
       const galleryUrls = await Promise.all(
         files.galleryImages.map(async (file) => {
           const { url } = await FileStorageService.saveImage(file.buffer, {
@@ -324,18 +329,17 @@ router.put('/:id', authenticate, upload.fields([
           return url;
         })
       );
-      productData.images = { 
-        ...productData.images, 
-        gallery: galleryUrls 
-      };
-      logger.info('Nouvelles images de galerie uploadées');
+      // Ajouter les nouvelles images à la galerie existante
+      const existingGallery = product.images?.gallery || [];
+      updateData['images.gallery'] = [...existingGallery, ...galleryUrls];
+      logger.info('Images de galerie uploadées');
     }
     
-    // Mettre à jour le produit
+    // Mettre à jour le produit avec les nouvelles URLs d'images
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
-      productData,
-      { new: true, runValidators: true }
+      { $set: updateData },
+      { new: true }
     );
     
     res.json({
@@ -343,25 +347,9 @@ router.put('/:id', authenticate, upload.fields([
       data: updatedProduct
     });
   } catch (error) {
-    // Gérer l'erreur de duplication (nom de produit déjà utilisé pour cette marque)
-    if (error instanceof mongoose.Error.ValidationError) {
-      return res.status(400).json({
-        success: false,
-        message: 'Validation échouée',
-        error: error.message
-      });
-    }
-    
-    if (error instanceof Error && error.name === 'MongoError' && (error as any).code === 11000) {
-      return res.status(400).json({
-        success: false,
-        message: 'Un produit avec ce nom existe déjà pour cette marque'
-      });
-    }
-    
     res.status(500).json({
       success: false,
-      message: 'Erreur lors de la mise à jour du produit',
+      message: 'Erreur lors de l\'upload des images',
       error: error instanceof Error ? error.message : 'Erreur inconnue'
     });
   }

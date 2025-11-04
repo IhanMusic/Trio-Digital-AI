@@ -10,7 +10,6 @@
 export interface BriefData {
   // Identité de base
   companyName: string;
-  email: string;
   sector: string;
   companyDescription: string;
   logo: File | null;

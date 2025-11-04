@@ -104,7 +104,6 @@ ADN DE LA MARQUE
 IDENTITÉ CORPORATE:
 ${briefData.companyName}
 Secteur d'activité: ${briefData.sector}
-Contact: ${briefData.email}
 
 DESCRIPTION ENTREPRISE:
 ${briefData.companyDescription}
