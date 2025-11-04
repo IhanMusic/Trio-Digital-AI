@@ -1746,6 +1746,351 @@ export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
     mood: "Surreal wonder with intellectual engagement, cognitive surprise triggering memorability, dreamlike brand narrative, impossible made believable, conceptual depth beyond surface",
     technicalSpecs: "Medium format digital, 50mm at f/8, ISO 100, composite photography techniques, extensive post-production surrealism"
   },
+
+  // ========== INTELLIGENCE ARTIFICIELLE & MACHINE LEARNING (6 styles) ==========
+  {
+    name: "AI Neural Network Visualization",
+    category: "ai_tech",
+    reference: "IBM Watson AI campaigns, Google DeepMind visualization, neural network data flow photography, artificial intelligence visualization, machine learning algorithm representation, AI technology marketing",
+    lighting: "Blue-tinted technological lighting at 5800K suggesting digital intelligence, LED network patterns, data flow illumination, futuristic AI atmosphere, neural network glow effects",
+    composition: "Neural network patterns visible, data flow visualization, AI processing representation, machine learning algorithms in action, technological sophistication emphasis, digital intelligence visualization",
+    mood: "AI intelligence confidence, machine learning innovation, technological advancement, artificial intelligence future, digital transformation excitement",
+    technicalSpecs: "Sony A7SIII, 35mm f/1.4 at f/2.0, ISO 1600, LED pattern lighting, AI visualization effects"
+  },
+  {
+    name: "Machine Learning Data Processing",
+    category: "ai_tech",
+    reference: "Microsoft Azure AI campaigns, machine learning data processing visualization, algorithmic decision making photography, AI model training representation, data science visualization",
+    lighting: "Clean data center lighting at 5500K, server room illumination, data processing LED indicators, algorithmic precision lighting, machine learning facility atmosphere",
+    composition: "Data processing servers, machine learning algorithms visualization, AI model training in progress, data flow patterns, algorithmic decision trees, technological precision emphasis",
+    mood: "Machine learning precision, data processing confidence, algorithmic intelligence, AI model training dedication, technological sophistication",
+    technicalSpecs: "Canon EOS R5, 24-70mm f/2.8 at f/4, ISO 800, data center lighting, technological precision aesthetic"
+  },
+  {
+    name: "Robotics AI Integration",
+    category: "ai_tech",
+    reference: "Boston Dynamics robotics campaigns, AI-powered robotics photography, human-robot collaboration, artificial intelligence in robotics, automated systems visualization",
+    lighting: "Industrial robotics lighting at 5200K, robotic precision illumination, AI integration lighting, automated systems atmosphere, technological advancement lighting",
+    composition: "AI-powered robots in action, human-robot collaboration, automated precision systems, artificial intelligence controlling robotics, technological integration emphasis",
+    mood: "Robotics AI synergy, automated precision confidence, human-robot collaboration, artificial intelligence integration, technological evolution",
+    technicalSpecs: "Nikon D850, 50mm f/1.4 at f/2.8, ISO 1000, industrial robotics lighting, AI integration aesthetic"
+  },
+  {
+    name: "Computer Vision Recognition",
+    category: "ai_tech",
+    reference: "Computer vision AI campaigns, facial recognition technology, object detection visualization, AI visual processing, machine vision systems photography",
+    lighting: "Computer vision scanning lighting, recognition system illumination, AI visual processing atmosphere, technological scanning effects, digital recognition lighting",
+    composition: "Computer vision systems in action, AI recognition interfaces, visual processing algorithms, object detection visualization, machine vision precision",
+    mood: "Computer vision accuracy, AI recognition confidence, visual processing intelligence, machine vision precision, technological recognition advancement",
+    technicalSpecs: "Sony A7III, 85mm f/1.8 at f/2.8, ISO 640, computer vision lighting, recognition system aesthetic"
+  },
+  {
+    name: "Natural Language Processing AI",
+    category: "ai_tech",
+    reference: "OpenAI ChatGPT campaigns, natural language processing visualization, AI conversation interfaces, language model photography, conversational AI representation",
+    lighting: "Conversational AI lighting at 5000K, natural language interface illumination, AI communication atmosphere, digital conversation lighting, language processing glow",
+    composition: "AI conversation interfaces, natural language processing visualization, conversational AI in action, language model interactions, digital communication emphasis",
+    mood: "Conversational AI intelligence, natural language processing sophistication, AI communication advancement, digital conversation evolution, language model confidence",
+    technicalSpecs: "Canon EOS R6, 50mm f/1.2 at f/2.0, ISO 400, conversational interface lighting, AI communication aesthetic"
+  },
+  {
+    name: "Predictive Analytics AI",
+    category: "ai_tech",
+    reference: "Predictive analytics AI campaigns, data forecasting visualization, AI prediction models, algorithmic forecasting photography, predictive intelligence representation",
+    lighting: "Predictive analytics lighting showing data trends, forecasting visualization illumination, AI prediction atmosphere, algorithmic forecasting lighting, data trend glow",
+    composition: "Predictive models visualization, data forecasting graphs, AI prediction algorithms, trend analysis representation, predictive intelligence emphasis",
+    mood: "Predictive intelligence confidence, data forecasting accuracy, AI prediction sophistication, algorithmic forecasting precision, predictive analytics advancement",
+    technicalSpecs: "Fujifilm X-T4, 35mm f/1.4 at f/2.8, ISO 800, predictive analytics lighting, forecasting visualization aesthetic"
+  },
+
+  // ========== TRANSPORT & LOGISTIQUE (7 styles) ==========
+  {
+    name: "Global Logistics Network",
+    category: "transport",
+    reference: "DHL global logistics campaigns, FedEx worldwide network visualization, UPS supply chain photography, global shipping network representation, logistics coordination visualization",
+    lighting: "Global logistics lighting showing network connectivity, shipping facility illumination, logistics coordination atmosphere, worldwide network lighting, supply chain glow",
+    composition: "Global shipping networks, logistics coordination centers, worldwide delivery systems, supply chain visualization, international shipping emphasis",
+    mood: "Global logistics confidence, worldwide network reliability, supply chain efficiency, international shipping precision, logistics coordination excellence",
+    technicalSpecs: "Canon EOS R5, 24-70mm f/2.8 at f/5.6, ISO 400, logistics facility lighting, global network aesthetic"
+  },
+  {
+    name: "Urban Delivery Innovation",
+    category: "transport",
+    reference: "Amazon Prime delivery campaigns, urban logistics innovation, last-mile delivery photography, city delivery systems, urban transportation solutions",
+    lighting: "Urban delivery lighting at 5500K, city logistics illumination, delivery innovation atmosphere, urban transportation lighting, last-mile delivery glow",
+    composition: "Urban delivery vehicles, city logistics systems, last-mile delivery innovation, urban transportation solutions, delivery efficiency emphasis",
+    mood: "Urban delivery efficiency, city logistics innovation, last-mile delivery confidence, urban transportation advancement, delivery system reliability",
+    technicalSpecs: "Sony A7III, 35mm f/1.8 at f/2.8, ISO 800, urban delivery lighting, city logistics aesthetic"
+  },
+  {
+    name: "Autonomous Vehicle Future",
+    category: "transport",
+    reference: "Tesla Autopilot campaigns, autonomous vehicle technology, self-driving car photography, automated transportation systems, future mobility visualization",
+    lighting: "Autonomous vehicle lighting showing technological advancement, self-driving car illumination, automated transport atmosphere, future mobility lighting, autonomous system glow",
+    composition: "Self-driving vehicles in action, autonomous navigation systems, automated transportation technology, future mobility solutions, technological advancement emphasis",
+    mood: "Autonomous vehicle confidence, self-driving technology trust, automated transportation future, mobility innovation excitement, autonomous system reliability",
+    technicalSpecs: "Nikon Z7 II, 50mm f/1.4 at f/2.0, ISO 640, autonomous vehicle lighting, future mobility aesthetic"
+  },
+  {
+    name: "Maritime Shipping Scale",
+    category: "transport",
+    reference: "Maersk container shipping campaigns, maritime logistics photography, ocean freight visualization, port operations documentation, shipping container scale representation",
+    lighting: "Maritime shipping lighting showing port operations, container terminal illumination, ocean freight atmosphere, shipping scale lighting, port logistics glow",
+    composition: "Massive container ships, port terminal operations, maritime logistics scale, ocean freight systems, shipping container emphasis",
+    mood: "Maritime shipping scale, ocean freight reliability, port operations efficiency, shipping logistics confidence, maritime transport excellence",
+    technicalSpecs: "Canon EOS R6, 16-35mm f/2.8 at f/8, ISO 200, maritime lighting, shipping scale aesthetic"
+  },
+  {
+    name: "Aviation Cargo Operations",
+    category: "transport",
+    reference: "Cargo airline operations photography, air freight logistics, aviation shipping systems, airport cargo handling, air transport efficiency visualization",
+    lighting: "Aviation cargo lighting showing airport operations, air freight illumination, cargo handling atmosphere, aviation logistics lighting, air transport glow",
+    composition: "Cargo aircraft operations, airport freight handling, air logistics systems, aviation shipping efficiency, cargo transport emphasis",
+    mood: "Aviation cargo efficiency, air freight reliability, airport operations precision, aviation logistics confidence, air transport excellence",
+    technicalSpecs: "Sony A7RIII, 70-200mm f/2.8 at f/4, ISO 800, aviation lighting, cargo operations aesthetic"
+  },
+  {
+    name: "Rail Transport Efficiency",
+    category: "transport",
+    reference: "Rail freight transportation campaigns, train logistics photography, railway shipping systems, rail transport efficiency, freight train operations visualization",
+    lighting: "Rail transport lighting showing train operations, railway logistics illumination, freight transport atmosphere, rail efficiency lighting, train logistics glow",
+    composition: "Freight trains in operation, railway logistics systems, rail transport efficiency, train shipping networks, railway freight emphasis",
+    mood: "Rail transport reliability, freight train efficiency, railway logistics confidence, train transport excellence, rail shipping precision",
+    technicalSpecs: "Nikon D850, 24-120mm f/4 at f/8, ISO 400, railway lighting, rail transport aesthetic"
+  },
+  {
+    name: "Warehouse Automation Systems",
+    category: "transport",
+    reference: "Amazon fulfillment center automation, warehouse robotics photography, automated storage systems, logistics automation visualization, warehouse efficiency technology",
+    lighting: "Warehouse automation lighting showing robotic systems, automated storage illumination, logistics technology atmosphere, warehouse efficiency lighting, automation system glow",
+    composition: "Automated warehouse systems, robotic storage operations, logistics automation technology, warehouse efficiency systems, automated fulfillment emphasis",
+    mood: "Warehouse automation efficiency, robotic logistics confidence, automated storage precision, warehouse technology advancement, logistics automation excellence",
+    technicalSpecs: "Canon EOS R5, 24-70mm f/2.8 at f/4, ISO 1000, warehouse automation lighting, logistics technology aesthetic"
+  },
+
+  // ========== TÉLÉMÉDECINE & SANTÉ DIGITALE (5 styles) ==========
+  {
+    name: "Telemedicine Consultation Remote",
+    category: "telehealth",
+    reference: "Teladoc telemedicine campaigns, remote healthcare consultation photography, digital health services, virtual medical appointments, telehealth technology visualization",
+    lighting: "Telemedicine lighting creating comfortable remote consultation atmosphere, home healthcare illumination, digital health service lighting, virtual appointment atmosphere, telehealth technology glow",
+    composition: "Remote medical consultations via video, telemedicine technology in use, virtual healthcare appointments, digital health services, remote patient care emphasis",
+    mood: "Telemedicine accessibility, remote healthcare confidence, digital health convenience, virtual medical care trust, telehealth innovation comfort",
+    technicalSpecs: "Sony A7III, 50mm f/1.8 at f/2.2, ISO 800, home consultation lighting, telemedicine aesthetic"
+  },
+  {
+    name: "Digital Health Monitoring",
+    category: "telehealth",
+    reference: "Apple Health digital monitoring, wearable health technology photography, continuous health tracking, digital wellness monitoring, health data visualization",
+    lighting: "Digital health monitoring lighting showing wearable technology, health tracking illumination, wellness monitoring atmosphere, digital health data lighting, monitoring system glow",
+    composition: "Wearable health devices in use, digital health monitoring systems, continuous wellness tracking, health data visualization, digital monitoring emphasis",
+    mood: "Digital health empowerment, continuous monitoring confidence, wellness tracking dedication, health data intelligence, digital wellness advancement",
+    technicalSpecs: "Canon EOS R6, 85mm f/1.2 at f/2.8, ISO 400, digital health lighting, monitoring technology aesthetic"
+  },
+  {
+    name: "AI Medical Diagnosis",
+    category: "telehealth",
+    reference: "IBM Watson Health AI diagnosis, medical AI analysis photography, artificial intelligence in healthcare, AI-powered medical imaging, diagnostic AI technology",
+    lighting: "AI medical diagnosis lighting showing technological precision, medical AI illumination, diagnostic technology atmosphere, healthcare AI lighting, medical analysis glow",
+    composition: "AI medical analysis systems, diagnostic technology in action, medical AI interfaces, healthcare artificial intelligence, diagnostic precision emphasis",
+    mood: "AI medical precision, diagnostic technology confidence, healthcare AI advancement, medical analysis intelligence, diagnostic AI reliability",
+    technicalSpecs: "Nikon D850, 105mm f/2.8 macro at f/5.6, ISO 200, medical AI lighting, diagnostic technology aesthetic"
+  },
+  {
+    name: "Remote Patient Monitoring",
+    category: "telehealth",
+    reference: "Remote patient monitoring systems, continuous health surveillance photography, patient care technology, remote healthcare monitoring, digital patient care",
+    lighting: "Remote monitoring lighting showing patient care technology, healthcare surveillance illumination, patient monitoring atmosphere, remote care lighting, monitoring system glow",
+    composition: "Remote patient monitoring devices, continuous health surveillance, patient care technology systems, remote healthcare monitoring, digital patient care emphasis",
+    mood: "Remote patient care confidence, continuous monitoring reliability, healthcare surveillance precision, patient monitoring dedication, remote care advancement",
+    technicalSpecs: "Canon EOS R5, 50mm f/1.2 at f/2.0, ISO 640, patient monitoring lighting, remote care aesthetic"
+  },
+  {
+    name: "Digital Pharmacy Services",
+    category: "telehealth",
+    reference: "Digital pharmacy delivery services, online prescription photography, e-pharmacy technology, digital medication management, pharmacy automation systems",
+    lighting: "Digital pharmacy lighting showing online services, e-pharmacy illumination, medication management atmosphere, pharmacy technology lighting, digital prescription glow",
+    composition: "Digital pharmacy interfaces, online prescription systems, e-pharmacy technology, medication management platforms, digital pharmacy services emphasis",
+    mood: "Digital pharmacy convenience, e-pharmacy reliability, online prescription confidence, medication management efficiency, digital pharmacy innovation",
+    technicalSpecs: "Sony A7III, 35mm f/1.8 at f/2.8, ISO 800, digital pharmacy lighting, e-pharmacy aesthetic"
+  },
+
+  // ========== IMMOBILIER & ARCHITECTURE (8 styles) ==========
+  {
+    name: "Luxury Real Estate Architectural",
+    category: "real_estate",
+    reference: "Sotheby's International Realty luxury property campaigns, architectural photography tradition from Julius Shulman, luxury real estate marketing visual language, property lifestyle integration, architectural detail celebration, luxury living visualization",
+    lighting: "Golden hour architectural lighting at 3200K emphasizing building materials and textures, dramatic shadows creating depth and dimension, interior-exterior lighting balance, warm inviting illumination suggesting luxury living",
+    composition: "Wide establishing shots showing property scale and context, architectural detail close-ups revealing craftsmanship, interior-exterior flow visualization, lifestyle integration showing property in use, leading lines from architectural elements",
+    mood: "Luxury living aspiration, architectural excellence appreciation, investment value confidence, lifestyle elevation promise, sophisticated taste celebration",
+    technicalSpecs: "Canon EOS R5, 16-35mm f/2.8 tilt-shift at f/8, ISO 100, architectural lighting, HDR bracketing"
+  },
+  {
+    name: "Modern Urban Development",
+    category: "real_estate",
+    reference: "Urban development marketing campaigns, modern city living visualization, mixed-use development photography, urban lifestyle integration, contemporary architecture celebration, city skyline context",
+    lighting: "Blue hour urban lighting at 4500K showing building lights and city energy, architectural illumination highlighting modern design, urban ambient light creating metropolitan atmosphere",
+    composition: "Aerial perspective showing development in urban context, street-level lifestyle integration, architectural lines leading eye through composition, urban energy and modern living visualization, city connectivity emphasis",
+    mood: "Modern urban living excitement, city energy connection, contemporary lifestyle aspiration, urban convenience celebration, metropolitan sophistication",
+    technicalSpecs: "DJI Mavic 3 for aerials, Sony A7RIII for ground shots, 24-70mm f/2.8, blue hour timing, urban lighting mix"
+  },
+  {
+    name: "Family Home Lifestyle Integration",
+    category: "real_estate",
+    reference: "Family-focused real estate marketing, home as lifestyle enabler, suburban family living visualization, domestic happiness photography, home-family connection storytelling, residential comfort emphasis",
+    lighting: "Warm family home lighting at 4800K creating cozy domestic atmosphere, natural window light suggesting daily life, evening home illumination showing family gathering spaces",
+    composition: "Family using home spaces naturally, children playing in yards, family meals in dining areas, home as backdrop for family life, domestic comfort and functionality emphasis",
+    mood: "Family home warmth, domestic happiness, child-friendly environment, family gathering celebration, home as sanctuary, generational living",
+    technicalSpecs: "Canon EOS R6, 35mm f/1.8 at f/2.8, ISO 800, natural home lighting, family lifestyle aesthetic"
+  },
+  {
+    name: "Commercial Real Estate Professional",
+    category: "real_estate",
+    reference: "Commercial property marketing, office space visualization, retail location photography, business environment emphasis, commercial real estate investment visualization, professional workspace marketing",
+    lighting: "Professional office lighting at 5200K emphasizing productivity and business atmosphere, clean commercial illumination, modern workplace lighting suggesting efficiency",
+    composition: "Professional workspace functionality, business meeting areas, commercial space flexibility, location advantages (transport, amenities), investment potential visualization through professional presentation",
+    mood: "Business productivity confidence, commercial investment potential, professional workspace efficiency, location advantage emphasis, business growth enabler",
+    technicalSpecs: "Sony A7III, 24-70mm f/2.8 at f/5.6, ISO 400, commercial lighting, professional business aesthetic"
+  },
+  {
+    name: "Vacation Rental Paradise",
+    category: "real_estate",
+    reference: "Airbnb property photography, vacation rental marketing, holiday home visualization, travel accommodation photography, destination property marketing, rental income potential emphasis",
+    lighting: "Vacation destination lighting emphasizing location beauty, golden hour resort-style illumination, tropical or mountain lighting matching location, holiday atmosphere lighting",
+    composition: "Property in vacation context showing location advantages, holiday lifestyle integration, rental amenities highlighted, guest experience visualization, destination beauty emphasis",
+    mood: "Vacation escape fantasy, holiday rental income potential, destination living dream, travel accommodation comfort, vacation lifestyle enabler",
+    technicalSpecs: "Fujifilm X-T4, 16-55mm f/2.8 at f/4, ISO 400, destination lighting, vacation aesthetic"
+  },
+  {
+    name: "Historic Property Heritage",
+    category: "real_estate",
+    reference: "Historic property marketing, heritage building photography, period property restoration, architectural history celebration, historic preservation visualization, character property marketing",
+    lighting: "Period-appropriate lighting respecting architectural heritage, natural light emphasizing historic details, warm lighting suggesting timeless quality, heritage craftsmanship illumination",
+    composition: "Historic architectural details, period features highlighted, restoration quality evident, heritage context preserved, historic charm and modern comfort balance",
+    mood: "Historic heritage pride, architectural history respect, period character celebration, timeless quality appreciation, heritage preservation value",
+    technicalSpecs: "Leica Q2, 28mm f/1.7 at f/4, ISO 400, natural heritage lighting, historic preservation aesthetic"
+  },
+  {
+    name: "Sustainable Green Building",
+    category: "real_estate",
+    reference: "Green building certification marketing, sustainable architecture photography, eco-friendly construction visualization, LEED certified property marketing, environmental responsibility in real estate",
+    lighting: "Natural sustainable lighting emphasizing eco-friendly features, solar panel illumination, green technology visibility, environmental harmony lighting",
+    composition: "Sustainable features prominently displayed (solar panels, green roofs, natural materials), environmental integration, energy efficiency visualization, eco-friendly lifestyle connection",
+    mood: "Environmental responsibility pride, sustainable living commitment, green technology confidence, eco-friendly investment value, future-conscious living",
+    technicalSpecs: "Canon EOS R5, 24-105mm f/4 at f/8, ISO 200, natural eco-lighting, sustainability aesthetic"
+  },
+  {
+    name: "Virtual Property Tour 360",
+    category: "real_estate",
+    reference: "Virtual reality property tours, 360-degree property photography, immersive real estate marketing, remote property viewing technology, VR real estate innovation, digital property experience",
+    lighting: "Even 360-degree lighting ensuring consistent illumination in all directions, VR-optimized lighting preventing hotspots, immersive environment lighting",
+    composition: "360-degree room capture showing complete spaces, VR tour waypoints, immersive property experience, virtual walkthrough optimization, remote viewing enhancement",
+    mood: "Technology innovation in real estate, remote viewing convenience, immersive property experience, virtual tour sophistication, digital real estate future",
+    technicalSpecs: "Insta360 Pro 2, specialized VR lighting rigs, 360-degree capture, VR post-processing workflow"
+  },
+
+  // ========== ÉNERGIE & ENVIRONNEMENT (6 styles) ==========
+  {
+    name: "Solar Energy Innovation",
+    category: "energy",
+    reference: "Solar panel installation campaigns, renewable energy visualization, clean energy technology photography, solar farm aerial photography, sustainable energy future visualization, green technology marketing",
+    lighting: "Bright solar energy lighting at 5800K emphasizing clean energy production, solar panel reflection creating energy visualization, clean bright illumination suggesting renewable power",
+    composition: "Solar installations in various contexts (residential, commercial, utility-scale), clean energy technology details, environmental integration, energy independence visualization",
+    mood: "Clean energy optimism, renewable future confidence, environmental responsibility, energy independence empowerment, sustainable technology pride",
+    technicalSpecs: "DJI Mavic 3 for solar farm aerials, Canon EOS R6 for installations, 24-70mm f/2.8, bright solar lighting"
+  },
+  {
+    name: "Wind Power Majesty",
+    category: "energy",
+    reference: "Wind turbine photography, wind farm campaigns, renewable energy landscape integration, clean power generation visualization, wind energy scale and beauty, sustainable energy infrastructure",
+    lighting: "Natural outdoor lighting showing wind turbines in landscape context, dramatic sky lighting emphasizing scale, clean energy illumination, environmental harmony lighting",
+    composition: "Wind turbines in landscape showing scale and environmental integration, aerial perspectives of wind farms, turbine detail showing engineering excellence, clean energy infrastructure beauty",
+    mood: "Renewable energy majesty, clean power generation pride, environmental harmony, sustainable infrastructure beauty, wind energy elegance",
+    technicalSpecs: "Sony A7RIII, 70-200mm f/2.8 for distance shots, drone for aerials, natural landscape lighting"
+  },
+  {
+    name: "Electric Vehicle Charging Future",
+    category: "energy",
+    reference: "EV charging station photography, electric mobility infrastructure, sustainable transportation visualization, clean energy automotive integration, EV charging network marketing",
+    lighting: "Modern EV charging station lighting, LED indicators and screen glow, clean technology illumination, future mobility lighting, sustainable transport atmosphere",
+    composition: "EV charging in progress, modern charging infrastructure, electric vehicles in charging context, clean transportation technology, sustainable mobility visualization",
+    mood: "Electric mobility future, sustainable transportation confidence, clean energy automotive, EV infrastructure reliability, emission-free driving pride",
+    technicalSpecs: "Canon EOS R5, 35mm f/1.8 at f/2.8, ISO 800, modern EV station lighting, clean technology aesthetic"
+  },
+  {
+    name: "Hydroelectric Power Natural",
+    category: "energy",
+    reference: "Hydroelectric dam photography, water power generation, renewable energy from nature, hydroelectric infrastructure, clean water energy, natural power generation visualization",
+    lighting: "Natural water and dam lighting, hydroelectric facility illumination, water flow dynamics lighting, clean energy infrastructure lighting, natural power generation atmosphere",
+    composition: "Hydroelectric dams and water flow, power generation infrastructure, water energy conversion, clean power from natural resources, renewable energy scale",
+    mood: "Natural power generation, water energy reliability, renewable resource utilization, clean energy infrastructure, hydroelectric engineering excellence",
+    technicalSpecs: "Nikon D850, 24-120mm f/4 at f/8, ISO 400, natural water lighting, infrastructure photography"
+  },
+  {
+    name: "Geothermal Energy Underground",
+    category: "energy",
+    reference: "Geothermal energy visualization, underground power generation, earth energy utilization, geothermal plant photography, renewable energy from earth, sustainable heating and cooling",
+    lighting: "Geothermal facility lighting, steam and heat visualization, underground energy illumination, earth energy atmosphere, sustainable heating lighting",
+    composition: "Geothermal plants and steam, earth energy extraction, underground power visualization, renewable energy from earth, sustainable energy infrastructure",
+    mood: "Earth energy utilization, geothermal reliability, underground power confidence, renewable earth resources, sustainable energy innovation",
+    technicalSpecs: "Sony A7III, 50mm f/1.8 at f/4, ISO 640, geothermal facility lighting, earth energy aesthetic"
+  },
+  {
+    name: "Energy Storage Battery Technology",
+    category: "energy",
+    reference: "Battery storage facility photography, energy storage technology, grid-scale battery systems, renewable energy storage, clean energy infrastructure, battery technology innovation",
+    lighting: "Modern battery facility lighting, technology infrastructure illumination, clean energy storage lighting, battery system LED indicators, sustainable energy storage atmosphere",
+    composition: "Battery storage facilities, energy storage technology details, grid-scale storage systems, renewable energy storage infrastructure, clean energy technology",
+    mood: "Energy storage innovation, renewable energy reliability, battery technology confidence, clean energy infrastructure, sustainable power storage",
+    technicalSpecs: "Canon EOS R6, 24-70mm f/2.8 at f/5.6, ISO 400, modern facility lighting, technology infrastructure aesthetic"
+  },
+
+  // ========== WEB3 & CRYPTO (5 styles) ==========
+  {
+    name: "Cryptocurrency Digital Gold",
+    category: "crypto",
+    reference: "Bitcoin and cryptocurrency marketing campaigns, digital asset visualization, crypto trading platform photography, blockchain technology representation, digital currency future visualization",
+    lighting: "Digital gold lighting with warm metallic tones at 4000K, cryptocurrency glow effects, blockchain network illumination, digital asset premium lighting, crypto technology atmosphere",
+    composition: "Cryptocurrency symbols and digital representations, trading screens and market data, blockchain network visualization, digital asset security emphasis, crypto technology integration",
+    mood: "Digital asset confidence, cryptocurrency future optimism, blockchain technology trust, digital gold value, crypto innovation excitement",
+    technicalSpecs: "Sony A7SIII, 50mm f/1.2 at f/2.0, ISO 1600, digital effects lighting, cryptocurrency aesthetic"
+  },
+  {
+    name: "NFT Digital Art Collectibles",
+    category: "crypto",
+    reference: "NFT marketplace photography, digital art collectibles, blockchain art verification, crypto art community, digital ownership visualization, NFT collection showcase",
+    lighting: "Digital art gallery lighting, NFT display illumination, crypto art presentation lighting, digital collectible showcase lighting, blockchain art atmosphere",
+    composition: "NFT digital art displays, crypto art collections, blockchain verification visible, digital ownership representation, NFT marketplace interface",
+    mood: "Digital art ownership pride, NFT collectible excitement, crypto art community, blockchain verification trust, digital asset creativity",
+    technicalSpecs: "Canon EOS R5, 85mm f/1.2 at f/2.8, ISO 400, digital gallery lighting, NFT art aesthetic"
+  },
+  {
+    name: "DeFi Decentralized Finance",
+    category: "crypto",
+    reference: "DeFi protocol visualization, decentralized finance platforms, crypto lending and staking, blockchain financial services, DeFi yield farming, decentralized banking future",
+    lighting: "Financial technology lighting, DeFi platform screen glow, decentralized finance illumination, crypto financial services lighting, blockchain banking atmosphere",
+    composition: "DeFi platform interfaces, decentralized finance protocols, crypto financial services, blockchain banking visualization, DeFi yield and staking representation",
+    mood: "Decentralized finance freedom, DeFi protocol confidence, crypto financial innovation, blockchain banking trust, decentralized economy empowerment",
+    technicalSpecs: "Fujifilm X-T4, 35mm f/1.4 at f/2.2, ISO 800, fintech lighting, DeFi platform aesthetic"
+  },
+  {
+    name: "Metaverse Virtual Worlds",
+    category: "crypto",
+    reference: "Metaverse platform visualization, virtual world photography, Web3 gaming environments, metaverse real estate, virtual reality crypto integration, digital world exploration",
+    lighting: "Virtual world lighting effects, metaverse environment illumination, digital reality lighting, virtual space atmosphere, Web3 gaming lighting",
+    composition: "Metaverse virtual environments, digital world exploration, virtual reality integration, metaverse avatars and spaces, Web3 gaming visualization",
+    mood: "Virtual world exploration excitement, metaverse future vision, digital reality immersion, Web3 gaming adventure, virtual space creativity",
+    technicalSpecs: "VR capture equipment, digital world rendering, metaverse platform integration, virtual photography techniques"
+  },
+  {
+    name: "Blockchain Network Visualization",
+    category: "crypto",
+    reference: "Blockchain network photography, distributed ledger visualization, crypto mining operations, blockchain infrastructure, decentralized network representation, crypto technology backbone",
+    lighting: "Network infrastructure lighting, blockchain node illumination, crypto mining facility lighting, distributed network visualization, blockchain technology atmosphere",
+    composition: "Blockchain network representations, crypto mining operations, distributed ledger visualization, blockchain infrastructure, decentralized network nodes",
+    mood: "Blockchain technology confidence, distributed network reliability, crypto infrastructure trust, decentralized system strength, blockchain innovation pride",
+    technicalSpecs: "Nikon D850, 24-70mm f/2.8 at f/5.6, ISO 800, infrastructure lighting, blockchain network aesthetic"
+  },
   {
     name: "Stop Motion Tactile Craft",
     category: "animation",
@@ -2398,6 +2743,214 @@ export const CREATIVE_CONTEXTS: CreativeContext[] = [
   {
     name: "Mother's Father's Day Family",
     description: "Fête mères/pères famille, cadeaux faits main, repas famille réuni, reconnaissance parentale, amour filial, générations ensemble, gratitude exprimée, liens familiaux célébrés"
+  },
+
+  // ========== CATÉGORIE J : CONTEXTES MICRO-MOMENTS (15 nouveaux) ==========
+  {
+    name: "Morning Commute Urban",
+    description: "Trajet matinal urbain, transport en commun bondé, café à emporter, podcast écouteurs, routine quotidienne, énergie matinale, préparation journée, mobilité urbaine"
+  },
+  {
+    name: "Lunch Break Office Escape",
+    description: "Pause déjeuner bureau, échappée rapide, sandwich sur le pouce, parc urbain proche, respiration entre réunions, moment personnel, recharge énergétique, détente express"
+  },
+  {
+    name: "Evening Wind-Down Ritual",
+    description: "Rituel détente soirée, fin journée travail, transition maison, vêtements confortables, thé apaisant, moment décompression, préparation repos, sérénité retrouvée"
+  },
+  {
+    name: "Weekend Grocery Adventure",
+    description: "Courses weekend famille, marché local coloré, liste en main, enfants curieux, produits frais sélection, préparation repas semaine, approvisionnement domestique, vie familiale"
+  },
+  {
+    name: "Late Night Study Grind",
+    description: "Session révision nocturne, bureau éclairé, livres ouverts, café refroidi, concentration intense, examens approche, détermination étudiante, sacrifice sommeil"
+  },
+  {
+    name: "Pre-Meeting Power Prep",
+    description: "Préparation réunion importante, documents organisés, présentation peaufinée, confiance construction, enjeux élevés, professionnalisme maximal, stress contrôlé, performance anticipée"
+  },
+  {
+    name: "Post-Workout Endorphin High",
+    description: "Après entraînement, endorphines circulation, satisfaction effort, serviette épaules, bouteille eau, accomplissement physique, énergie positive, bien-être corporel"
+  },
+  {
+    name: "Sunday Morning Slow",
+    description: "Dimanche matin lent, réveil naturel, petit-déjeuner prolongé, journaux dépliés, rythme apaisé, luxe temporel, famille rassemblée, tranquillité dominicale"
+  },
+  {
+    name: "First Coffee Sacred Moment",
+    description: "Premier café sacré, réveil progressif, arôme enveloppant, silence matinal, rituel personnel, énergie montante, jour qui commence, moment privilégié"
+  },
+  {
+    name: "Bedtime Story Tender",
+    description: "Histoire coucher enfant, livre illustré, voix douce, lumière tamisée, câlins réconfortants, imagination voyage, transition sommeil, amour parental"
+  },
+  {
+    name: "Waiting Room Patience",
+    description: "Salle d'attente patience, magazines feuilletés, temps suspendu, anticipation rendez-vous, nervosité contenue, observation discrète, moment introspection"
+  },
+  {
+    name: "Elevator Small Talk",
+    description: "Ascenseur conversation polie, étages défilent, proximité temporaire, politesse urbaine, échange superficiel, temps compressé, civilité moderne"
+  },
+  {
+    name: "Traffic Jam Meditation",
+    description: "Embouteillage méditation forcée, patience automobile, radio compagnie, temps ralenti, réflexion involontaire, stress urbain, acceptation situation"
+  },
+  {
+    name: "Checkout Line Observation",
+    description: "File d'attente caisse, observation humaine, achats révélateurs, patience commerciale, vie quotidienne spectacle, attente productive, sociologie supermarché"
+  },
+  {
+    name: "Phone Call Walking",
+    description: "Appel téléphonique marche, multitâche moderne, conversation mobile, pas rythmés, communication nomade, efficacité temporelle, connexion mouvement"
+  },
+
+  // ========== CATÉGORIE K : CONTEXTES GÉNÉRATIONNELS (10 nouveaux) ==========
+  {
+    name: "Gen Alpha Digital Native",
+    description: "Génération Alpha ultra-connectée, tablette intuitive, applications éducatives, réalité augmentée naturelle, intelligence artificielle familière, créativité numérique, futur digital"
+  },
+  {
+    name: "Gen Z Creator Economy",
+    description: "Génération Z économie créative, contenu viral création, influence sociale, entrepreneuriat digital, authenticité valorisée, diversité célébrée, changement social"
+  },
+  {
+    name: "Millennial Work-Life Balance",
+    description: "Millennial équilibre vie, télétravail flexible, bien-être priorité, expériences valorisées, durabilité consciente, technologie intégrée, accomplissement personnel"
+  },
+  {
+    name: "Gen X Sandwich Generation",
+    description: "Génération X sandwich, enfants adolescents, parents vieillissants, responsabilités multiples, carrière établie, pragmatisme expérimenté, stabilité recherchée"
+  },
+  {
+    name: "Boomer Active Retirement",
+    description: "Baby-boomer retraite active, sagesse partagée, voyages découverte, bénévolat engagé, petits-enfants choyés, santé préservée, héritage transmission"
+  },
+  {
+    name: "Gen Z Mental Health First",
+    description: "Génération Z santé mentale priorité, thérapie normalisée, auto-soin rituels, limites saines, vulnérabilité force, communauté support, bien-être holistique"
+  },
+  {
+    name: "Millennial Conscious Parenting",
+    description: "Millennial parentalité consciente, éducation bienveillante, écrans limités, nature privilégiée, émotions validées, diversité enseignée, futur préparé"
+  },
+  {
+    name: "Gen X Career Peak",
+    description: "Génération X apogée carrière, leadership expérimenté, mentorat jeunes, expertise reconnue, équilibre trouvé, influence maximale, transmission savoir"
+  },
+  {
+    name: "Boomer Grandparent Joy",
+    description: "Baby-boomer joie grands-parents, transmission traditions, histoires racontées, sagesse partagée, amour inconditionnel, héritage familial, générations liées"
+  },
+  {
+    name: "Gen Alpha Learning Revolution",
+    description: "Génération Alpha révolution apprentissage, IA tuteur personnel, réalité virtuelle éducative, apprentissage adaptatif, créativité augmentée, futur éducation"
+  },
+
+  // ========== CATÉGORIE L : CONTEXTES SECTORIELS HYPER-SPÉCIALISÉS (15 nouveaux) ==========
+  {
+    name: "Veterinary Clinic Compassionate",
+    description: "Clinique vétérinaire compassion, animaux soignés tendrement, propriétaires inquiets, équipement médical adapté, guérison espoir, amour animal, professionnalisme bienveillant"
+  },
+  {
+    name: "Legal Office Professional Authority",
+    description: "Cabinet avocat autorité professionnelle, bibliothèque juridique imposante, dossiers confidentiels, justice service, expertise reconnue, confiance client, droit défendu"
+  },
+  {
+    name: "Dental Practice Modern Comfort",
+    description: "Cabinet dentaire moderne confort, équipement high-tech, ambiance apaisante, sourire santé, prévention priorité, technologie douce, bien-être bucco-dentaire"
+  },
+  {
+    name: "Accounting Firm Trusted Precision",
+    description: "Cabinet comptable confiance précision, chiffres exactitude, conseils avisés, fiscalité maîtrisée, entreprises accompagnées, rigueur professionnelle, expertise financière"
+  },
+  {
+    name: "Insurance Office Reassuring Security",
+    description: "Bureau assurance sécurité rassurante, protection famille, risques couverts, tranquillité esprit, conseiller attentif, avenir protégé, sérénité garantie"
+  },
+  {
+    name: "Real Estate Open House Dream",
+    description: "Visite immobilière rêve accessible, maison parfaite, famille projection, investissement futur, négociation équitable, clés bonheur, foyer trouvé"
+  },
+  {
+    name: "Optometry Vision Care",
+    description: "Cabinet optométrie soins vision, vue préservée, lunettes stylées, examens précis, technologie avancée, confort visuel, clarté retrouvée"
+  },
+  {
+    name: "Physical Therapy Recovery",
+    description: "Kinésithérapie récupération, mouvement retrouvé, douleur soulagée, exercices guidés, motivation constante, corps réparé, mobilité restaurée"
+  },
+  {
+    name: "Pharmacy Community Care",
+    description: "Pharmacie soins communautaires, conseils santé, médicaments sécurisés, prévention active, bien-être local, accessibilité médicale, santé proximité"
+  },
+  {
+    name: "Architecture Studio Creative Vision",
+    description: "Studio architecture vision créative, plans innovants, espaces rêvés, fonctionnalité beauté, projets ambitieux, créativité structurée, bâtir futur"
+  },
+  {
+    name: "Consulting Firm Strategic Insight",
+    description: "Cabinet conseil insight stratégique, solutions innovantes, transformation guidée, expertise sectorielle, performance optimisée, croissance accompagnée, succès partagé"
+  },
+  {
+    name: "Translation Agency Global Bridge",
+    description: "Agence traduction pont global, langues maîtrisées, cultures connectées, communication fluide, barrières supprimées, monde rapproché, compréhension universelle"
+  },
+  {
+    name: "Event Planning Magic Moments",
+    description: "Organisation événements moments magiques, célébrations parfaites, détails soignés, émotions orchestrées, souvenirs créés, rêves réalisés, bonheur organisé"
+  },
+  {
+    name: "Graphic Design Studio Creativity",
+    description: "Studio graphisme créativité débordante, idées visualisées, marques créées, messages impactants, esthétique fonctionnelle, communication visuelle, art commercial"
+  },
+  {
+    name: "Recruitment Agency Career Catalyst",
+    description: "Agence recrutement catalyseur carrière, talents révélés, opportunités créées, matching parfait, ambitions réalisées, potentiel libéré, succès professionnel"
+  },
+
+  // ========== CATÉGORIE M : CONTEXTES ÉMERGENTS 2024-2025 (10 nouveaux) ==========
+  {
+    name: "AI Workplace Integration Seamless",
+    description: "IA intégrée travail harmonieux, assistance intelligente, productivité augmentée, créativité amplifiée, collaboration homme-machine, efficacité nouvelle, futur travail"
+  },
+  {
+    name: "Climate Solutions Optimistic Action",
+    description: "Solutions climatiques action optimiste, éco-innovations prometteuses, énergie renouvelable, économie circulaire, espoir environnemental, planète préservée, futur durable"
+  },
+  {
+    name: "Mental Health First Aid Normalized",
+    description: "Premiers secours psychologiques normalisés, bien-être mental priorité, soutien accessible, stigma éliminé, résilience renforcée, santé holistique, équilibre retrouvé"
+  },
+  {
+    name: "Hybrid Work Flexibility Mastered",
+    description: "Travail hybride flexibilité maîtrisée, bureau-maison équilibre, collaboration digitale, autonomie responsable, productivité optimisée, vie équilibrée, nouvelle normalité"
+  },
+  {
+    name: "Digital Detox Mindful Reconnection",
+    description: "Détox digitale reconnexion consciente, écrans éteints, nature retrouvée, relations authentiques, présent savouré, simplicité redécouverte, équilibre numérique"
+  },
+  {
+    name: "Circular Economy Innovation Hub",
+    description: "Économie circulaire hub innovation, déchets ressources, réutilisation créative, durabilité profitable, impact positif, modèle économique révolutionnaire, planète respectée"
+  },
+  {
+    name: "Neurodiversity Celebration Workplace",
+    description: "Neurodiversité célébrée travail, différences valorisées, talents uniques, inclusion authentique, perspectives enrichies, créativité diversifiée, équipes renforcées"
+  },
+  {
+    name: "Longevity Wellness Lifestyle",
+    description: "Longévité bien-être lifestyle, vieillissement sain, prévention active, vitalité préservée, années qualité, santé investissement, vie prolongée"
+  },
+  {
+    name: "Space Economy Commercial Frontier",
+    description: "Économie spatiale frontière commerciale, tourisme spatial, ressources extraterrestres, technologies spatiales, exploration privée, univers accessible, futur cosmique"
+  },
+  {
+    name: "Quantum Computing Revolution Dawn",
+    description: "Révolution informatique quantique aube, calculs impossibles, problèmes résolus, science accélérée, découvertes exponentielles, futur computationnel, réalité transformée"
   }
 ];
 
@@ -2473,7 +3026,8 @@ export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
   'lifestyle': ['lifestyle', 'fashion', 'minimal'],
   
   // TECHNOLOGIE
-  'technology': ['minimal', 'studio', 'lifestyle'],
+  'technology': ['minimal', 'studio', 'lifestyle', 'ai_tech'],
+  'tech': ['minimal', 'studio', 'lifestyle', 'ai_tech'],
   
   // LUXE
   'luxury': ['luxury', 'editorial', 'lifestyle'],
@@ -2485,32 +3039,73 @@ export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
   // FINANCE & BANQUE
   'finance': ['finance', 'minimal', 'studio'],
   'banking': ['finance', 'minimal', 'studio'],
+  'fintech': ['finance', 'minimal', 'ai_tech'],
   
   // SANTÉ
-  'health': ['healthcare', 'minimal'],
-  'healthcare': ['healthcare', 'minimal'],
+  'health': ['healthcare', 'minimal', 'telehealth'],
+  'healthcare': ['healthcare', 'minimal', 'telehealth'],
+  'medical': ['healthcare', 'minimal', 'telehealth'],
+  'telehealth': ['telehealth', 'healthcare', 'minimal'],
   
   // ÉDUCATION
+  'education': ['education', 'lifestyle', 'minimal'],
+  'learning': ['education', 'lifestyle', 'minimal'],
   
   // AGRICULTURE
   'agriculture': ['agriculture', 'food', 'lifestyle'],
+  'farming': ['agriculture', 'food', 'lifestyle'],
   
   // ARTISANAT
   'craft': ['artisanat', 'lifestyle'],
   'artisanat': ['artisanat', 'lifestyle'],
+  'handmade': ['artisanat', 'lifestyle'],
   
   // BIENS DE CONSOMMATION
-  'consumer-goods': ['studio', 'lifestyle', 'minimal'],
+  'consumer-goods': ['consumer_goods', 'studio', 'lifestyle', 'minimal'],
+  'retail': ['consumer_goods', 'studio', 'lifestyle'],
   
   // COMMUNICATION & MÉDIAS
-  'media': ['minimal', 'lifestyle', 'studio'],
-  'communication': ['minimal', 'lifestyle', 'studio'],
+  'media': ['media', 'minimal', 'lifestyle', 'studio'],
+  'communication': ['media', 'minimal', 'lifestyle', 'studio'],
+  'advertising': ['media', 'minimal', 'lifestyle', 'studio'],
   
-  // INDUSTRIE
-  'manufacturing': ['studio', 'minimal'],
-  'industry': ['studio', 'minimal'],
+  // INDUSTRIE MANUFACTURIÈRE
+  'manufacturing': ['manufacturing', 'studio', 'minimal'],
+  'industry': ['manufacturing', 'studio', 'minimal'],
+  'industrial': ['manufacturing', 'studio', 'minimal'],
+  
+  // IMMOBILIER & ARCHITECTURE
+  'real-estate': ['real_estate', 'lifestyle', 'luxury'],
+  'realestate': ['real_estate', 'lifestyle', 'luxury'],
+  'architecture': ['real_estate', 'lifestyle', 'luxury'],
+  'property': ['real_estate', 'lifestyle', 'luxury'],
+  
+  // ÉNERGIE & ENVIRONNEMENT
+  'energy': ['energy', 'lifestyle', 'minimal'],
+  'renewable': ['energy', 'lifestyle', 'minimal'],
+  'environment': ['energy', 'lifestyle', 'minimal'],
+  'sustainability': ['energy', 'lifestyle', 'minimal'],
+  
+  // WEB3 & CRYPTO
+  'crypto': ['crypto', 'ai_tech', 'minimal'],
+  'blockchain': ['crypto', 'ai_tech', 'minimal'],
+  'web3': ['crypto', 'ai_tech', 'minimal'],
+  'nft': ['crypto', 'ai_tech', 'minimal'],
+  
+  // INTELLIGENCE ARTIFICIELLE
+  'ai': ['ai_tech', 'minimal', 'studio'],
+  'artificial-intelligence': ['ai_tech', 'minimal', 'studio'],
+  'machine-learning': ['ai_tech', 'minimal', 'studio'],
+  'robotics': ['ai_tech', 'minimal', 'studio'],
+  
+  // TRANSPORT & LOGISTIQUE
+  'transport': ['transport', 'lifestyle', 'minimal'],
+  'logistics': ['transport', 'lifestyle', 'minimal'],
+  'shipping': ['transport', 'lifestyle', 'minimal'],
+  'delivery': ['transport', 'lifestyle', 'minimal'],
   
   // FALLBACK GÉNÉRIQUE
+  'default': ['lifestyle', 'minimal', 'studio']
 };
 
 /**
@@ -2586,7 +3181,6 @@ export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
   
   // ========== MOMENTS DE CONSOMMATION SPÉCIFIQUES ==========
   'on-the-go': ['Street Urban Authentic', 'New York Rooftop Urban', 'Tokyo Neon Cyberpunk', 'Airport Business Lounge', 'Urban Loft Industrial', 'Convenience Store 24/7'],
-  'post-workout': ['Sports Stadium Energy', 'Spa Wellness Zen', 'Beach Sunset Romance', 'Modern Office Workspace', 'Yoga Lifestyle Flow', 'Home Office Remote Work'],
   'pre-workout': ['Sports Stadium Energy', 'Home Office Remote Work', 'Urban Loft Industrial', 'Outdoor Nature Setting', 'Modern Office Workspace'],
   'hydration': ['Sports Stadium Energy', 'Beach Sunset Romance', 'Outdoor Nature Setting', 'Yoga Lifestyle Flow', 'Summer Beach Vacation', 'Mountain Peak Achievement'],
   'refreshment': ['Beach Sunset Romance', 'Summer Beach Vacation', 'Music Festival Outdoor', 'Outdoor Nature Setting', 'Sports Stadium Energy', 'Spa Wellness Zen'],
@@ -2617,8 +3211,8 @@ export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
   'running': ['Outdoor Nature Setting', 'Beach Sunset Romance', 'Mountain Peak Achievement', 'Urban Loft Industrial'],
   
   // ========== BEAUTÉ & SOINS ==========
-  'morning-routine': ['Modern Kitchen Bright', 'Spa Wellness Zen', 'Minimalist Studio White', 'Home Office Remote Work'],
-  'evening-routine': ['Spa Wellness Zen', 'Cozy Home Comfort', 'Luxury Hotel Suite', 'Baby Nursery Tender'],
+  'morning-skincare': ['Modern Kitchen Bright', 'Spa Wellness Zen', 'Minimalist Studio White', 'Home Office Remote Work'],
+  'evening-skincare': ['Spa Wellness Zen', 'Cozy Home Comfort', 'Luxury Hotel Suite', 'Baby Nursery Tender'],
   'skincare': ['Spa Wellness Zen', 'Minimalist Studio White', 'Botanical Garden Natural', 'Luxury Hotel Suite'],
   'makeup': ['Minimalist Studio White', 'Fashion Runway Backstage', 'Luxury Hotel Suite', 'Boutique Retail Chic'],
   'haircare': ['Spa Wellness Zen', 'Fashion Runway Backstage', 'Parisian Café Classic', 'Luxury Hotel Suite'],
@@ -2701,6 +3295,18 @@ export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
   'dreamy': ['Dream Sequence Surreal', 'Cloud Kingdom Ethereal', 'Underwater Fantasy', 'Northern Lights Wonder'],
   'energetic': ['Music Festival Outdoor', 'Sports Stadium Energy', 'Brazilian Carnival Energy', 'Tokyo Neon Cyberpunk'],
   
+  // ========== MICRO-MOMENTS ENRICHIS ==========
+  'morning-commute': ['Morning Commute Urban', 'Street Urban Authentic', 'New York Rooftop Urban', 'Tokyo Neon Cyberpunk', 'Urban Loft Industrial', 'Business District Skyline'],
+  'lunch-break': ['Lunch Break Office Escape', 'Business Lunch Restaurant', 'Parisian Café Classic', 'Coworking Space Collaborative', 'Modern Office Workspace', 'Street Urban Authentic'],
+  'evening-routine': ['Evening Wind-Down Ritual', 'Spa Wellness Zen', 'Cozy Home Comfort', 'Scandinavian Hygge Cozy', 'Home Office Remote Work', 'Luxury Hotel Suite'],
+  'weekend-grocery': ['Weekend Grocery Adventure', 'Market Stall Authentic', 'Supermarket Aisle Bright', 'Family Kitchen Busy', 'Cozy Home Comfort', 'Sustainable Eco-Home'],
+  'late-night-study': ['Late Night Study Grind', 'Student Dorm Campus', 'Home Office Remote Work', 'Modern Office Workspace', 'Coworking Space Collaborative', 'Minimalist Studio White'],
+  'pre-meeting': ['Pre-Meeting Power Prep', 'Corporate Boardroom Executive', 'Modern Office Workspace', 'Conference Center Professional', 'Business District Skyline', 'Hotel Conference Room'],
+  'post-workout': ['Post-Workout Endorphin High', 'Sports Stadium Energy', 'Spa Wellness Zen', 'Modern Office Workspace', 'Home Office Remote Work', 'Outdoor Nature Setting'],
+  'sunday-morning': ['Sunday Morning Slow', 'Cozy Home Comfort', 'Scandinavian Hygge Cozy', 'Family Kitchen Busy', 'Parisian Café Classic', 'Botanical Garden Natural'],
+  'first-coffee': ['First Coffee Sacred Moment', 'Modern Kitchen Bright', 'Cozy Home Comfort', 'Parisian Café Classic', 'Home Office Remote Work', 'Scandinavian Hygge Cozy'],
+  'bedtime-story': ['Bedtime Story Tender', 'Baby Nursery Tender', 'Cozy Home Comfort', 'Family Kitchen Busy', 'Childhood Memory Nostalgic', 'Teenager Bedroom Personal'],
+
   // ========== FALLBACK ENRICHI ==========
   'default': ['Minimalist Studio White', 'Modern Kitchen Bright', 'Cozy Home Comfort', 'Outdoor Nature Setting', 'Urban Loft Industrial', 'Boutique Retail Chic']
 };
