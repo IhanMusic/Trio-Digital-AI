@@ -114,6 +114,8 @@ const Results: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isPolling, setIsPolling] = useState(false);
+  const [lastPostCount, setLastPostCount] = useState(0);
 
   const updatePost = useCallback(async (postId: string, newText: string) => {
     try {
@@ -137,6 +139,52 @@ const Results: React.FC = () => {
   }, [token]);
 
   const debouncedUpdate = useDebounce(updatePost, 1000);
+
+  // Fonction de refresh intelligente pour le polling
+  const refreshPosts = useCallback(async () => {
+    if (isPolling) return; // Éviter les appels multiples
+    
+    try {
+      setIsPolling(true);
+      
+      const response = await fetch(
+        `${config.apiUrl}/posts/calendar/${calendarId}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      
+      if (!response.ok) {
+        console.error('Erreur lors du refresh des posts');
+        return;
+      }
+
+      const result = await response.json();
+      if (!result.success) {
+        console.error('Erreur API lors du refresh:', result.error);
+        return;
+      }
+
+      const newPostsData = result.data;
+      
+      // Comparer avec les posts existants
+      if (newPostsData.length > posts.length) {
+        console.log(`Nouveaux posts détectés: ${newPostsData.length - posts.length} posts ajoutés`);
+        
+        // Charger les dimensions des nouvelles images
+        await Promise.all(newPostsData.map(loadImageDimensions));
+        
+        setPosts(newPostsData);
+        setLastPostCount(newPostsData.length);
+      }
+    } catch (error) {
+      console.error('Erreur lors du refresh des posts:', error);
+    } finally {
+      setIsPolling(false);
+    }
+  }, [calendarId, token, posts.length, isPolling]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -175,6 +223,41 @@ const Results: React.FC = () => {
 
     fetchPosts();
   }, [calendarId, token]);
+
+  // Système de polling automatique
+  useEffect(() => {
+    if (posts.length === 0 || loading) return; // Pas de polling avant le premier chargement
+    
+    console.log('Démarrage du polling automatique pour les nouveaux posts');
+    
+    // Déterminer si la génération est probablement terminée
+    const allPostsHaveMedia = posts.every(post => 
+      post.content.imageUrl || post.content.videoUrl
+    );
+    
+    // Si tous les posts ont leurs médias, arrêter le polling
+    if (allPostsHaveMedia && posts.length > 0) {
+      console.log('Tous les posts ont leurs médias, arrêt du polling');
+      return;
+    }
+    
+    // Démarrer le polling toutes les 10 secondes
+    const interval = setInterval(() => {
+      console.log('Polling: vérification de nouveaux posts...');
+      refreshPosts();
+    }, 10000);
+    
+    // Timeout de sécurité après 10 minutes
+    const timeout = setTimeout(() => {
+      console.log('Timeout du polling après 10 minutes');
+      clearInterval(interval);
+    }, 10 * 60 * 1000);
+    
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [posts.length, loading, refreshPosts]);
 
   // Effet pour mettre à jour les dimensions des images si nécessaire
   useEffect(() => {
@@ -266,9 +349,19 @@ const Results: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-10 bg-gradient-to-r from-white to-[#53dfb2] bg-clip-text text-transparent">
-        Publications Générées
-      </h1>
+      <div className="flex items-center justify-between mb-10">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-[#53dfb2] bg-clip-text text-transparent">
+          Publications Générées
+        </h1>
+        
+        {/* Indicateur de polling actif */}
+        {!loading && posts.length > 0 && !posts.every(post => post.content.imageUrl || post.content.videoUrl) && (
+          <div className="flex items-center space-x-2 text-sm text-white/60">
+            <div className="w-2 h-2 bg-[#53dfb2] rounded-full animate-pulse"></div>
+            <span>Génération en cours...</span>
+          </div>
+        )}
+      </div>
       
       {Object.entries(groupedPosts).map(([platform, platformPosts]) => (
         <div key={platform} className="mb-12">
