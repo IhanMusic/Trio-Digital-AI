@@ -2473,7 +2473,6 @@ export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
   'lifestyle': ['lifestyle', 'fashion', 'minimal'],
   
   // TECHNOLOGIE
-  'tech': ['minimal', 'studio', 'lifestyle'],
   'technology': ['minimal', 'studio', 'lifestyle'],
   
   // LUXE
@@ -2492,7 +2491,6 @@ export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
   'healthcare': ['healthcare', 'minimal'],
   
   // ÉDUCATION
-  'education': ['education', 'lifestyle'],
   
   // AGRICULTURE
   'agriculture': ['agriculture', 'food', 'lifestyle'],
@@ -2513,24 +2511,105 @@ export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
   'industry': ['studio', 'minimal'],
   
   // FALLBACK GÉNÉRIQUE
-  'default': ['lifestyle', 'minimal', 'studio']
 };
 
 /**
  * Mapping des occasions d'usage vers les contextes visuels pertinents
- * ENRICHI avec les 100 contextes disponibles
+ * ENRICHI MASSIVEMENT avec les 100 contextes disponibles pour MAXIMISER LA DIVERSITÉ
  */
 export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
   // ========== MOMENTS ALIMENTAIRES ==========
-  'breakfast': ['Modern Kitchen Bright', 'Cozy Home Comfort', 'Family Kitchen Busy', 'Home Office Remote Work'],
-  'lunch': ['Modern Kitchen Bright', 'Business Lunch Restaurant', 'Outdoor Nature Setting', 'Coworking Space Collaborative'],
-  'dinner': ['Cozy Home Comfort', 'Luxury Hotel Suite', 'Rustic Countryside', 'Family Kitchen Busy'],
-  'snack': ['Modern Kitchen Bright', 'Outdoor Nature Setting', 'Street Urban Authentic', 'Convenience Store 24/7'],
-  'coffee': ['Parisian Café Classic', 'Coworking Space Collaborative', 'Home Office Remote Work', 'Airport Business Lounge'],
-  'dessert': ['Cozy Home Comfort', 'Parisian Café Classic', 'Luxury Hotel Suite', 'Birthday Party Celebration'],
+  'breakfast': ['Modern Kitchen Bright', 'Cozy Home Comfort', 'Family Kitchen Busy', 'Home Office Remote Work', 'Scandinavian Hygge Cozy', 'Parisian Café Classic'],
+  'lunch': ['Modern Kitchen Bright', 'Business Lunch Restaurant', 'Outdoor Nature Setting', 'Coworking Space Collaborative', 'Parisian Café Classic', 'Mediterranean Villa Luxury'],
+  'dinner': ['Cozy Home Comfort', 'Luxury Hotel Suite', 'Rustic Countryside', 'Family Kitchen Busy', 'Mediterranean Villa Luxury', 'Parisian Café Classic'],
+  'snack': ['Modern Kitchen Bright', 'Outdoor Nature Setting', 'Street Urban Authentic', 'Convenience Store 24/7', 'Coworking Space Collaborative', 'Urban Loft Industrial'],
+  'dessert': ['Cozy Home Comfort', 'Parisian Café Classic', 'Luxury Hotel Suite', 'Birthday Party Celebration', 'Mediterranean Villa Luxury', 'Wedding Reception Elegant'],
+  
+  // ========== BOISSONS - JUS & SMOOTHIES (ENRICHI MASSIVEMENT) ==========
+  'juice': ['Beach Sunset Romance', 'Botanical Garden Natural', 'Brazilian Carnival Energy', 'African Savanna Wild', 'Tokyo Neon Cyberpunk', 'New York Rooftop Urban', 'Summer Beach Vacation', 'Outdoor Nature Setting', 'Market Stall Authentic', 'Spa Wellness Zen'],
+  'fresh-juice': ['Market Stall Authentic', 'Botanical Garden Natural', 'Summer Beach Vacation', 'Outdoor Nature Setting', 'Brazilian Carnival Energy', 'Beach Sunset Romance', 'Indian Bazaar Colorful', 'Moroccan Souk Vibrant'],
+  'smoothie': ['Spa Wellness Zen', 'Beach Sunset Romance', 'Sports Stadium Energy', 'Yoga Lifestyle Flow', 'Botanical Garden Natural', 'Outdoor Nature Setting', 'Modern Office Workspace', 'Summer Beach Vacation'],
+  'green-juice': ['Sustainable Eco-Home', 'Botanical Garden Natural', 'Yoga Lifestyle Flow', 'Biophilic Design Nature-Tech', 'Spa Wellness Zen', 'Forest Enchanted Magical', 'Zero-Waste Lifestyle', 'Solar Punk Future'],
+  'fruit-juice': ['Botanical Garden Natural', 'Summer Beach Vacation', 'Brazilian Carnival Energy', 'Market Stall Authentic', 'Beach Sunset Romance', 'Outdoor Nature Setting', 'Indian Bazaar Colorful'],
+  'vegetable-juice': ['Sustainable Eco-Home', 'Market Stall Authentic', 'Botanical Garden Natural', 'Modern Kitchen Bright', 'Zero-Waste Lifestyle', 'Biophilic Design Nature-Tech'],
+  
+  // ========== BOISSONS CHAUDES ==========
+  'coffee': ['Parisian Café Classic', 'Coworking Space Collaborative', 'Home Office Remote Work', 'Scandinavian Hygge Cozy', 'Modern Office Workspace', 'Airport Business Lounge', 'Urban Loft Industrial', 'New York Rooftop Urban'],
+  'espresso': ['Parisian Café Classic', 'Urban Loft Industrial', 'Modern Office Workspace', 'New York Rooftop Urban', 'Coworking Space Collaborative', 'Business Lunch Restaurant'],
+  'cappuccino': ['Parisian Café Classic', 'Scandinavian Hygge Cozy', 'Cozy Home Comfort', 'Coworking Space Collaborative', 'Mediterranean Villa Luxury', 'Urban Loft Industrial'],
+  'latte': ['Parisian Café Classic', 'Coworking Space Collaborative', 'Modern Office Workspace', 'Scandinavian Hygge Cozy', 'Urban Loft Industrial', 'Home Office Remote Work'],
+  'tea': ['Japanese Temple Zen', 'Spa Wellness Zen', 'Cozy Home Comfort', 'Botanical Garden Natural', 'Scandinavian Hygge Cozy', 'Parisian Café Classic', 'Moroccan Souk Vibrant', 'Indian Bazaar Colorful'],
+  'hot-chocolate': ['Cozy Home Comfort', 'Winter Sports Mountain', 'Christmas Holiday Festive', 'Scandinavian Hygge Cozy', 'Family Kitchen Busy', 'Mountain Peak Achievement'],
+  
+  // ========== BOISSONS ALCOOLISÉES ==========
+  'cocktail': ['New York Rooftop Urban', 'Luxury Hotel Suite', 'Beach Sunset Romance', 'Tokyo Neon Cyberpunk', 'Mediterranean Villa Luxury', 'Urban Loft Industrial', 'Music Festival Outdoor', 'Award Ceremony Prestige'],
+  'wine': ['Mediterranean Villa Luxury', 'Parisian Café Classic', 'Luxury Hotel Suite', 'Rustic Countryside', 'Wedding Reception Elegant', 'Business Lunch Restaurant', 'Award Ceremony Prestige'],
+  'beer': ['Sports Stadium Energy', 'Music Festival Outdoor', 'Street Urban Authentic', 'Brazilian Carnival Energy', 'Beach Sunset Romance', 'Urban Loft Industrial', 'Shared Apartment Roommates'],
+  'champagne': ['Wedding Reception Elegant', 'New York Rooftop Urban', 'Luxury Hotel Suite', 'Award Ceremony Prestige', 'Gallery Opening Vernissage', 'Charity Gala Fundraising'],
+  'spirits': ['New York Rooftop Urban', 'Luxury Hotel Suite', 'Urban Loft Industrial', 'Tokyo Neon Cyberpunk', 'Award Ceremony Prestige', 'Corporate Event Networking'],
+  
+  // ========== BOISSONS ÉNERGÉTIQUES & SPORT ==========
+  'energy-drink': ['Sports Stadium Energy', 'Urban Loft Industrial', 'Gaming Room RGB', 'Music Festival Outdoor', 'Tokyo Neon Cyberpunk', 'Mountain Peak Achievement', 'Street Urban Authentic'],
+  'sports-drink': ['Sports Stadium Energy', 'Beach Sunset Romance', 'Mountain Peak Achievement', 'Outdoor Nature Setting', 'Summer Beach Vacation', 'Yoga Lifestyle Flow', 'Winter Sports Mountain'],
+  'protein-shake': ['Sports Stadium Energy', 'Modern Office Workspace', 'Home Office Remote Work', 'Yoga Lifestyle Flow', 'Beach Sunset Romance', 'Urban Loft Industrial'],
+  
+  // ========== SODAS & SOFT DRINKS ==========
+  'soda': ['Street Urban Authentic', 'Music Festival Outdoor', 'Beach Sunset Romance', 'Brazilian Carnival Energy', 'Sports Stadium Energy', 'Tokyo Neon Cyberpunk', 'Summer Beach Vacation'],
+  'sparkling-water': ['Spa Wellness Zen', 'Mediterranean Villa Luxury', 'Modern Office Workspace', 'Yoga Lifestyle Flow', 'Luxury Hotel Suite', 'Business Lunch Restaurant', 'New York Rooftop Urban'],
+  'iced-tea': ['Beach Sunset Romance', 'Summer Beach Vacation', 'Outdoor Nature Setting', 'Parisian Café Classic', 'Mediterranean Villa Luxury', 'Botanical Garden Natural'],
+  'lemonade': ['Summer Beach Vacation', 'Beach Sunset Romance', 'Outdoor Nature Setting', 'Market Stall Authentic', 'Family Kitchen Busy', 'Birthday Party Celebration'],
+  
+  // ========== PRODUITS LAITIERS - YAOURTS ==========
+  'yogurt': ['Modern Kitchen Bright', 'Spa Wellness Zen', 'Outdoor Nature Setting', 'Cozy Home Comfort', 'Botanical Garden Natural', 'Beach Sunset Romance', 'Home Office Remote Work'],
+  'greek-yogurt': ['Sports Stadium Energy', 'Modern Office Workspace', 'Yoga Lifestyle Flow', 'Home Office Remote Work', 'Spa Wellness Zen', 'Beach Sunset Romance', 'Urban Loft Industrial'],
+  'yogurt-drink': ['Beach Sunset Romance', 'Sports Stadium Energy', 'Outdoor Nature Setting', 'Urban Loft Industrial', 'Summer Beach Vacation', 'Modern Office Workspace', 'Yoga Lifestyle Flow'],
+  'probiotic-yogurt': ['Spa Wellness Zen', 'Yoga Lifestyle Flow', 'Modern Office Workspace', 'Home Office Remote Work', 'Botanical Garden Natural', 'Sustainable Eco-Home'],
+  'skyr': ['Sports Stadium Energy', 'Mountain Peak Achievement', 'Winter Sports Mountain', 'Scandinavian Hygge Cozy', 'Modern Office Workspace', 'Yoga Lifestyle Flow'],
+  
+  // ========== PRODUITS LAITIERS - FROMAGES ==========
+  'cheese': ['Rustic Countryside', 'Parisian Café Classic', 'Mediterranean Villa Luxury', 'Market Stall Authentic', 'Family Kitchen Busy', 'Business Lunch Restaurant', 'Moroccan Souk Vibrant'],
+  'cream-cheese': ['Modern Kitchen Bright', 'Cozy Home Comfort', 'Scandinavian Hygge Cozy', 'Family Kitchen Busy', 'Home Office Remote Work', 'Parisian Café Classic'],
+  'artisan-cheese': ['Rustic Countryside', 'Market Stall Authentic', 'Parisian Café Classic', 'Mediterranean Villa Luxury', 'Moroccan Souk Vibrant', 'Indian Bazaar Colorful'],
+  
+  // ========== PRODUITS LAITIERS - LAIT ==========
+  'milk': ['Modern Kitchen Bright', 'Rustic Countryside', 'Family Kitchen Busy', 'Cozy Home Comfort', 'Scandinavian Hygge Cozy', 'Home Office Remote Work'],
+  'plant-milk': ['Sustainable Eco-Home', 'Botanical Garden Natural', 'Modern Office Workspace', 'Yoga Lifestyle Flow', 'Spa Wellness Zen', 'Biophilic Design Nature-Tech', 'Zero-Waste Lifestyle'],
+  'almond-milk': ['Sustainable Eco-Home', 'Botanical Garden Natural', 'Spa Wellness Zen', 'Modern Office Workspace', 'Yoga Lifestyle Flow', 'Biophilic Design Nature-Tech'],
+  'oat-milk': ['Sustainable Eco-Home', 'Scandinavian Hygge Cozy', 'Modern Office Workspace', 'Cozy Home Comfort', 'Botanical Garden Natural', 'Zero-Waste Lifestyle'],
+  
+  // ========== GLACES & DESSERTS GLACÉS ==========
+  'ice-cream': ['Beach Sunset Romance', 'Summer Beach Vacation', 'Family Kitchen Busy', 'Music Festival Outdoor', 'Birthday Party Celebration', 'Cozy Home Comfort', 'Street Urban Authentic'],
+  'gelato': ['Mediterranean Villa Luxury', 'Parisian Café Classic', 'Street Urban Authentic', 'Summer Beach Vacation', 'Beach Sunset Romance', 'Market Stall Authentic'],
+  'sorbet': ['Beach Sunset Romance', 'Botanical Garden Natural', 'Summer Beach Vacation', 'Spa Wellness Zen', 'Mediterranean Villa Luxury', 'Outdoor Nature Setting'],
+  'frozen-yogurt': ['Beach Sunset Romance', 'Summer Beach Vacation', 'Sports Stadium Energy', 'Spa Wellness Zen', 'Yoga Lifestyle Flow', 'Modern Office Workspace'],
+  'popsicle': ['Summer Beach Vacation', 'Beach Sunset Romance', 'Outdoor Nature Setting', 'Family Kitchen Busy', 'Birthday Party Celebration', 'Music Festival Outdoor'],
+  
+  // ========== MOMENTS DE CONSOMMATION SPÉCIFIQUES ==========
+  'on-the-go': ['Street Urban Authentic', 'New York Rooftop Urban', 'Tokyo Neon Cyberpunk', 'Airport Business Lounge', 'Urban Loft Industrial', 'Convenience Store 24/7'],
+  'post-workout': ['Sports Stadium Energy', 'Spa Wellness Zen', 'Beach Sunset Romance', 'Modern Office Workspace', 'Yoga Lifestyle Flow', 'Home Office Remote Work'],
+  'pre-workout': ['Sports Stadium Energy', 'Home Office Remote Work', 'Urban Loft Industrial', 'Outdoor Nature Setting', 'Modern Office Workspace'],
+  'hydration': ['Sports Stadium Energy', 'Beach Sunset Romance', 'Outdoor Nature Setting', 'Yoga Lifestyle Flow', 'Summer Beach Vacation', 'Mountain Peak Achievement'],
+  'refreshment': ['Beach Sunset Romance', 'Summer Beach Vacation', 'Music Festival Outdoor', 'Outdoor Nature Setting', 'Sports Stadium Energy', 'Spa Wellness Zen'],
+  'indulgence': ['Luxury Hotel Suite', 'Cozy Home Comfort', 'Parisian Café Classic', 'Mediterranean Villa Luxury', 'Scandinavian Hygge Cozy', 'Wedding Reception Elegant'],
+  'healthy-snack': ['Spa Wellness Zen', 'Modern Office Workspace', 'Yoga Lifestyle Flow', 'Botanical Garden Natural', 'Home Office Remote Work', 'Coworking Space Collaborative'],
+  
+  // ========== CONTEXTES URBAINS & MODERNES ==========
+  'urban': ['Tokyo Neon Cyberpunk', 'New York Rooftop Urban', 'Street Urban Authentic', 'Urban Loft Industrial', 'Business District Skyline', 'Tech Startup Garage'],
+  'modern': ['Modern Office Workspace', 'Tech Startup Garage', 'Fintech Office Modern', 'Minimalist Apartment Urban', 'Data Center Futuristic', 'Innovation Lab Cutting-Edge'],
+  'trendy': ['Pop-Up Store Trendy', 'TikTok House Gen-Z', 'Gaming Room RGB', 'Streaming Studio Setup', 'Tokyo Neon Cyberpunk', 'New York Rooftop Urban'],
+  
+  // ========== NATURE & AVENTURE ==========
+  'nature': ['Botanical Garden Natural', 'Forest Enchanted Magical', 'Mountain Peak Achievement', 'African Savanna Wild', 'Outdoor Nature Setting', 'Beach Sunset Romance'],
+  'adventure': ['Mountain Peak Achievement', 'Desert Mirage Mysterious', 'African Savanna Wild', 'Winter Sports Mountain', 'Forest Enchanted Magical', 'Outdoor Nature Setting'],
+  'tropical': ['Brazilian Carnival Energy', 'Beach Sunset Romance', 'Botanical Garden Natural', 'Summer Beach Vacation', 'Mediterranean Villa Luxury', 'Indian Bazaar Colorful'],
+  'jungle': ['Botanical Garden Natural', 'Brazilian Carnival Energy', 'African Savanna Wild', 'Forest Enchanted Magical', 'Outdoor Nature Setting'],
+  
+  // ========== LUXE & PREMIUM ==========
+  'premium': ['Luxury Hotel Suite', 'Mediterranean Villa Luxury', 'New York Rooftop Urban', 'Award Ceremony Prestige', 'Department Store Luxury', 'Boutique Retail Chic'],
+  'exclusive': ['Luxury Hotel Suite', 'Award Ceremony Prestige', 'Gallery Opening Vernissage', 'Corporate Boardroom Executive', 'Charity Gala Fundraising', 'Wedding Reception Elegant'],
   
   // ========== SPORT & BIEN-ÊTRE ==========
-  'sport': ['Outdoor Nature Setting', 'Sports Stadium Energy', 'Mountain Peak Achievement', 'Beach Sunset Romance'],
+  'sport': ['Outdoor Nature Setting', 'Sports Stadium Energy', 'Mountain Peak Achievement', 'Beach Sunset Romance', 'Winter Sports Mountain', 'Music Festival Outdoor'],
   'workout': ['Outdoor Nature Setting', 'Modern Office Workspace', 'Urban Loft Industrial', 'Home Office Remote Work'],
   'yoga': ['Spa Wellness Zen', 'Outdoor Nature Setting', 'Botanical Garden Natural', 'Beach Sunset Romance'],
   'wellness': ['Spa Wellness Zen', 'Botanical Garden Natural', 'Cozy Home Comfort', 'Forest Enchanted Magical'],
@@ -2568,7 +2647,6 @@ export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
   // ========== VOYAGE & DÉCOUVERTE ==========
   'travel': ['Airport Business Lounge', 'Luxury Hotel Suite', 'Beach Sunset Romance', 'Mountain Peak Achievement'],
   'vacation': ['Beach Sunset Romance', 'Luxury Hotel Suite', 'Mountain Peak Achievement', 'Mediterranean Villa Luxury'],
-  'adventure': ['Mountain Peak Achievement', 'Forest Enchanted Magical', 'Desert Mirage Mysterious', 'African Savanna Wild'],
   'city-break': ['New York Rooftop Urban', 'Parisian Café Classic', 'Tokyo Neon Cyberpunk', 'Business District Skyline'],
   
   // ========== FAMILLE & MAISON ==========
