@@ -281,12 +281,14 @@ const Results: React.FC = () => {
     console.log('🚀 Démarrage du polling automatique pour les nouveaux posts');
     
     // Déterminer si la génération est probablement terminée
-    const allPostsHaveMedia = posts.every(post => 
-      post.content.imageUrl || post.content.videoUrl
+    const postsWithoutMedia = posts.filter(post => 
+      !post.content.imageUrl && !post.content.videoUrl
     );
     
+    console.log(`📊 État actuel: ${posts.length} posts total, ${postsWithoutMedia.length} sans média`);
+    
     // Si tous les posts ont leurs médias, arrêter le polling
-    if (allPostsHaveMedia && posts.length > 0) {
+    if (postsWithoutMedia.length === 0 && posts.length > 0) {
       console.log('✅ Tous les posts ont leurs médias, arrêt du polling');
       return;
     }
@@ -400,7 +402,7 @@ const Results: React.FC = () => {
         </h1>
         
         {/* Indicateur de polling actif */}
-        {!loading && posts.length > 0 && !posts.every(post => post.content.imageUrl || post.content.videoUrl) && (
+        {!loading && posts.length > 0 && posts.some(post => !post.content.imageUrl && !post.content.videoUrl) && (
           <div className="flex items-center space-x-2 text-sm text-white/60">
             <div className="w-2 h-2 bg-[#53dfb2] rounded-full animate-pulse"></div>
             <span>Génération en cours...</span>
