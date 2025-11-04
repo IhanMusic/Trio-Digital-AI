@@ -16,6 +16,8 @@ import { ProductIntegrationWithStabilityService } from './ProductIntegrationWith
 import Veo3Service from './Veo3Service';
 import sharp from 'sharp';
 import { selectCreativePreset, generateColorPalettePrompt } from './CreativePresetsLibrary';
+import { CannesLionsImageOptimizer } from './CannesLionsImageOptimizer';
+import { CannesLionsImageScorer, ScoredImage } from './CannesLionsImageScorer';
 
 // 🔥 CONFIGURATION GÉNÉRATION VIDÉO
 // Mettre à true pour générer des REELs au lieu d'images
@@ -940,50 +942,45 @@ DIRECTIVES CRÉATIVES
           products: calendar.selectedProducts || []
         };
         
-          // Générer une image pour le post
+          // 🏆 GÉNÉRATION D'IMAGE NIVEAU CANNES LIONS
           try {
-            logger.info('=== Début de la génération d\'image avec Gemini ===');
-            logger.info(`Génération d'image pour ${platform}`);
-            logger.info(`Marque: ${brand.name}, Secteur: ${brand.sector}`);
+            logger.info('🏆 === GÉNÉRATION D\'IMAGE NIVEAU CANNES LIONS ===');
+            logger.info(`Plateforme: ${platform}, Marque: ${brand.name}, Secteur: ${brand.sector}`);
             
-            // Récupérer le prompt d'image
-            const prompt = parsedPost.imagePrompt;
-            logger.info('Prompt complet:', prompt);
-            
-            // Forcer le format 1:1 pour toutes les plateformes
-            const aspect_ratio = '1:1';
-            logger.info('Ratio d\'aspect:', aspect_ratio);
+            // Récupérer le prompt brut généré par GPT-5
+            const rawImagePrompt = parsedPost.imagePrompt;
+            logger.info('Prompt GPT-5 original (premiers 200 chars):', rawImagePrompt.substring(0, 200) + '...');
             
             // Préparer l'image de référence si un produit est sélectionné
             let referenceImageBase64: string | undefined;
+            let hasProductReference = false;
             
             if (calendar.selectedProducts && calendar.selectedProducts.length > 0 && products.length > 0) {
               const product = products[0];
-              logger.info(`Produit sélectionné: ${product.name}`);
+              logger.info(`📦 Produit sélectionné: ${product.name}`);
               
               // Vérifier si le produit a une image
               if (product.images && product.images.main) {
                 const productImagePath = product.images.main;
-                logger.info(`Image du produit trouvée: ${productImagePath}`);
+                logger.info(`📸 Image du produit trouvée: ${productImagePath}`);
                 
                 try {
                   let imageBuffer: Buffer;
                   
                   // Vérifier si c'est une URL (Cloudinary ou autre)
                   if (productImagePath.startsWith('http://') || productImagePath.startsWith('https://') || productImagePath.includes('cloudinary.com')) {
-                    logger.info('📥 Téléchargement de l\'image depuis l\'URL:', productImagePath);
+                    logger.info('📥 Téléchargement depuis URL:', productImagePath.substring(0, 80) + '...');
                     
-                    // Télécharger l'image depuis l'URL
                     const response = await axios.get(productImagePath, { 
                       responseType: 'arraybuffer',
-                      timeout: 30000 // 30 secondes de timeout
+                      timeout: 30000
                     });
                     imageBuffer = Buffer.from(response.data);
-                    logger.info('✅ Image téléchargée depuis l\'URL avec succès');
+                    logger.info('✅ Image téléchargée:', imageBuffer.length, 'bytes');
                   } else {
                     // Chemin local - pour développement ou fallback
                     const fullPath = path.join(process.cwd(), 'public', productImagePath);
-                    logger.info('📂 Lecture de l\'image depuis le chemin local:', fullPath);
+                    logger.info('📂 Lecture depuis le système de fichiers:', fullPath);
                     
                     const fs = await import('fs');
                     if (!fs.existsSync(fullPath)) {
@@ -991,59 +988,196 @@ DIRECTIVES CRÉATIVES
                     }
                     
                     imageBuffer = await fs.promises.readFile(fullPath);
-                    logger.info('✅ Image lue depuis le système de fichiers local');
+                    logger.info('✅ Image lue:', imageBuffer.length, 'bytes');
                   }
                   
-                  // Transformer l'image en carré pour toutes les plateformes (format 1:1)
-                  logger.info('📐 Format carré (1:1) - transformation de l\'image produit en carré');
-                  const squareImageBuffer = await makeImageSquareFromBuffer(imageBuffer);
-                  referenceImageBase64 = squareImageBuffer.toString('base64');
-                  logger.info('✅ Image produit transformée en carré et convertie en base64');
+                  // 🎯 HAUTE RÉSOLUTION : Transformer en carré 2048x2048 (au lieu de 1024x1024)
+                  logger.info('🎯 Transformation en haute résolution 2048x2048 (qualité maximale)...');
+                  const highResBuffer = await sharp(imageBuffer)
+                    .resize(2048, 2048, {
+                      fit: 'contain',
+                      background: { r: 255, g: 255, b: 255, alpha: 1 }
+                    })
+                    .png({ quality: 100 })
+                    .toBuffer();
+                  
+                  referenceImageBase64 = highResBuffer.toString('base64');
+                  hasProductReference = true;
+                  logger.info('✅ Image produit 2048x2048 convertie en base64 :', referenceImageBase64.length, 'chars');
                 } catch (error: any) {
-                  logger.error('❌ Erreur lors de la conversion de l\'image produit en base64:');
+                  logger.error('❌ Erreur lors du traitement de l\'image produit:');
                   logger.error('Details:', error.message);
                   if (error.response) {
                     logger.error('HTTP Status:', error.response.status);
-                    logger.error('HTTP Data:', error.response.data);
                   }
-                  logger.info('Génération sans image de référence');
+                  logger.info('⚠️  Génération sans image de référence');
                 }
               } else {
-                logger.info('Aucune image associée au produit');
+                logger.info('ℹ️  Aucune image associée au produit');
               }
             }
             
-            // Générer l'image avec Gemini (avec ou sans image de référence)
-            logger.info(`Génération avec Gemini${referenceImageBase64 ? ' en incluant l\'image du produit' : ' sans image de référence'}`);
-            
-            const geminiResults = await GeminiImageService.generateImages(
-              prompt,
+            // 🎨 OPTIMISER LE PROMPT AVEC L'OPTIMISEUR PROFESSIONNEL
+            logger.info('🎨 Optimisation du prompt avec CannesLionsImageOptimizer...');
+            const optimizedPrompt = CannesLionsImageOptimizer.optimizeForGemini(
+              rawImagePrompt,
+              creativePreset,
               {
-                numberOfImages: 1,
-                aspectRatio: aspect_ratio as '1:1' | '16:9',
-                imageSize: '1K',
-                referenceImage: referenceImageBase64
-              }
+                primary: brand.colors?.primary,
+                secondary: brand.colors?.secondary,
+                accent: brand.colors?.accent
+              },
+              hasProductReference,
+              brand.sector
             );
             
-            if (geminiResults.length > 0) {
-              const imageUrl = geminiResults[0].url;
-              logger.info('✅ Image générée avec succès par Gemini');
-              logger.info('URL de l\'image:', imageUrl);
+            logger.info('✅ Prompt optimisé généré');
+            logger.info('📊 Paramètres de génération:', JSON.stringify(optimizedPrompt.generationParams));
+            logger.info('🔍 Prompt principal (premiers 500 chars):');
+            logger.info(optimizedPrompt.mainPrompt.substring(0, 500) + '...');
+            logger.info('🚫 Negative prompt (premiers 200 chars):');
+            logger.info(optimizedPrompt.negativePrompt.substring(0, 200) + '...');
+            
+            // 🎯 MULTI-GÉNÉRATION : Générer 2 variations et sélectionner la meilleure
+            logger.info(`\n🎯 === MULTI-GÉNÉRATION: ${optimizedPrompt.generationParams.numberOfImages} variations ===`);
+            
+            const generatedVariations = [];
+            
+            for (let variation = 1; variation <= optimizedPrompt.generationParams.numberOfImages; variation++) {
+              logger.info(`\n📸 Génération variation ${variation}/${optimizedPrompt.generationParams.numberOfImages}...`);
               
-              // Utiliser l'image générée directement
-              postData.content.imageUrl = imageUrl;
-            } else {
-              logger.error('❌ Aucune image retournée par Gemini');
+              // Ajuster légèrement le strength pour chaque variation
+              const adjustedStrength = optimizedPrompt.generationParams.referenceImageStrength
+                ? optimizedPrompt.generationParams.referenceImageStrength + ((variation - 1) * 0.05)
+                : undefined;
+              
+              if (adjustedStrength) {
+                logger.info(`🎚️  Reference strength pour variation ${variation}: ${adjustedStrength.toFixed(2)}`);
+              }
+              
+              try {
+                const geminiResults = await GeminiImageService.generateImages(
+                  optimizedPrompt.mainPrompt,
+                  {
+                    numberOfImages: 1,
+                    aspectRatio: optimizedPrompt.generationParams.aspectRatio,
+                    imageSize: optimizedPrompt.generationParams.imageSize,
+                    referenceImage: referenceImageBase64,
+                    referenceImageStrength: adjustedStrength
+                  }
+                );
+                
+                if (geminiResults.length > 0) {
+                  generatedVariations.push({
+                    url: geminiResults[0].url,
+                    width: geminiResults[0].width,
+                    height: geminiResults[0].height,
+                    variation
+                  });
+                  logger.info(`✅ Variation ${variation} générée: ${geminiResults[0].url}`);
+                } else {
+                  logger.error(`❌ Variation ${variation}: Aucune image retournée`);
+                }
+              } catch (variationError: any) {
+                logger.error(`❌ Erreur variation ${variation}:`, variationError.message);
+              }
             }
+            
+            // 🏆 SCORING AUTOMATIQUE AVEC GEMINI VISION
+            if (generatedVariations.length > 0) {
+              logger.info(`\n🏆 === SCORING AUTOMATIQUE GEMINI VISION ===`);
+              
+              // Déterminer si l'image contient probablement des mains
+              // (heuristique basée sur le prompt)
+              const promptLower = optimizedPrompt.mainPrompt.toLowerCase();
+              const hasHands = promptLower.includes('hand') || promptLower.includes('holding') || 
+                               promptLower.includes('grip') || promptLower.includes('finger');
+              
+              logger.info(`Présence mains détectée: ${hasHands ? 'OUI' : 'NON'}`);
+              
+              // Scorer chaque variation
+              const scoredVariations: ScoredImage[] = [];
+              
+              for (const variation of generatedVariations) {
+                try {
+                  logger.info(`\n📊 Scoring de la variation ${variation.variation}...`);
+                  
+                  const score = await CannesLionsImageScorer.scoreImage(
+                    variation.url,
+                    variation.variation,
+                    hasHands
+                  );
+                  
+                  scoredVariations.push({
+                    ...variation,
+                    score
+                  });
+                  
+                } catch (scoringError: any) {
+                  logger.error(`❌ Erreur scoring variation ${variation.variation}:`, scoringError.message);
+                  logger.info('⚠️  Utilisation de scores par défaut pour cette variation');
+                  
+                  // Utiliser des scores par défaut en cas d'erreur
+                  scoredVariations.push({
+                    ...variation,
+                    score: {
+                      overall: 75,
+                      anatomicalAccuracy: 75,
+                      compositionExcellence: 75,
+                      lightingMastery: 75,
+                      productFidelity: 75,
+                      technicalSharpness: 75,
+                      colorAccuracy: 75,
+                      realismAuthenticity: 75,
+                      emotionalImpact: 75,
+                      brandIntegration: 75,
+                      detailRichness: 75,
+                      handQuality: 75,
+                      backgroundQuality: 75,
+                      professionalism: 75,
+                      creativeExcellence: 75,
+                      cannesLionsPotential: 75,
+                      criticalIssues: [],
+                      minorImprovements: [],
+                      recommendations: [],
+                      regenerationRequired: false
+                    }
+                  });
+                }
+              }
+              
+              // Sélectionner la meilleure image
+              logger.info(`\n🎯 Sélection de la meilleure parmi ${scoredVariations.length} variations scorées...`);
+              
+              const bestImage = CannesLionsImageScorer.selectBestImage(scoredVariations);
+              
+              postData.content.imageUrl = bestImage.url;
+              
+              logger.info(`\n✅ === GÉNÉRATION RÉUSSIE ===`);
+              logger.info(`🏆 Image gagnante: Variation ${bestImage.variation}`);
+              logger.info(`📊 Score global: ${bestImage.score.overall}/100`);
+              logger.info(`   - Anatomie: ${bestImage.score.anatomicalAccuracy}/100`);
+              logger.info(`   - Composition: ${bestImage.score.compositionExcellence}/100`);
+              logger.info(`   - Produit: ${bestImage.score.productFidelity}/100`);
+              logger.info(`   - Cannes Lions: ${bestImage.score.cannesLionsPotential}/100`);
+              logger.info(`📐 Dimensions: ${bestImage.width}x${bestImage.height}`);
+              logger.info(`🔗 URL: ${bestImage.url}`);
+              
+              if (bestImage.score.recommendations.length > 0) {
+                logger.info(`💡 Recommandations: ${bestImage.score.recommendations.slice(0, 2).join(', ')}`);
+              }
+              
+            } else {
+              logger.error('❌ Aucune variation n\'a été générée avec succès');
+            }
+            
           } catch (error: any) {
-            logger.error('❌ Erreur lors de la génération de l\'image avec Gemini');
-            logger.error('Message d\'erreur:', error.message);
+            logger.error('❌ === ERREUR GÉNÉRATION IMAGE ===');
+            logger.error('Message:', error.message);
+            logger.error('Stack:', error.stack);
             if (error.response) {
-              logger.error('Détails de l\'erreur:', {
-                status: error.response.status,
-                data: error.response.data
-              });
+              logger.error('HTTP Status:', error.response.status);
+              logger.error('HTTP Data:', JSON.stringify(error.response.data).substring(0, 500));
             }
           }
 
