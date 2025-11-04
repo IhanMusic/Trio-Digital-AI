@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { config } from '../../config/env';
 import { Link, useNavigate } from 'react-router-dom';
 import { getWithAuth, postWithAuth, putWithAuth, deleteWithAuth } from '../../utils/apiUtils';
-import GenerationProgress from '../loading/GenerationProgress';
+import EnhancedGenerationProgress from '../loading/EnhancedGenerationProgress';
 import { countries } from '../../constants/countries';
 import { 
   SOCIAL_NETWORKS, 
@@ -252,6 +252,7 @@ const ProductsSection: React.FC<{
 const Calendars: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generatingCalendarId, setGeneratingCalendarId] = useState<string | null>(null);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [availableProducts, setAvailableProducts] = useState<Product[]>([]);
   const [formData, setFormData] = useState<CalendarFormData>({
@@ -543,6 +544,7 @@ const Calendars: React.FC = () => {
       console.log('Calendrier créé avec succès, ID:', calendarResult.data._id);
       
       const calendar = calendarResult.data;
+      setGeneratingCalendarId(calendar._id);
       
       console.log('Génération du contenu pour le calendrier...');
       
@@ -667,8 +669,39 @@ const Calendars: React.FC = () => {
     }
   };
 
-  if (isGenerating) {
-    return <GenerationProgress />;
+  if (isGenerating && generatingCalendarId) {
+    const selectedBrand = brands.find(b => b._id === formData.brandId);
+    
+    // Calculer le nombre de posts attendus
+    const start = new Date(formData.startDate);
+    const end = new Date(formData.endDate);
+    const totalDays = Math.ceil((end.getTime() - start.getTime()) / (24 * 60 * 60 * 1000)) + 1;
+    
+    let expectedPosts = totalDays;
+    switch (formData.frequency) {
+      case 'twice_daily':
+        expectedPosts = totalDays * 2;
+        break;
+      case 'three_per_week':
+        expectedPosts = Math.ceil(totalDays * (3 / 7));
+        break;
+      case 'weekly':
+        expectedPosts = Math.ceil(totalDays / 7);
+        break;
+      default:
+        expectedPosts = totalDays;
+    }
+    
+    // Multiplier par le nombre de réseaux sociaux sélectionnés
+    expectedPosts = expectedPosts * formData.socialNetworks.length;
+    
+    return (
+      <EnhancedGenerationProgress 
+        calendarId={generatingCalendarId}
+        brandName={selectedBrand?.name}
+        expectedPosts={expectedPosts}
+      />
+    );
   }
 
   return (

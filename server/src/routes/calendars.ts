@@ -36,6 +36,72 @@ router.post('/', authenticate, async (req: Request, res: Response) => {
   }
 });
 
+// Obtenir le statut de génération d'un calendrier
+router.get('/:id/generation-status', authenticate, async (req: Request, res: Response) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      error: 'Non authentifié'
+    });
+  }
+  
+  try {
+    const calendar = await Calendar.findOne({
+      _id: req.params.id,
+      createdBy: req.user._id
+    });
+    
+    if (!calendar) {
+      return res.status(404).json({
+        success: false,
+        error: 'Calendrier non trouvé'
+      });
+    }
+    
+    // Récupérer les posts associés au calendrier
+    const Post = require('../models/Post');
+    const posts = await Post.find({ calendarId: req.params.id });
+    
+    // Déterminer l'étape actuelle basée sur le nombre de posts
+    let currentStep = 'initialization';
+    let status = 'in_progress';
+    
+    if (posts.length === 0) {
+      currentStep = 'content_generation';
+    } else {
+      const postsWithImages = posts.filter((post: any) => post.content.imageUrl || post.content.videoUrl);
+      const progressPercentage = posts.length > 0 ? (postsWithImages.length / posts.length) * 100 : 0;
+      
+      if (progressPercentage === 100) {
+        currentStep = 'finalization';
+        status = 'completed';
+      } else if (progressPercentage > 60) {
+        currentStep = 'video_generation';
+      } else if (progressPercentage > 0) {
+        currentStep = 'image_generation';
+      } else {
+        currentStep = 'content_generation';
+      }
+    }
+    
+    res.json({
+      success: true,
+      data: {
+        status,
+        currentStep,
+        posts,
+        progress: posts.length > 0 ? Math.round((posts.filter((p: any) => p.content.imageUrl || p.content.videoUrl).length / posts.length) * 100) : 0
+      }
+    });
+  } catch (error) {
+    console.error('Erreur lors de la récupération du statut de génération:', error);
+    res.status(500).json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Erreur inconnue'
+    });
+  }
+});
+
 // Générer les publications pour un calendrier
 router.post('/:id/generate', authenticate, async (req: Request, res: Response) => {
   if (!req.user) {
