@@ -81,6 +81,7 @@ const EnhancedGenerationProgress: React.FC<EnhancedGenerationProgressProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isComplete, setIsComplete] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [consecutiveErrors, setConsecutiveErrors] = useState(0);
 
   // Polling pour vérifier le statut de génération
   const checkGenerationStatus = useCallback(async () => {
@@ -89,6 +90,9 @@ const EnhancedGenerationProgress: React.FC<EnhancedGenerationProgressProps> = ({
       
       if (response.success && response.data) {
         const { status, progress, currentStep, error: serverError, posts } = response.data;
+        
+        // Réinitialiser le compteur d'erreurs en cas de succès
+        setConsecutiveErrors(0);
         
         if (serverError) {
           setError(serverError);
@@ -128,9 +132,15 @@ const EnhancedGenerationProgress: React.FC<EnhancedGenerationProgressProps> = ({
       }
     } catch (err) {
       console.error('Erreur lors de la vérification du statut:', err);
-      // Ne pas afficher d'erreur immédiatement, continuer à essayer
+      setConsecutiveErrors(prev => prev + 1);
+      
+      // Si trop d'erreurs consécutives, passer au fallback
+      if (consecutiveErrors >= 3) {
+        console.log('Trop d\'erreurs sur l\'endpoint de statut, passage au fallback');
+        throw err; // Déclencher le fallback
+      }
     }
-  }, [calendarId, navigate]);
+  }, [calendarId, navigate, consecutiveErrors]);
 
   // Fallback: vérifier directement les posts générés si l'endpoint de statut n'existe pas
   const checkPostsDirectly = useCallback(async () => {

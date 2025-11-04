@@ -3,6 +3,7 @@ import { IUser } from '../models/User';
 import { authenticate } from '../middleware/auth';
 import Calendar from '../models/Calendar';
 import Brand from '../models/Brand';
+import Post from '../models/Post';
 import PostGenerationService from '../services/PostGenerationService';
 import EmailService from '../services/EmailService';
 import { FileStorageService } from '../services/FileStorageService';
@@ -59,7 +60,6 @@ router.get('/:id/generation-status', authenticate, async (req: Request, res: Res
     }
     
     // Récupérer les posts associés au calendrier
-    const Post = require('../models/Post');
     const posts = await Post.find({ calendarId: req.params.id });
     
     // Déterminer l'étape actuelle basée sur le nombre de posts
