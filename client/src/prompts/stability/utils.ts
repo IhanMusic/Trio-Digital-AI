@@ -342,13 +342,6 @@ export const getStabilityParams = (
       break;
   }
 
-  // Ajustements selon le budget
-  const budgetAllocation = briefData.budget.allocation['Photo/Vidéo'] || 0;
-  if (budgetAllocation > 30) {
-    baseParams.steps += 10;
-    baseParams.samples = Math.min(baseParams.samples + 1, 3);
-  }
-
   return baseParams;
 };
 
@@ -488,21 +481,16 @@ export const extractVisualElements = (briefData: BriefData): string[] => {
   const elements: string[] = [];
 
   // Extraire les éléments visuels des campagnes précédentes
-  briefData.previousCampaigns.forEach(campaign => {
+  briefData.previousCampaigns?.forEach(campaign => {
     campaign.learnings
       .filter(learning => learning.toLowerCase().includes('visuel'))
       .forEach(learning => elements.push(learning));
   });
 
   // Ajouter les différenciateurs visuels
-  briefData.competitiveAnalysis.differentiators
-    .filter(diff => diff.toLowerCase().includes('visuel'))
+  briefData.competitiveAnalysis?.differentiators
+    ?.filter(diff => diff.toLowerCase().includes('visuel'))
     .forEach(diff => elements.push(diff));
-
-  // Ajouter les éléments de style de communication
-  if (briefData.communicationStyle) {
-    elements.push(`style: ${briefData.communicationStyle}`);
-  }
 
   // Ajouter les éléments spécifiques au secteur
   if (briefData.sector) {

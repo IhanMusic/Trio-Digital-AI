@@ -18,20 +18,16 @@ export const generateBasePrompt = (briefData: BriefData): string => {
     .join('. ');
 
   // Analyse des différenciateurs visuels
-  const visualDifferentiators = briefData.competitiveAnalysis.differentiators
-    .filter(diff => diff.toLowerCase().includes('visuel'))
-    .join(', ');
+  const visualDifferentiators = briefData.competitiveAnalysis?.differentiators
+    ?.filter(diff => diff.toLowerCase().includes('visuel'))
+    .join(', ') || '';
 
   // Construction du prompt de base
   let prompt = `Create a professional commercial photograph with these specific requirements:
 
 [Brand Identity]
-${briefData.logo ? '- Use brand logo colors and style as reference' : ''}
-${briefData.brandGuidelines ? '- Follow provided brand guidelines for visual style' : ''}
-${briefData.productPhotos.length > 0 ? '- Reference provided product photos for accurate representation' : ''}
 - Company: ${briefData.companyName}
 - Industry: ${briefData.sector}
-- Style: ${briefData.communicationStyle}
 
 [Visual Requirements]
 - Professional studio lighting setup
@@ -44,11 +40,6 @@ ${briefData.productPhotos.length > 0 ? '- Reference provided product photos for 
 - Cinematic lighting
 - High dynamic range
 - Clean and uncluttered background
-
-[Brand Assets Integration]
-${briefData.logo ? '- Respect brand color palette from logo' : ''}
-${briefData.brandGuidelines ? '- Follow visual hierarchy from guidelines' : ''}
-${briefData.productPhotos.length > 0 ? '- Match product details and finishes from reference photos' : ''}
 
 [Previous Learnings]
 ${visualLearnings ? `Apply these learnings: ${visualLearnings}` : ''}
@@ -143,8 +134,8 @@ export const getGenerateOptions = (briefData: BriefData, purpose: 'social' | 'pr
   }
 
   // Ajustements selon les contraintes légales
-  if (briefData.legalConstraints.disclaimers.length > 0) {
-    options.height = Math.floor(options.height * 1.2); // Espace pour le texte légal
+  if (briefData.legalConstraints?.disclaimers && briefData.legalConstraints.disclaimers.length > 0) {
+    options.height = Math.floor(options.height! * 1.2); // Espace pour le texte légal
   }
 
   return options;

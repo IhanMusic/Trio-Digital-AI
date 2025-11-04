@@ -238,9 +238,8 @@ ${config.styleGuide.map(guide => `- ${guide}`).join('\n')}
 
 Industry Context:
 - Sector: ${briefData.sector}
-- Market: ${briefData.targetAudience.demographic.join(', ')}
-- Position: ${briefData.competitiveAnalysis.marketPosition}
-- Key Features: ${briefData.competitiveAnalysis.differentiators.join(', ')}`;
+- Position: ${briefData.competitiveAnalysis?.marketPosition || 'Not defined'}
+- Key Features: ${briefData.competitiveAnalysis?.differentiators?.join(', ') || 'Standard features'}`;
 };
 
 export const adjustTechnicalParams = (
@@ -255,19 +254,6 @@ export const adjustTechnicalParams = (
     steps: Math.min(baseParams.steps, config.technicalParams.steps),
     samples: baseParams.samples
   };
-
-  // Ajustements basés sur les contraintes légales
-  if (briefData.legalConstraints.regulations.length > 0) {
-    adjustedParams.cfgScale += 0.5;
-    adjustedParams.steps = Math.min(adjustedParams.steps + 5, 40);
-  }
-
-  // Ajustements basés sur le budget
-  const budgetAllocation = briefData.budget.allocation['Photo/Vidéo'] || 0;
-  if (budgetAllocation > 30) {
-    adjustedParams.steps = Math.min(adjustedParams.steps + 5, 40);
-    adjustedParams.samples = 2;
-  }
 
   // Limites de sécurité pour SDXL
   return {

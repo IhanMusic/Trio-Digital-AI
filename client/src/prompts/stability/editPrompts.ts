@@ -11,15 +11,15 @@ export const generateEditPrompt = (briefData: BriefData, baseDescription: string
     .join('. ');
 
   // Analyse des différenciateurs visuels
-  const visualDifferentiators = briefData.competitiveAnalysis.differentiators
-    .filter(diff => diff.toLowerCase().includes('visuel'))
-    .join(', ');
+  const visualDifferentiators = briefData.competitiveAnalysis?.differentiators
+    ?.filter(diff => diff.toLowerCase().includes('visuel'))
+    .join(', ') || '';
 
   return `Edit this image while maintaining perfect anatomical accuracy and natural interactions:
 
 [Legal Requirements]
-${briefData.legalConstraints.regulations.map(reg => `- Comply with: ${reg}`).join('\n')}
-${briefData.legalConstraints.disclaimers.map(disc => `- Include space for: ${disc}`).join('\n')}
+${briefData.legalConstraints?.regulations?.map(reg => `- Comply with: ${reg}`).join('\n') || 'No specific regulations'}
+${briefData.legalConstraints?.disclaimers?.map(disc => `- Include space for: ${disc}`).join('\n') || 'No disclaimers required'}
 
 [Anatomical Precision]
 - Keep all hand proportions 100% realistic
@@ -48,17 +48,15 @@ ${visualLearnings ? `- Apply learnings: ${visualLearnings}` : ''}
 ${visualDifferentiators ? `- Emphasize differentiators: ${visualDifferentiators}` : ''}
 
 [Resource Optimization]
-- Tools available: ${briefData.resources.tools.join(', ')}
-- Budget allocation: ${briefData.budget.allocation['Photo/Vidéo']}% of total
-- Team capabilities: ${briefData.resources.internalTeam.join(', ')}
+- Tools available: Standard professional tools
+- Budget allocation: Optimized for quality
+- Team capabilities: Professional creative team
 
 Base edit description: ${baseDescription}
 
 Additional context:
 - Brand: ${briefData.companyName}
-- Style: ${briefData.communicationStyle}
-- Industry: ${briefData.sector}
-- Target audience: ${briefData.targetAudience.demographic.join(', ')}`;
+- Industry: ${briefData.sector}`;
 };
 
 export const getEditStrength = (briefData: BriefData): number => {
@@ -83,12 +81,12 @@ export const getEditStrength = (briefData: BriefData): number => {
   }
 
   // Ajustement selon les contraintes légales
-  if (briefData.legalConstraints.regulations.length > 0) {
+  if (briefData.legalConstraints?.regulations && briefData.legalConstraints.regulations.length > 0) {
     baseStrength -= 0.1; // Plus conservateur avec des contraintes légales
   }
 
   // Ajustement selon les apprentissages précédents
-  const hasVisualLearnings = briefData.previousCampaigns.some(
+  const hasVisualLearnings = briefData.previousCampaigns?.some(
     campaign => campaign.learnings.some(
       learning => learning.toLowerCase().includes('visuel')
     )
@@ -126,16 +124,9 @@ export const getEditParams = (briefData: BriefData): StabilityParams => {
   }
 
   // Ajustements selon les contraintes légales
-  if (briefData.legalConstraints.regulations.length > 0) {
+  if (briefData.legalConstraints?.regulations && briefData.legalConstraints.regulations.length > 0) {
     baseParams.cfgScale += 0.5;
     baseParams.steps += 5;
-  }
-
-  // Ajustements selon le budget
-  const budgetAllocation = briefData.budget.allocation['Photo/Vidéo'] || 0;
-  if (budgetAllocation > 30) {
-    baseParams.steps += 10;
-    baseParams.samples = 2;
   }
 
   return baseParams;
@@ -160,9 +151,9 @@ export const getNegativePromptForEdit = (briefData: BriefData): string => {
     : '';
 
   // Ajouter les restrictions légales
-  const legalNegative = briefData.legalConstraints.regulations
-    .map(reg => reg.toLowerCase())
-    .join(', ');
+  const legalNegative = briefData.legalConstraints?.regulations
+    ?.map(reg => reg.toLowerCase())
+    .join(', ') || '';
 
   return [baseNegative, sectorNegative, legalNegative]
     .filter(Boolean)
