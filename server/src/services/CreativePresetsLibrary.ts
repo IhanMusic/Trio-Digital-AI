@@ -50,11 +50,11 @@ export interface CreativePreset {
 }
 
 // ==========================================
-// 📸 STYLES PHOTOGRAPHIQUES ENRICHIS (45 variations)
+// 📸 STYLES PHOTOGRAPHIQUES ENRICHIS (114 variations au total)
 // ==========================================
 
 export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
-  // FOOD & BEVERAGE
+  // ========== FOOD & BEVERAGE ENRICHI (15 styles au total) ==========
   {
     name: "Todd Selby Intimate Food",
     category: "food",
@@ -63,6 +63,60 @@ export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
     composition: "Rule of thirds with intentional negative space, hands showing human connection",
     mood: "Nostalgic aspiration for slow living ritual with gentle excitement and mindful presence",
     technicalSpecs: "Canon EOS R5, 50mm f/1.2 at f/2.8, ISO 400-800, natural light only"
+  },
+  {
+    name: "Michelin Star Plating Artistry",
+    category: "food",
+    reference: "Three Michelin star plating photography from Eleven Madison Park campaigns, fine dining as art form, chef's table intimate perspective, culinary precision storytelling, gastronomic excellence visualization, plate as canvas philosophy",
+    lighting: "Soft overhead gallery lighting at 5000K treating plate as art installation, subtle side light revealing texture depth, rim light on sauce creating glossy appeal, museum-quality illumination for culinary masterpiece",
+    composition: "Centered plate hero shot with negative space as design element, artistic plating with precise ingredient placement, micro-herbs and edible flowers as final touches, shallow depth of field isolating dish, rule of thirds with sauce swirl leading eye",
+    mood: "Culinary artistry reverence, fine dining sophistication, gastronomic excellence, chef's vision celebration, plate as edible art",
+    technicalSpecs: "Phase One XF, 80mm at f/5.6, ISO 100, overhead boom arm, gallery spotlighting"
+  },
+  {
+    name: "Farm-to-Fork Harvest Story",
+    category: "food",
+    reference: "Blue Hill at Stone Barns farm-to-table narrative, ingredient journey storytelling, harvest-to-plate connection, sustainable dining visualization, farmer-chef collaboration photography, seed-to-table transparency",
+    lighting: "Natural farm-to-kitchen lighting transition at 5200K, golden hour harvest glow, rustic kitchen window light, authentic agricultural illumination, farm-fresh morning light",
+    composition: "Split narrative showing ingredient in field and on plate, farmer's hands harvesting transitioning to chef's hands plating, soil-to-table journey visualization, environmental context showing farm origin, authentic agricultural beauty",
+    mood: "Farm-to-table authenticity, sustainable dining pride, ingredient origin transparency, agricultural heritage honor, harvest-to-plate connection",
+    technicalSpecs: "Canon EOS R5, 35mm f/1.4 at f/2.8, ISO 400-800, natural light sequence"
+  },
+  {
+    name: "Cocktail Mixology Craft",
+    category: "beverage",
+    reference: "Death & Co cocktail photography aesthetic, mixology as craft art, artisan cocktail culture, speakeasy sophistication, craft cocktail movement visualization, bartender as artist campaigns",
+    lighting: "Moody bar lighting at 4200K creating intimate cocktail lounge atmosphere, backlight through cocktail showing color and clarity, rim light on glass creating elegant glow, dramatic shadows suggesting speakeasy mystique",
+    composition: "Cocktail glass hero shot with garnish as focal point, bartender hands mid-craft visible showing artisan process, bar tools and premium spirits partially visible, smoke or vapor adding atmospheric drama, shallow focus on cocktail with blurred bar background",
+    mood: "Mixology craft sophistication, cocktail culture elevation, artisan bartending pride, speakeasy mystique, craft cocktail artistry",
+    technicalSpecs: "Sony A7SIII, 85mm f/1.4 at f/2.0, ISO 1600-3200, moody bar practicals"
+  },
+  {
+    name: "Breakfast Bowl Instagram Trend",
+    category: "food",
+    reference: "Smoothie bowl Instagram aesthetic, açai bowl photography trend, breakfast bowl art, health influencer food styling, colorful breakfast photography, morning ritual visualization for social media",
+    lighting: "Bright natural morning light at 5500K creating fresh breakfast feel, overhead soft window light, optimistic bright illumination, Instagram-ready lighting, fresh morning atmosphere",
+    composition: "Overhead flat-lay of artistically arranged breakfast bowl, colorful toppings creating rainbow effect, granola and fresh fruit arranged in patterns, coffee or juice in frame suggesting complete breakfast, marble or wooden surface, Instagram square crop optimization",
+    mood: "Morning ritual joy, healthy breakfast celebration, Instagram aesthetic perfection, wellness lifestyle visualization, colorful breakfast happiness",
+    technicalSpecs: "iPhone 15 Pro, overhead natural light, Instagram square format optimization"
+  },
+  {
+    name: "Cheese Board Charcuterie Art",
+    category: "food",
+    reference: "Artisan cheese board photography, charcuterie board styling trend, grazing table aesthetic, entertaining lifestyle photography, cheese and wine pairing visualization, European cheese culture celebration",
+    lighting: "Warm entertaining lighting at 4800K creating inviting atmosphere, soft overhead illumination showing board details, warm candlelight practicals suggesting evening gathering, cozy hosting ambiance",
+    composition: "Overhead or 45° angle showing complete cheese board arrangement, variety of cheeses, cured meats, fruits, nuts artfully arranged, hands reaching for cheese suggesting sharing moment, wine glasses partially visible, rustic wooden board on textured surface",
+    mood: "Entertaining sophistication, sharing and gathering warmth, artisan cheese appreciation, European food culture, hosting pride",
+    technicalSpecs: "Nikon Z7 II, 35mm f/1.8 at f/4, ISO 640, warm natural light"
+  },
+  {
+    name: "Sushi Omakase Japanese Precision",
+    category: "food",
+    reference: "Jiro Dreams of Sushi aesthetic, omakase experience photography, Japanese sushi craftsmanship, itamae chef artistry, sushi as art form, Japanese culinary precision visualization",
+    lighting: "Clean Japanese restaurant lighting at 5500K emphasizing sushi freshness, soft overhead illumination showing fish texture, minimal shadows maintaining ingredient clarity, authentic sushi bar ambiance",
+    composition: "Close-up of sushi pieces on traditional plate or wooden board, chef's hands visible showing precision craft, wasabi and ginger artfully placed, negative space emphasizing minimalist Japanese aesthetic, focus on fish texture and rice grain detail",
+    mood: "Japanese culinary precision, sushi craftsmanship reverence, omakase experience intimacy, itamae artistry respect, minimalist Japanese elegance",
+    technicalSpecs: "Fujifilm GFX 100S, 110mm f/2 at f/4, ISO 400, soft overhead diffusion"
   },
   {
     name: "Donna Hay Clean Minimal",
@@ -407,7 +461,7 @@ export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
     technicalSpecs: "Nikon D850, 35mm f/1.8 at f/4, ISO 400, colorful natural lighting, playful activism brand grade"
   },
 
-  // ========== STUDIO PRODUIT GLACES (8 styles) ==========
+  // ========== STUDIO PRODUIT GLACES (15 styles au total) ==========
   {
     name: "Häagen-Dazs Premium Luxury",
     category: "studio",
@@ -480,8 +534,154 @@ export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
     mood: "Premium indulgence accessibility, sophisticated treat-yourself moment, guilt-free pleasure promise, modern freezer luxury",
     technicalSpecs: "Phase One XF, 80mm lens at f/11, ISO 64, controlled studio lighting, focus stacking for sharp detail throughout"
   },
+  {
+    name: "Ice Cream Social Sharing Moment",
+    category: "lifestyle",
+    reference: "Ben & Jerry's 'Cone Together' social campaigns, ice cream as social connector, friends sharing pint photography, communal dessert moment, ice cream bringing people together, social bonding through dessert",
+    lighting: "Warm social gathering lighting at 4800K creating friendly atmosphere, soft overhead illumination, cozy evening light suggesting shared moment, warm undertones emphasizing connection",
+    composition: "Multiple hands with spoons reaching into shared pint, friends gathered around ice cream, genuine laughter and connection visible, ice cream as centerpiece of social moment, casual authentic gathering, diverse group sharing dessert",
+    mood: "Social connection warmth, friendship celebration, shared indulgence joy, communal dessert bonding, ice cream as social glue",
+    technicalSpecs: "Canon EOS R6, 35mm f/1.8 at f/2.2, ISO 800, natural social lighting"
+  },
+  {
+    name: "Vegan Ice Cream Plant-Based Pride",
+    category: "studio",
+    reference: "Oatly ice cream plant-based campaigns, vegan dessert innovation, dairy-free luxury positioning, sustainable indulgence, plant-based ice cream revolution, coconut/oat/almond milk base celebration",
+    lighting: "Clean modern lighting at 5500K emphasizing plant-based purity, bright fresh illumination, green-tinted ambient suggesting plant origin, sustainable product lighting, eco-conscious brightness",
+    composition: "Ice cream with plant-based ingredients visible (oats, almonds, coconuts), sustainable packaging prominent, plant leaves or botanical elements in frame, eco-friendly presentation, vegan certification visible, plant-based pride messaging",
+    mood: "Plant-based innovation pride, sustainable indulgence, dairy-free luxury, environmental consciousness, vegan dessert celebration",
+    technicalSpecs: "Sony A7III, 50mm f/1.8 at f/4, ISO 200, bright clean studio lighting"
+  },
+  {
+    name: "Ice Cream Sandwich Nostalgic Summer",
+    category: "studio",
+    reference: "Good Humor ice cream sandwich nostalgia, childhood summer treat, ice cream truck memories, vintage frozen novelty reimagined premium, artisan ice cream sandwich trend",
+    lighting: "Bright summer lighting at 5500K creating nostalgic summer day feel, even illumination preventing melt appearance, cheerful bright lighting, summer sunshine simulation",
+    composition: "Stack of artisan ice cream sandwiches with bite taken from top one, cookie texture and ice cream filling clearly visible, slight intentional melt drip for appetite appeal, summer-bright colorful background, nostalgic yet premium presentation",
+    mood: "Childhood summer nostalgia, ice cream truck memories, playful indulgence, refreshing summer treat, nostalgic joy",
+    technicalSpecs: "Nikon D850, 105mm f/2.8 macro at f/8, ISO 100, bright studio strobes"
+  },
+  {
+    name: "Gelato Italian Artisan Tradition",
+    category: "studio",
+    reference: "Italian gelato artisan photography, Grom premium gelato campaigns, gelato parlor aesthetic, traditional metal scoop artistry, Italian gelato culture, artisan gelato craftsmanship",
+    lighting: "Natural Italian gelateria lighting at 5200K, soft window light simulation, warm practical lights suggesting artisan shop, authentic gelato parlor ambiance",
+    composition: "Traditional metal gelato scoop with perfectly formed gelato ball, visible ingredients (pistachio pieces, fruit ripples), rustic Italian marble counter, additional gelato containers blurred background, artisan workshop aesthetic, handcrafted texture evident",
+    mood: "Italian artisan craft pride, gelato tradition respect, handmade quality, authentic Italian culture, artisan gelato excellence",
+    technicalSpecs: "Fujifilm GFX 100S, 110mm f/2 at f/5.6, ISO 200, natural window simulation"
+  },
+  {
+    name: "Ice Cream Float Retro Diner",
+    category: "lifestyle",
+    reference: "Classic American ice cream float, retro diner aesthetic, soda fountain nostalgia, 1950s Americana, root beer float tradition, vintage soda shop photography",
+    lighting: "Retro diner lighting at 4800K with neon accents, warm nostalgic illumination, vintage soda fountain ambiance, classic American diner atmosphere",
+    composition: "Tall glass with ice cream float, vanilla ice cream floating in soda with foam overflowing, striped straw, retro diner counter visible, chrome and red vinyl aesthetic, Americana nostalgia elements",
+    mood: "Retro Americana nostalgia, soda fountain memories, 1950s diner charm, classic American treat, vintage soda shop joy",
+    technicalSpecs: "Leica Q2, 28mm f/1.7 at f/2.8, ISO 800, retro diner practicals"
+  },
+  {
+    name: "Sorbet Fresh Fruit Vibrant",
+    category: "studio",
+    reference: "Fresh fruit sorbet photography, vibrant fruit ice cream, healthy frozen dessert, fruit-forward ice cream, natural fruit sorbet, refreshing fruit ice",
+    lighting: "Bright vibrant lighting at 5500K emphasizing fruit colors, fresh illumination, colorful fruit enhancement lighting, refreshing brightness",
+    composition: "Colorful sorbet scoops with fresh fruit pieces visible, whole fruits surrounding sorbet showing natural ingredients, vibrant color contrast, fresh fruit garnish, healthy dessert presentation, fruit-forward styling",
+    mood: "Fresh fruit vitality, healthy indulgence, vibrant refreshment, natural fruit celebration, guilt-free frozen dessert",
+    technicalSpecs: "Canon EOS R5, 100mm f/2.8 macro at f/5.6, ISO 200, bright colorful lighting"
+  },
 
-  // ========== STUDIO PRODUIT YAOURTS & PRODUITS LAITIERS (7 styles) ==========
+  // ========== NOUVEAUX STYLES GLACES CANNES LIONS (10 styles additionnels) ==========
+  {
+    name: "Häagen-Dazs Seduction Cinématique",
+    category: "studio",
+    reference: "Häagen-Dazs 'Let Your Tongue Travel' Gold Cannes Lions 2019 by BETC Paris, sensual ice cream advertising cinematography, chocolate seduction campaigns, intimate dessert moments photography, premium indulgence as aphrodisiac visual language, luxury frozen dessert romanticism",
+    lighting: "Dramatic chiaroscuro lighting at 3800K creating intimate boudoir atmosphere, single key light from 60° angle creating sensual shadows on melting surface, candlelight warmth suggesting romantic evening, rim light on melting ice cream creating seductive glow, condensation droplets backlit like diamonds",
+    composition: "Extreme close-up of spoon entering velvety ice cream surface with slow deliberate movement, melting drops creating sensual patterns on dark marble surface, lips slightly parted in anticipation visible in soft focus background, chocolate sauce creating artistic swirls, intimate framing suggesting private indulgence moment",
+    mood: "Sensual chocolate seduction, intimate indulgence ritual, forbidden pleasure anticipation, luxurious adult dessert experience, romantic evening climax",
+    technicalSpecs: "RED Komodo 6K, 85mm f/1.2 at f/2.0 for intimate depth, ISO 800, single tungsten key light, black velvet backdrop"
+  },
+  {
+    name: "Ben & Jerry's Activism Explosion",
+    category: "studio",
+    reference: "Ben & Jerry's 'Justice ReMix'd' social justice campaigns, 'Save Our Swirled' climate activism Bronze Cannes Lions 2015, protest art meets ice cream photography, activist brand storytelling through product, progressive values visualization, ice cream as vehicle for social change",
+    lighting: "High-energy strobe lighting at 5800K freezing explosive movement, multiple colored gels (rainbow pride colors) creating activist energy, dramatic backlighting through flying ice cream chunks, UV blacklight making certain elements pop, documentary-style harsh lighting suggesting urgency",
+    composition: "Ice cream pint exploding upward with chunks and swirls flying in controlled chaos, protest signs and activist symbols integrated in background, diverse hands reaching for shared pint suggesting community, rainbow of flavors mixing mid-air representing diversity, dynamic diagonal composition suggesting revolution",
+    mood: "Activist energy explosion, social justice celebration, progressive values triumph, community solidarity joy, revolutionary ice cream movement",
+    technicalSpecs: "Canon EOS-1D X Mark III, 24mm f/1.4 at f/8, ISO 100, 1/8000s with multiple strobes, activist poster backdrop"
+  },
+  {
+    name: "Magnum Double Chocolate ASMR",
+    category: "studio",
+    reference: "Magnum 'True to Pleasure' ASMR campaigns, chocolate crack sound visualization photography, sensory marketing Gold Cannes Lions 2020, Belgian chocolate shell breaking satisfaction, premium ice cream bar as sensory experience, sound made visible through visual texture",
+    lighting: "Precise macro lighting at 4500K revealing chocolate texture micro-details, dual strip lights creating perfect highlight on chocolate shell crack lines, backlight through cracking chocolate showing thickness, focused spot on bite mark, subtle fill maintaining chocolate richness",
+    composition: "Ultra-macro shot of teeth marks in Belgian chocolate shell at moment of crack, chocolate shards suspended mid-fall in perfect focus, visible sound waves illustrated through motion blur of falling pieces, creamy vanilla interior revealed like treasure, bite taken at golden ratio point",
+    mood: "ASMR satisfaction climax, chocolate crack ecstasy, sensory pleasure peak, premium indulgence breakthrough, auditory-visual synesthesia",
+    technicalSpecs: "Hasselblad H6D-100c, 120mm macro at f/11, ISO 50, high-speed flash at 1/8000s, sound-triggered shutter"
+  },
+  {
+    name: "Gelato Artisan Slow Motion Poetry",
+    category: "studio",
+    reference: "Italian gelato artisan tradition meets modern slow-motion aesthetic, Carpigiani gelato craftsmanship campaigns, artisanal ice cream as performance art photography, slow food movement visualization, Italian dolce vita in frozen time, Grom premium gelato artistic campaigns",
+    lighting: "Warm Tuscan golden hour at 3200K streaming through imaginary Italian gelateria window, soft side light emphasizing texture ridges from traditional spatula, practical vintage bulbs creating nostalgic workshop atmosphere, backlight through gelato showing natural ingredient particles",
+    composition: "Metal gelato spatula sculpting perfect wave pattern in slow motion capture, visible texture ridges creating mesmerizing patterns, pistachio pieces and fruit ripples suspended in creamy matrix, Italian marble counter reflecting warm light, hands of maestro gelatiere showing decades of expertise",
+    mood: "Artisanal poetry in motion, Italian craftsmanship romance, slow food meditation, gelato as sculptural art, nostalgic workshop mastery",
+    technicalSpecs: "Phantom TMX 7510 high-speed camera, 85mm f/1.4 at f/2.8, ISO 1600, 10,000 fps capture, warm tungsten practicals"
+  },
+  {
+    name: "Ice Cream Melt Time-Lapse Art",
+    category: "experimental",
+    reference: "OK Go 'The One Moment' time manipulation aesthetic applied to ice cream, melting as artistic transformation, Sam Taylor-Johnson 'Still Life' time-lapse decay art, ice cream entropy as beauty, transformation photography winning design awards",
+    lighting: "Consistent LED panel at 5500K maintaining exposure across 2-hour melt, subtle color temperature shift from 5500K to 4000K showing time passage, rim lighting emphasizing flowing patterns, UV light revealing hidden fluorescent ingredients",
+    composition: "Fixed camera position documenting ice cream cone melting over 2 hours compressed to 8 seconds, melting patterns creating abstract art on surface below, colors mixing and separating like living painting, final frame showing beautiful chaos pattern, time as fourth dimension in composition",
+    mood: "Beautiful decay poetry, entropy as art form, time transformation beauty, ephemeral dessert philosophy, melting meditation",
+    technicalSpecs: "Canon EOS R5 with interval timer, 100mm macro at f/8, ISO 200, 2-hour capture at 30-second intervals"
+  },
+  {
+    name: "Nitrogen Frozen Instant Sculpture",
+    category: "experimental",
+    reference: "Molecular gastronomy meets ice cream photography, liquid nitrogen instant freezing visualization, Heston Blumenthal theatrical food science, ice cream as chemistry performance, scientific gastronomy Gold Innovation Cannes Lions",
+    lighting: "High-speed strobe array at 6500K freezing nitrogen vapor clouds, dramatic backlighting through vapor creating ethereal glow, spot lighting on crystallization moment, practical LED in nitrogen container, scientific precision lighting",
+    composition: "Liquid ice cream base hitting -196°C nitrogen creating instant frozen sculpture, vapor clouds billowing dramatically around transformation, crystalline structures forming in real-time, scientific beakers and molecular gastronomy tools visible, transformation from liquid to solid captured mid-process",
+    mood: "Scientific transformation wonder, molecular gastronomy theater, instant gratification magic, chemistry as culinary art, frozen sculpture birth",
+    technicalSpecs: "Profoto B1X with freeze mode, 50mm f/1.2 at f/4, ISO 400, 1/8000s flash duration, protective housing for equipment"
+  },
+  {
+    name: "Vegan Ice Cream Plant Power",
+    category: "lifestyle",
+    reference: "Oatly ice cream plant-based revolution campaigns, Ben & Jerry's non-dairy line sustainability photography, vegan dessert as environmental statement, plant-based luxury positioning, sustainable indulgence visualization",
+    lighting: "Natural greenhouse lighting at 5200K filtered through plant leaves, green-tinted ambient suggesting plant origin, soft overhead diffusion through greenhouse glass, morning dew on plants creating fresh atmosphere",
+    composition: "Ice cream surrounded by source plants (oats, almonds, coconuts) in greenhouse setting, visible plant milk streams flowing toward product, leaves and botanical elements framing composition, sustainable packaging prominent, earth-conscious lifestyle context",
+    mood: "Plant-powered indulgence pride, sustainable luxury choice, environmental consciousness, guilt-free pleasure, botanical beauty celebration",
+    technicalSpecs: "Fujifilm GFX 100S, 63mm f/2.8 at f/4, ISO 400, natural greenhouse light with reflector fill"
+  },
+  {
+    name: "Childhood Memory Nostalgic Blur",
+    category: "emotional",
+    reference: "Stranger Things 80s nostalgia aesthetic applied to ice cream, childhood summer memory visualization, ice cream truck emotional triggers, nostalgic advertising Cannes Lions winners, memory-based marketing photography",
+    lighting: "Soft nostalgic lighting at 3500K mimicking childhood summer evening, lens flare suggesting memory haze, warm practical lights from imaginary ice cream truck, firefly-like bokeh in background",
+    composition: "Slightly out-of-focus edges suggesting memory recall, child's hand reaching for ice cream cone in soft focus, vintage ice cream truck bells visible but blurred, summer elements (sprinkler, bicycle) in dreamy background, intentional light leaks adding to memory feel",
+    mood: "Childhood summer nostalgia, innocent joy remembrance, simpler times yearning, ice cream truck excitement, memory lane sweetness",
+    technicalSpecs: "Vintage Helios 44-2 lens for swirly bokeh, Canon 5D Mark IV, f/2 wide open, ISO 800, added grain in post"
+  },
+  {
+    name: "Zero Gravity Ice Cream Float",
+    category: "conceptual",
+    reference: "OK Go zero gravity music video aesthetic, NASA food photography in space, weightless food art trending campaigns, gravity-defying product photography, conceptual advertising Grand Prix Cannes Lions",
+    lighting: "Multiple strobes at 5500K freezing floating elements, rim lighting on every floating component, fill from below eliminating gravity shadows, sparkle lights suggesting space environment",
+    composition: "Ice cream scoops floating weightlessly with toppings orbiting around them, spoon suspended mid-air with ice cream drop frozen between spoon and cone, sprinkles creating constellation patterns, all elements sharp despite different distances, impossible physics made beautiful",
+    mood: "Weightless wonder, gravity-defying joy, space-age dessert, impossible made possible, floating dream state",
+    technicalSpecs: "Multiple camera composite technique, 85mm f/1.4 at f/8, ISO 100, 1/8000s with 6 Profoto strobes"
+  },
+  {
+    name: "Ice Cream Social Ritual",
+    category: "documentary",
+    reference: "Humans of New York storytelling aesthetic, ice cream as social connector documentation, community gathering around frozen treats, authentic moment photography, social documentary Cannes Lions winners",
+    lighting: "Available natural light at varying temperatures capturing authentic moments, golden hour community gathering light, neon ice cream shop signs at blue hour, mixed color temperatures showing time passage",
+    composition: "Multiple generations sharing ice cream in authentic community setting, hands of different ages reaching for shared sundae, genuine laughter and connection visible, ice cream shop as community hub, environmental portrait including neighborhood context",
+    mood: "Community connection warmth, intergenerational bonding, ice cream as social glue, authentic human moments, neighborhood tradition celebration",
+    technicalSpecs: "Leica Q2 for discrete documentation, 28mm f/1.7 at f/2.8, ISO 1600-3200, available light only"
+  },
+
+  // ========== STUDIO PRODUIT YAOURTS & PRODUITS LAITIERS (14 styles au total) ==========
   {
     name: "Danone Creamy Spoon Lift",
     category: "studio",
@@ -544,6 +744,60 @@ export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
     composition: "Rustic bowl or traditional ceramic containing fresh fromage blanc, spoon showing thick creamy texture, fresh fruit compote (strawberry, apricot) artfully placed alongside or on top, rustic wooden board or marble surface suggesting artisan quality, French countryside aesthetic, herbs or honey for garnish, authentic imperfect styling",
     mood: "Artisan dairy craft tradition, French countryside authenticity, fresh handmade quality, simple ingredient purity",
     technicalSpecs: "Leica SL2, 50mm f/1.4 lens at f/4, ISO 400, natural window light simulation, wooden reflector for warmth"
+  },
+  {
+    name: "Probiotic Yogurt Health Science",
+    category: "studio",
+    reference: "Activia probiotic health campaigns, digestive health yogurt photography, gut health visualization, probiotic culture scientific photography, health benefit yogurt positioning, wellness yogurt campaigns",
+    lighting: "Clean clinical lighting at 5500K suggesting health and science, bright illumination emphasizing purity, health-focused lighting, scientific precision brightness",
+    composition: "Yogurt with probiotic culture visualization (microscopic imagery overlay or scientific graphics), health benefit messaging visible, clean white medical-style presentation, scientific credibility elements, wellness positioning clear",
+    mood: "Health science confidence, probiotic wellness, digestive health focus, scientific yogurt credibility, gut health commitment",
+    technicalSpecs: "Phase One XF, 80mm at f/11, ISO 100, clinical studio lighting, scientific aesthetic"
+  },
+  {
+    name: "Kefir Fermented Culture Tradition",
+    category: "studio",
+    reference: "Traditional kefir photography, fermented dairy culture, probiotic drink tradition, Eastern European kefir heritage, fermented milk culture celebration, traditional fermentation process",
+    lighting: "Natural traditional lighting at 5200K suggesting heritage craft, soft illumination showing kefir texture, authentic fermentation process lighting, traditional dairy culture ambiance",
+    composition: "Kefir in traditional glass or bottle, visible kefir grains or culture, fermentation process suggested, traditional Eastern European context, heritage dairy craft elements, authentic cultural presentation",
+    mood: "Fermented culture tradition, probiotic heritage, traditional dairy craft, Eastern European authenticity, fermentation process respect",
+    technicalSpecs: "Nikon Z7 II, 50mm f/1.4 at f/2.8, ISO 640, natural traditional lighting"
+  },
+  {
+    name: "Skyr Icelandic Protein Power",
+    category: "studio",
+    reference: "Icelandic Skyr protein photography, Viking heritage dairy, high-protein Icelandic yogurt, Nordic dairy tradition, Skyr thick texture hero shots, Icelandic dairy culture",
+    lighting: "Cool Nordic lighting at 5500K suggesting Icelandic origin, clean bright illumination, Nordic purity lighting, Icelandic dairy freshness",
+    composition: "Skyr in bowl showing thick protein-rich texture, spoon standing upright demonstrating thickness, Icelandic landscape or Nordic elements suggested, Viking heritage subtle references, high-protein positioning clear",
+    mood: "Icelandic heritage pride, Viking protein power, Nordic dairy tradition, high-protein strength, Icelandic purity",
+    technicalSpecs: "Canon EOS R5, 85mm f/1.4 at f/4, ISO 200, cool Nordic lighting aesthetic"
+  },
+  {
+    name: "Lassi Indian Yogurt Drink",
+    category: "beverage",
+    reference: "Indian lassi traditional photography, mango lassi vibrant colors, yogurt drink Indian culture, traditional Indian dairy beverage, lassi cultural authenticity, Indian street food beverage",
+    lighting: "Vibrant Indian market lighting at 5500K, colorful illumination, traditional Indian ambiance, street food energy lighting, cultural authenticity brightness",
+    composition: "Lassi in traditional Indian glass or clay cup, mango or fruit visible showing flavor, Indian cultural context elements, traditional serving style, vibrant colors (mango yellow, rose pink), cultural authenticity emphasized",
+    mood: "Indian cultural tradition, lassi refreshment joy, traditional yogurt drink, Indian street food energy, cultural beverage authenticity",
+    technicalSpecs: "Sony A7III, 50mm f/1.8 at f/2.8, ISO 400, vibrant cultural lighting"
+  },
+  {
+    name: "Yogurt Smoothie Healthy Lifestyle",
+    category: "lifestyle",
+    reference: "Yogurt smoothie health photography, protein smoothie fitness, post-workout yogurt drink, healthy lifestyle smoothie, fitness nutrition photography, active lifestyle yogurt beverage",
+    lighting: "Bright healthy lifestyle lighting at 5500K, energetic illumination, fitness-focused brightness, active lifestyle lighting, health and wellness ambiance",
+    composition: "Yogurt smoothie in modern glass or bottle, fitness context visible (gym equipment, yoga mat, running shoes), fresh fruit and healthy ingredients visible, active lifestyle setting, health-conscious presentation, post-workout refreshment suggested",
+    mood: "Fitness nutrition energy, healthy lifestyle commitment, post-workout refreshment, active wellness, protein power confidence",
+    technicalSpecs: "Canon EOS R6, 35mm f/1.8 at f/2.8, ISO 640, bright fitness lifestyle lighting"
+  },
+  {
+    name: "Artisan Yogurt Small-Batch Craft",
+    category: "studio",
+    reference: "Small-batch artisan yogurt photography, craft dairy producer, local yogurt maker, artisan dairy craftsmanship, handmade yogurt quality, local dairy pride",
+    lighting: "Warm artisan lighting at 4800K suggesting handmade craft, natural workshop light, artisan dairy ambiance, craft producer authenticity lighting",
+    composition: "Artisan yogurt in glass jar with handwritten label, small-batch production elements visible, craft dairy tools suggested, local producer authenticity, handmade quality evident, artisan workshop aesthetic",
+    mood: "Artisan craft pride, small-batch quality, local dairy support, handmade yogurt excellence, craft producer dedication",
+    technicalSpecs: "Fujifilm X-T4, 35mm f/1.4 at f/2.2, ISO 800, warm artisan lighting"
   },
 
   // ========== AGRICULTURE ET AGROALIMENTAIRE (6 styles) ==========
@@ -1480,6 +1734,98 @@ export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
     composition: "Vertical framing, centered subject, TikTok optimization",
     mood: "Dynamic energy with Gen Z appeal and viral content potential",
     technicalSpecs: "iPhone 15 Pro, vertical 9:16, ring light, 4K video frame extraction"
+  },
+
+  // ========== NOUVEAUX STYLES INNOVANTS CANNES LIONS (10 styles) ==========
+  {
+    name: "Surrealist Advertising Magritte",
+    category: "conceptual",
+    reference: "René Magritte surrealist influence in advertising, Volkswagen 'Think Small' conceptual revolution, Absolut Vodka bottle transformation campaigns, surrealist juxtaposition creating memorable impact, impossible reality visualization, dreamlike brand storytelling, conceptual advertising Gold Cannes Lions tradition",
+    lighting: "Even surreal lighting at 5500K creating dreamlike clarity, soft shadows defying physics, multiple light sources creating impossible illumination, clean bright light emphasizing surreal elements, studio lighting with reality-bending shadows",
+    composition: "Impossible juxtapositions creating cognitive dissonance, scale manipulation making ordinary extraordinary, perspective distortion challenging perception, floating elements defying gravity, visual metaphors replacing literal representation, negative space as conceptual element",
+    mood: "Surreal wonder with intellectual engagement, cognitive surprise triggering memorability, dreamlike brand narrative, impossible made believable, conceptual depth beyond surface",
+    technicalSpecs: "Medium format digital, 50mm at f/8, ISO 100, composite photography techniques, extensive post-production surrealism"
+  },
+  {
+    name: "Stop Motion Tactile Craft",
+    category: "animation",
+    reference: "Laika Studios stop-motion excellence, Aardman Animations Wallace & Gromit charm, Honda 'Paper' stop-motion campaign, tactile handmade aesthetic, frame-by-frame craft visible, imperfect perfection charm, artisanal animation storytelling",
+    lighting: "Consistent stop-motion lighting at 5500K maintaining continuity, miniature set lighting creating depth, practical lights visible in frame, slight flicker suggesting handmade process, warm tactile illumination",
+    composition: "Miniature world perspective with forced depth, visible texture showing handcrafted materials, slight imperfections adding charm, layered set design creating dimensionality, frozen motion suggesting animation frames",
+    mood: "Handcrafted charm with artisanal pride, nostalgic animation warmth, tactile material celebration, patient craft appreciation, whimsical storytelling magic",
+    technicalSpecs: "Canon EOS R5, 100mm macro at f/11, ISO 200, frame-by-frame capture, miniature set lighting rigs"
+  },
+  {
+    name: "Double Exposure Narrative Fusion",
+    category: "conceptual",
+    reference: "True Detective opening titles aesthetic, Nike 'Find Your Greatness' double exposure campaigns, narrative layering through multiple exposures, emotional storytelling through image fusion, metaphorical visual poetry, two stories becoming one",
+    lighting: "Layered lighting at different exposures, primary subject key light, secondary narrative ambient glow, transparency creating depth, emotional lighting contrast between layers",
+    composition: "Two narratives merged in single frame, silhouette containing secondary story, transparent overlay creating meaning, strategic opacity revealing connections, visual metaphor through fusion",
+    mood: "Poetic narrative depth, emotional layer complexity, visual metaphor power, storytelling innovation, artistic message fusion",
+    technicalSpecs: "Sony A7RIII, 85mm f/1.4 at f/2.8, ISO 400, in-camera multiple exposure or compositing"
+  },
+  {
+    name: "Hyperrealistic CGI Impossible",
+    category: "digital",
+    reference: "Audi 'Sphere' concept car CGI campaigns, impossible product demonstrations, photoreal CGI indistinguishable from reality, digital perfection beyond physical limits, future product visualization, CGI allowing impossible camera angles",
+    lighting: "Perfect CGI lighting at 5500K with no physical constraints, multiple HDRI environments, photorealistic global illumination, subsurface scattering on materials, physically accurate yet impossible lighting scenarios",
+    composition: "Impossible camera positions only achievable in CGI, perfect product presentation without physical limits, dynamic angles defying physics, seamless environment integration, hyperreal detail beyond photography",
+    mood: "Future perfection visualization, impossible made real, technological marvel, digital craftsmanship excellence, beyond reality enhancement",
+    technicalSpecs: "Full CGI pipeline, Octane/Redshift rendering, 8K output resolution, photogrammetry integration, 32-bit workflow"
+  },
+  {
+    name: "Extreme Minimalism Void",
+    category: "minimal",
+    reference: "Apple 'Shot on iPhone' minimalist campaigns, Scandinavian design influence, 95% negative space compositions, single element hero focus, silence as communication, less-is-everything philosophy",
+    lighting: "Single soft light source at 5500K, minimal shadows, even illumination, no dramatic lighting, pure simplicity",
+    composition: "95% empty space with tiny product presence, extreme negative space as design element, single focal point isolation, geometric precision, breathing room maximized",
+    mood: "Zen simplicity, confident minimalism, space as luxury, essential focus, quiet sophistication",
+    technicalSpecs: "Phase One XF, 80mm at f/11, ISO 64, single softbox, infinite white backdrop"
+  },
+  {
+    name: "Digital Collage Deconstruction",
+    category: "editorial",
+    reference: "David Carson deconstructed typography, contemporary digital collage art, mixed media layering, analog-digital fusion, controlled chaos aesthetic, punk design philosophy, anti-grid rebellion",
+    lighting: "Mixed lighting sources from different elements, varied color temperatures creating energy, no unified lighting creating collage effect, dramatic contrasts between elements",
+    composition: "Deconstructed layout breaking all rules, overlapping elements creating depth, mixed scales and perspectives, typography as visual element, organized chaos principle",
+    mood: "Creative rebellion, deconstructed energy, punk aesthetic sophistication, controlled chaos, anti-establishment design",
+    technicalSpecs: "Mixed media capture, various focal lengths, digital compositing, scanner integration, mixed resolution elements"
+  },
+  {
+    name: "Infrared Otherworld Vision",
+    category: "experimental",
+    reference: "Richard Mosse infrared war photography, Kodak Aerochrome aesthetic revival, invisible spectrum revealed, alien Earth visualization, environmental photography reimagined, scientific art fusion",
+    lighting: "Infrared spectrum capture revealing invisible light, foliage appearing white/pink, sky turning dark dramatic, heat signatures visible, otherworldly natural illumination",
+    composition: "Familiar scenes made alien through infrared, vegetation as surreal elements, architectural elements transformed, human subjects ethereal, landscape as foreign planet",
+    mood: "Otherworldly discovery, invisible revealed, scientific wonder, environmental reimagining, alien beauty on Earth",
+    technicalSpecs: "Modified camera for IR capture, 720nm IR filter, specialized post-processing, false color interpretation"
+  },
+  {
+    name: "Tilt-Shift Miniature Universe",
+    category: "perspective",
+    reference: "BMW tilt-shift campaigns, miniature faking technique, real world as toy model, selective focus creating scale illusion, playful perspective manipulation, accessible luxury visualization",
+    lighting: "Bright even lighting suggesting miniature model, high key illumination, minimal shadows like toy photography, saturated colors enhancing toy effect",
+    composition: "High angle suggesting looking down at model, selective focus plane creating miniature effect, enhanced saturation for toy aesthetic, real scenes as dioramas",
+    mood: "Playful scale manipulation, world as playground, accessible wonder, toy-like charm, perspective magic",
+    technicalSpecs: "Tilt-shift lens 45mm, f/2.8 selective focus, ISO 100, elevated viewpoint, saturation boost post"
+  },
+  {
+    name: "Glitch Art Digital Decay",
+    category: "digital",
+    reference: "Digital artist Rosa Menkman glitch aesthetics, error as art form, digital decay beauty, corruption as creation, technology failure celebrated, cyberpunk data-moshing, post-internet art movement",
+    lighting: "Screen glow and digital artifacts, RGB channel separation, datamoshed color bleeding, electronic interference patterns, corrupted pixel illumination",
+    composition: "Intentional digital corruption patterns, pixel sorting algorithms, data bending aesthetics, compression artifacts as design, frame tearing and displacement",
+    mood: "Digital age anxiety, beautiful destruction, technology fragility, glitch poetry, error celebration",
+    technicalSpecs: "Digital manipulation tools, datamoshing software, hex editor corruption, processing algorithms, glitch apps"
+  },
+  {
+    name: "Thermal Imaging Emotion",
+    category: "experimental",
+    reference: "Predator movie thermal vision influence, FLIR camera art projects, emotion through heat visualization, invisible temperature narratives, scientific imaging as art, heat signature storytelling",
+    lighting: "Thermal radiation capture, no traditional lighting needed, heat emission as illumination, temperature gradients creating contrast, body heat as light source",
+    composition: "Heat signatures as compositional elements, temperature contrast creating focus, cold-hot juxtaposition, human warmth against cold environment, emotional heat mapping",
+    mood: "Emotional temperature, invisible intimacy, scientific poetry, heat as life force, thermal narrative",
+    technicalSpecs: "FLIR thermal camera, temperature range calibration, false color heat mapping, thermal resolution 640x480, specialized thermal software"
   }
 ];
 
@@ -1714,7 +2060,248 @@ export const LIGHTING_SETUPS: LightingSetup[] = [
 ];
 
 // ==========================================
-// 🎯 FONCTIONS DE SÉLECTION INTELLIGENTE
+// 🎯 MAPPINGS SECTEUR → CATÉGORIES (pour pré-filtrage)
+// ==========================================
+
+/**
+ * Mapping des secteurs vers les catégories photographiques pertinentes
+ * Un secteur peut avoir 2-4 catégories pour offrir flexibilité et diversité
+ */
+export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
+  // ALIMENTAIRE & BOISSONS
+  'food': ['food', 'beverage', 'studio', 'lifestyle'],
+  'dairy': ['food', 'studio', 'lifestyle'],
+  'beverage': ['beverage', 'food', 'lifestyle'],
+  
+  // BEAUTÉ & COSMÉTIQUE
+  'cosmetic': ['beauty', 'cosmetic', 'luxury', 'lifestyle'],
+  'beauty': ['beauty', 'cosmetic', 'luxury'],
+  
+  // MODE & LIFESTYLE
+  'fashion': ['fashion', 'lifestyle', 'editorial', 'luxury'],
+  'lifestyle': ['lifestyle', 'fashion', 'minimal'],
+  
+  // TECHNOLOGIE
+  'tech': ['minimal', 'studio', 'lifestyle'],
+  'technology': ['minimal', 'studio', 'lifestyle'],
+  
+  // LUXE
+  'luxury': ['luxury', 'editorial', 'lifestyle'],
+  
+  // AUTOMOBILE
+  'automobile': ['automobile', 'luxury'],
+  'automotive': ['automobile', 'luxury'],
+  
+  // FINANCE & BANQUE
+  'finance': ['finance', 'minimal', 'studio'],
+  'banking': ['finance', 'minimal', 'studio'],
+  
+  // SANTÉ
+  'health': ['healthcare', 'minimal'],
+  'healthcare': ['healthcare', 'minimal'],
+  
+  // ÉDUCATION
+  'education': ['education', 'lifestyle'],
+  
+  // AGRICULTURE
+  'agriculture': ['agriculture', 'food', 'lifestyle'],
+  
+  // ARTISANAT
+  'craft': ['artisanat', 'lifestyle'],
+  'artisanat': ['artisanat', 'lifestyle'],
+  
+  // BIENS DE CONSOMMATION
+  'consumer-goods': ['studio', 'lifestyle', 'minimal'],
+  
+  // COMMUNICATION & MÉDIAS
+  'media': ['minimal', 'lifestyle', 'studio'],
+  'communication': ['minimal', 'lifestyle', 'studio'],
+  
+  // INDUSTRIE
+  'manufacturing': ['studio', 'minimal'],
+  'industry': ['studio', 'minimal'],
+  
+  // FALLBACK GÉNÉRIQUE
+  'default': ['lifestyle', 'minimal', 'studio']
+};
+
+/**
+ * Mapping des occasions d'usage vers les contextes visuels pertinents
+ */
+export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
+  // Moments alimentaires
+  'breakfast': ['Modern Kitchen Bright', 'Cozy Home Comfort', 'Minimalist Studio White'],
+  'lunch': ['Modern Kitchen Bright', 'Outdoor Nature Setting', 'Urban Loft Industrial'],
+  'dinner': ['Cozy Home Comfort', 'Luxury Hotel Suite', 'Rustic Countryside'],
+  'snack': ['Modern Kitchen Bright', 'Outdoor Nature Setting', 'Street Urban Authentic'],
+  
+  // Sport & bien-être
+  'sport': ['Outdoor Nature Setting', 'Modern Office Workspace', 'Minimalist Studio White'],
+  'workout': ['Outdoor Nature Setting', 'Modern Office Workspace', 'Urban Loft Industrial'],
+  'yoga': ['Spa Wellness Zen', 'Outdoor Nature Setting', 'Botanical Garden Natural'],
+  'wellness': ['Spa Wellness Zen', 'Botanical Garden Natural', 'Cozy Home Comfort'],
+  
+  // Beauté & soins
+  'morning-routine': ['Modern Kitchen Bright', 'Spa Wellness Zen', 'Minimalist Studio White'],
+  'evening-routine': ['Spa Wellness Zen', 'Cozy Home Comfort', 'Luxury Hotel Suite'],
+  'skincare': ['Spa Wellness Zen', 'Minimalist Studio White', 'Botanical Garden Natural'],
+  
+  // Travail & productivité
+  'work': ['Modern Office Workspace', 'Urban Loft Industrial', 'Minimalist Studio White'],
+  'office': ['Modern Office Workspace', 'Minimalist Studio White', 'Urban Loft Industrial'],
+  
+  // Loisirs & social
+  'party': ['Urban Loft Industrial', 'Luxury Hotel Suite', 'Street Urban Authentic'],
+  'celebration': ['Luxury Hotel Suite', 'Boutique Retail Chic', 'Modern Kitchen Bright'],
+  'relaxation': ['Spa Wellness Zen', 'Cozy Home Comfort', 'Botanical Garden Natural'],
+  
+  // Shopping & retail
+  'shopping': ['Boutique Retail Chic', 'Street Urban Authentic', 'Urban Loft Industrial'],
+  
+  // Fallback
+  'default': ['Minimalist Studio White', 'Modern Kitchen Bright', 'Cozy Home Comfort']
+};
+
+// ==========================================
+// 🎯 FONCTIONS DE PRÉ-FILTRAGE INTELLIGENT
+// ==========================================
+
+/**
+ * Pré-filtre les styles photographiques selon le secteur de la marque
+ * @param sector - Secteur de la marque (ex: 'food', 'cosmetic', 'tech')
+ * @param productCategory - Catégorie du produit (optionnel, pour affinage)
+ * @returns Array de styles photographiques pertinents (15-25 styles)
+ */
+export function preFilterStylesBySector(
+  sector: string,
+  productCategory?: string
+): PhotographicStyle[] {
+  // 1. Obtenir les catégories pertinentes pour ce secteur
+  const relevantCategories = SECTOR_TO_CATEGORIES[sector.toLowerCase()] 
+    || SECTOR_TO_CATEGORIES['default'];
+  
+  console.log(`[PreFilter] Secteur: ${sector} → Catégories: ${relevantCategories.join(', ')}`);
+  
+  // 2. Filtrer les styles par catégorie
+  const filteredByCategory = PHOTOGRAPHIC_STYLES.filter(style =>
+    relevantCategories.some(cat => 
+      style.category.toLowerCase().includes(cat.toLowerCase())
+    )
+  );
+  
+  console.log(`[PreFilter] Styles filtrés par catégorie: ${filteredByCategory.length}`);
+  
+  // 3. Si catégorie produit fournie, prioriser les styles correspondants
+  if (productCategory) {
+    const priorityStyles = filteredByCategory.filter(style =>
+      style.name.toLowerCase().includes(productCategory.toLowerCase()) ||
+      style.category.toLowerCase().includes(productCategory.toLowerCase())
+    );
+    
+    const otherStyles = filteredByCategory.filter(s => !priorityStyles.includes(s));
+    
+    // Combiner : prioritaires en premier, puis autres
+    const combined = [...priorityStyles, ...otherStyles];
+    
+    console.log(`[PreFilter] Styles prioritaires (${productCategory}): ${priorityStyles.length}`);
+    
+    // Limiter à 25 styles maximum pour GPT-5
+    return combined.slice(0, 25);
+  }
+  
+  // Limiter à 25 styles maximum
+  return filteredByCategory.slice(0, 25);
+}
+
+/**
+ * Pré-filtre les contextes visuels selon les occasions d'usage du produit
+ * @param usageOccasions - Occasions d'usage du produit
+ * @param productCategory - Catégorie du produit (pour contexte supplémentaire)
+ * @returns Array de contextes visuels pertinents (4-6 contextes)
+ */
+export function preFilterContextsByUsage(
+  usageOccasions: string[],
+  productCategory?: string
+): CreativeContext[] {
+  const relevantContextNames = new Set<string>();
+  
+  // 1. Mapper les occasions d'usage vers les contextes
+  usageOccasions.forEach(occasion => {
+    const contexts = USAGE_TO_CONTEXTS[occasion.toLowerCase()] 
+      || USAGE_TO_CONTEXTS['default'];
+    contexts.forEach(ctx => relevantContextNames.add(ctx));
+  });
+  
+  // 2. Ajouter des contextes génériques toujours pertinents
+  relevantContextNames.add('Minimalist Studio White');
+  relevantContextNames.add('Cozy Home Comfort');
+  
+  // 3. Filtrer les contextes disponibles
+  const filteredContexts = CREATIVE_CONTEXTS.filter(context =>
+    relevantContextNames.has(context.name)
+  );
+  
+  console.log(`[PreFilter] Contextes filtrés: ${filteredContexts.length} (${Array.from(relevantContextNames).join(', ')})`);
+  
+  // Limiter à 6 contextes maximum
+  return filteredContexts.slice(0, 6);
+}
+
+/**
+ * Interface pour les presets pré-filtrés
+ */
+export interface FilteredPresets {
+  styles: PhotographicStyle[];      // 15-25 styles pertinents
+  palettes: ColorPalette[];         // Toutes les 12 palettes
+  frameworks: CreativeFramework[];  // Tous les 8 frameworks
+  contexts: CreativeContext[];      // 4-6 contextes pertinents
+  lightings: LightingSetup[];       // Tous les 7 éclairages
+}
+
+/**
+ * Fonction principale : obtenir tous les presets pré-filtrés pour GPT-5
+ * @param brand - Données de la marque
+ * @param product - Données du produit
+ * @param calendar - Données du calendrier (optionnel)
+ * @returns Presets pré-filtrés prêts pour GPT-5
+ */
+export function getRelevantPresetsForGPT(
+  brand: any,
+  product: any,
+  calendar?: any
+): FilteredPresets {
+  console.log(`[PreFilter] Début du pré-filtrage pour ${brand.name} - ${product.name}`);
+  
+  // 1. Pré-filtrer les styles par secteur et catégorie produit
+  const filteredStyles = preFilterStylesBySector(
+    brand.sector,
+    product.category
+  );
+  
+  // 2. Pré-filtrer les contextes par occasions d'usage
+  const filteredContexts = preFilterContextsByUsage(
+    product.usageOccasions || [],
+    product.category
+  );
+  
+  // 3. Garder toutes les palettes, frameworks et éclairages
+  // (GPT-5 choisira parmi tous, car ils sont tous potentiellement pertinents)
+  
+  const result: FilteredPresets = {
+    styles: filteredStyles,
+    palettes: COLOR_PALETTES,        // Toutes les 12
+    frameworks: CREATIVE_FRAMEWORKS,  // Tous les 8
+    contexts: filteredContexts,
+    lightings: LIGHTING_SETUPS        // Tous les 7
+  };
+  
+  console.log(`[PreFilter] Résultat: ${result.styles.length} styles, ${result.contexts.length} contextes`);
+  
+  return result;
+}
+
+// ==========================================
+// 🎯 FONCTIONS DE SÉLECTION INTELLIGENTE (anciennes - conservées pour compatibilité)
 // ==========================================
 
 /**

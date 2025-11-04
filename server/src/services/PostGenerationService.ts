@@ -15,7 +15,8 @@ import { parseGPTResponse } from '../utils/promptParser';
 import { ProductIntegrationWithStabilityService } from './ProductIntegrationWithStabilityService';
 import Veo3Service from './Veo3Service';
 import sharp from 'sharp';
-import { selectCreativePreset, generateColorPalettePrompt } from './CreativePresetsLibrary';
+import { getRelevantPresetsForGPT, generateColorPalettePrompt } from './CreativePresetsLibrary';
+import { selectPresetWithGPT, randomizeFromFilteredPresets } from './GPTPresetSelector';
 import { CannesLionsImageOptimizer } from './CannesLionsImageOptimizer';
 import { CannesLionsImageScorer, ScoredImage } from './CannesLionsImageScorer';
 
@@ -325,18 +326,41 @@ class PostGenerationService {
         const date = dates[i];
         logger.info(`\nGénération du contenu pour ${platform} - Post #${i + 1} (${date.toLocaleDateString()})`);
         
-        // 🎨 SÉLECTIONNER UN PRESET CRÉATIF UNIQUE POUR CE POST
-        const creativePreset = selectCreativePreset(
-          globalPostIndex,
-          totalPostsCount,
-          brand.sector,
-          {
-            primary: brand.colors?.primary,
-            secondary: brand.colors?.secondary,
-            accent: brand.colors?.accent
-          },
-          String(calendar._id) // ✨ SEED UNIQUE PAR CALENDRIER pour randomisation anarchique
+        // 🎨 SÉLECTIONNER UN PRESET CRÉATIF UNIQUE POUR CE POST AVEC GPT-5
+        logger.info('🤖 Pré-filtrage des presets pour GPT-5...');
+        
+        // Étape 1: Pré-filtrer les presets pertinents
+        const filteredPresets = getRelevantPresetsForGPT(
+          brand,
+          products.length > 0 ? products[0] : { category: 'general', usageOccasions: [] },
+          calendar
         );
+        
+        logger.info(`✅ Presets pré-filtrés: ${filteredPresets.styles.length} styles, ${filteredPresets.contexts.length} contextes`);
+        
+        // Étape 2: Demander à GPT-5 de sélectionner le preset optimal
+        let creativePreset;
+        try {
+          logger.info('🤖 Appel à GPT-5 pour sélection intelligente du preset...');
+          const gptSelectedPreset = await selectPresetWithGPT(
+            filteredPresets,
+            brand,
+            products.length > 0 ? products[0] : { name: brand.name, category: 'general' },
+            calendar
+          );
+          
+          if (gptSelectedPreset) {
+            creativePreset = gptSelectedPreset;
+            logger.info('✅ GPT-5 a sélectionné le preset avec succès');
+          } else {
+            logger.info('⚠️  GPT-5 n\'a pas pu sélectionner, fallback sur randomisation');
+            creativePreset = randomizeFromFilteredPresets(filteredPresets);
+          }
+        } catch (error: any) {
+          logger.error('❌ Erreur lors de la sélection GPT-5:', error.message);
+          logger.info('⚠️  Fallback sur randomisation parmi les presets filtrés');
+          creativePreset = randomizeFromFilteredPresets(filteredPresets);
+        }
         
         logger.info(`🎨 Preset créatif sélectionné:`);
         logger.info(`   - Style: ${creativePreset.style.name}`);
