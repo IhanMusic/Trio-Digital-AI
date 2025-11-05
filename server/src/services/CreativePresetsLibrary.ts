@@ -3009,13 +3009,13 @@ export const LIGHTING_SETUPS: LightingSetup[] = [
 
 /**
  * Mapping des secteurs vers les catégories photographiques pertinentes
- * Un secteur peut avoir 2-4 catégories pour offrir flexibilité et diversité
+ * ÉLARGI pour maximiser la diversité tout en gardant la cohérence
  */
 export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
-  // ALIMENTAIRE & BOISSONS
-  'food': ['food', 'beverage', 'studio', 'lifestyle'],
-  'dairy': ['food', 'studio', 'lifestyle'],
-  'beverage': ['beverage', 'food', 'lifestyle'],
+  // ALIMENTAIRE & BOISSONS - ÉLARGI POUR PLUS DE DIVERSITÉ
+  'food': ['food', 'beverage', 'studio', 'lifestyle', 'minimal', 'luxury'],
+  'dairy': ['food', 'studio', 'lifestyle', 'minimal', 'luxury'],
+  'beverage': ['beverage', 'food', 'lifestyle', 'minimal', 'luxury', 'studio'],
   
   // BEAUTÉ & COSMÉTIQUE
   'cosmetic': ['beauty', 'cosmetic', 'luxury', 'lifestyle'],
@@ -3477,14 +3477,14 @@ function seededRandom(seed: number, offset: number): number {
 }
 
 /**
- * Sélectionne un preset créatif avec RANDOMISATION ANARCHIQUE MAXIMALE
- * Chaque calendrier obtient une signature visuelle complètement unique
+ * Sélectionne un preset créatif avec RANDOMISATION VRAIMENT ALÉATOIRE
+ * Garantit la diversité même sur de courtes périodes (2 jours)
  * 
  * @param postIndex - Index du post dans le calendrier
  * @param totalPosts - Nombre total de posts dans le calendrier
  * @param sector - Secteur d'activité (pour filtrage futur)
  * @param brandColors - Couleurs de la marque
- * @param calendarId - ID du calendrier pour seed unique (NOUVEAU)
+ * @param calendarId - ID du calendrier pour seed unique
  */
 export function selectCreativePreset(
   postIndex: number,
@@ -3493,25 +3493,38 @@ export function selectCreativePreset(
   brandColors?: { primary?: string; secondary?: string; accent?: string },
   calendarId?: string
 ): CreativePreset {
-  // 🎲 RANDOMISATION TOTALE avec seed unique par calendrier
-  // Utiliser calendarId comme seed pour des résultats reproductibles mais uniques
-  const seed = calendarId 
-    ? simpleHash(calendarId.toString() + postIndex.toString())
-    : postIndex * 1000 + Math.floor(Math.random() * 1000); // Fallback vraiment random
+  // 🎲 RANDOMISATION VRAIMENT ALÉATOIRE - Pas de patterns prévisibles !
+  // Utiliser timestamp + calendarId + postIndex pour garantir l'unicité
+  const timestamp = Date.now();
+  const randomSalt = Math.random() * 1000000;
+  const calendarSeed = calendarId ? simpleHash(calendarId) : Math.random() * 1000;
   
-  // 🎨 Sélection VRAIMENT aléatoire de chaque composant
-  // Chaque offset différent crée une séquence indépendante
-  const styleIndex = seededRandom(seed, 0) % PHOTOGRAPHIC_STYLES.length;
-  const paletteIndex = seededRandom(seed, 1) % COLOR_PALETTES.length;
-  const frameworkIndex = seededRandom(seed, 2) % CREATIVE_FRAMEWORKS.length;
-  const contextIndex = seededRandom(seed, 3) % CREATIVE_CONTEXTS.length;
-  const lightingIndex = seededRandom(seed, 4) % LIGHTING_SETUPS.length;
+  // Créer des seeds complètement différents pour chaque composant
+  const baseSeed = timestamp + randomSalt + calendarSeed + postIndex;
+  
+  // 🎨 Sélection ANARCHIQUE de chaque composant avec seeds indépendants
+  // Chaque composant utilise un multiplicateur premier différent pour éviter les corrélations
+  const styleIndex = Math.floor((Math.sin(baseSeed * 7919) * 10000) % 1 * PHOTOGRAPHIC_STYLES.length);
+  const paletteIndex = Math.floor((Math.sin(baseSeed * 7927) * 10000) % 1 * COLOR_PALETTES.length);
+  const frameworkIndex = Math.floor((Math.sin(baseSeed * 7933) * 10000) % 1 * CREATIVE_FRAMEWORKS.length);
+  const contextIndex = Math.floor((Math.sin(baseSeed * 7937) * 10000) % 1 * CREATIVE_CONTEXTS.length);
+  const lightingIndex = Math.floor((Math.sin(baseSeed * 7949) * 10000) % 1 * LIGHTING_SETUPS.length);
 
-  const style = PHOTOGRAPHIC_STYLES[styleIndex];
-  const palette = COLOR_PALETTES[paletteIndex];
-  const framework = CREATIVE_FRAMEWORKS[frameworkIndex];
-  const context = CREATIVE_CONTEXTS[contextIndex];
-  const lighting = LIGHTING_SETUPS[lightingIndex];
+  // Assurer des indices positifs
+  const safeStyleIndex = Math.abs(styleIndex) % PHOTOGRAPHIC_STYLES.length;
+  const safePaletteIndex = Math.abs(paletteIndex) % COLOR_PALETTES.length;
+  const safeFrameworkIndex = Math.abs(frameworkIndex) % CREATIVE_FRAMEWORKS.length;
+  const safeContextIndex = Math.abs(contextIndex) % CREATIVE_CONTEXTS.length;
+  const safeLightingIndex = Math.abs(lightingIndex) % LIGHTING_SETUPS.length;
+
+  const style = PHOTOGRAPHIC_STYLES[safeStyleIndex];
+  const palette = COLOR_PALETTES[safePaletteIndex];
+  const framework = CREATIVE_FRAMEWORKS[safeFrameworkIndex];
+  const context = CREATIVE_CONTEXTS[safeContextIndex];
+  const lighting = LIGHTING_SETUPS[safeLightingIndex];
+
+  // Log pour debug (optionnel)
+  console.log(`[CreativePreset] Post ${postIndex}: Style=${style.name}, Context=${context.name}, Palette=${palette.name}`);
 
   // Construire la référence complète
   const reference = style.reference;

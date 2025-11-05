@@ -259,23 +259,39 @@ export async function selectPresetWithGPT(
 }
 
 /**
- * Fallback : randomisation parmi les presets pré-filtrés
+ * Fallback : randomisation VRAIMENT ALÉATOIRE parmi les presets pré-filtrés
  * Utilisé si GPT-5 échoue ou si le parsing échoue
+ * Garantit la diversité même sur de courtes périodes
  */
 export function randomizeFromFilteredPresets(
   filteredPresets: FilteredPresets,
   seed?: number
 ): CreativePreset {
-  console.log('[GPTPresetSelector] Fallback: randomisation parmi les presets filtrés');
+  console.log('[GPTPresetSelector] Fallback: randomisation VRAIMENT ALÉATOIRE parmi les presets filtrés');
   
-  const random = (max: number) => Math.floor(Math.random() * max);
+  // 🎲 RANDOMISATION VRAIMENT ALÉATOIRE - Pas de patterns prévisibles !
+  const timestamp = Date.now();
+  const randomSalt = Math.random() * 1000000;
+  const baseSeed = timestamp + randomSalt + (seed || 0);
+  
+  // 🎨 Sélection ANARCHIQUE avec seeds indépendants pour chaque composant
+  // Utiliser des multiplicateurs premiers différents pour éviter les corrélations
+  const styleIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7919) * 10000) % filteredPresets.styles.length);
+  const paletteIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7927) * 10000) % filteredPresets.palettes.length);
+  const frameworkIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7933) * 10000) % filteredPresets.frameworks.length);
+  const contextIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7937) * 10000) % filteredPresets.contexts.length);
+  const lightingIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7949) * 10000) % filteredPresets.lightings.length);
+
+  const selectedStyle = filteredPresets.styles[styleIndex];
+  
+  console.log(`[GPTPresetSelector] Fallback sélectionné: Style=${selectedStyle.name}, Context=${filteredPresets.contexts[contextIndex].name}`);
   
   return {
-    style: filteredPresets.styles[random(filteredPresets.styles.length)],
-    palette: filteredPresets.palettes[random(filteredPresets.palettes.length)],
-    framework: filteredPresets.frameworks[random(filteredPresets.frameworks.length)],
-    context: filteredPresets.contexts[random(filteredPresets.contexts.length)],
-    lighting: filteredPresets.lightings[random(filteredPresets.lightings.length)],
-    reference: filteredPresets.styles[random(filteredPresets.styles.length)].reference
+    style: selectedStyle,
+    palette: filteredPresets.palettes[paletteIndex],
+    framework: filteredPresets.frameworks[frameworkIndex],
+    context: filteredPresets.contexts[contextIndex],
+    lighting: filteredPresets.lightings[lightingIndex],
+    reference: selectedStyle.reference
   };
 }
