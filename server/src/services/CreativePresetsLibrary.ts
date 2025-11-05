@@ -3121,7 +3121,7 @@ export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
   'dessert': ['Cozy Home Comfort', 'Parisian Café Classic', 'Luxury Hotel Suite', 'Birthday Party Celebration', 'Mediterranean Villa Luxury', 'Wedding Reception Elegant'],
   
   // ========== BOISSONS - JUS & SMOOTHIES (ENRICHI MASSIVEMENT) ==========
-  'juice': ['Beach Sunset Romance', 'Botanical Garden Natural', 'Brazilian Carnival Energy', 'African Savanna Wild', 'Tokyo Neon Cyberpunk', 'New York Rooftop Urban', 'Summer Beach Vacation', 'Outdoor Nature Setting', 'Market Stall Authentic', 'Spa Wellness Zen'],
+  'juice': ['Beach Sunset Romance', 'Botanical Garden Natural', 'Brazilian Carnival Energy', 'African Savanna Wild', 'Tokyo Neon Cyberpunk', 'New York Rooftop Urban', 'Summer Beach Vacation', 'Outdoor Nature Setting', 'Market Stall Authentic', 'Spa Wellness Zen', 'Modern Kitchen Bright', 'Cozy Home Comfort', 'Urban Loft Industrial', 'Mediterranean Villa Luxury', 'Parisian Café Classic', 'Scandinavian Hygge Cozy', 'Music Festival Outdoor', 'Sports Stadium Energy', 'Yoga Lifestyle Flow', 'Minimalist Studio White'],
   'fresh-juice': ['Market Stall Authentic', 'Botanical Garden Natural', 'Summer Beach Vacation', 'Outdoor Nature Setting', 'Brazilian Carnival Energy', 'Beach Sunset Romance', 'Indian Bazaar Colorful', 'Moroccan Souk Vibrant'],
   'smoothie': ['Spa Wellness Zen', 'Beach Sunset Romance', 'Sports Stadium Energy', 'Yoga Lifestyle Flow', 'Botanical Garden Natural', 'Outdoor Nature Setting', 'Modern Office Workspace', 'Summer Beach Vacation'],
   'green-juice': ['Sustainable Eco-Home', 'Botanical Garden Natural', 'Yoga Lifestyle Flow', 'Biophilic Design Nature-Tech', 'Spa Wellness Zen', 'Forest Enchanted Magical', 'Zero-Waste Lifestyle', 'Solar Punk Future'],
@@ -3364,9 +3364,10 @@ export function preFilterStylesBySector(
 
 /**
  * Pré-filtre les contextes visuels selon les occasions d'usage du produit
+ * NOUVELLE VERSION: Plus permissive pour garantir la diversité
  * @param usageOccasions - Occasions d'usage du produit
  * @param productCategory - Catégorie du produit (pour contexte supplémentaire)
- * @returns Array de contextes visuels pertinents (4-6 contextes)
+ * @returns Array de contextes visuels pertinents (15-20 contextes minimum)
  */
 export function preFilterContextsByUsage(
   usageOccasions: string[],
@@ -3374,26 +3375,82 @@ export function preFilterContextsByUsage(
 ): CreativeContext[] {
   const relevantContextNames = new Set<string>();
   
-  // 1. Mapper les occasions d'usage vers les contextes
+  // 1. Mapper les occasions d'usage vers les contextes (comme avant)
   usageOccasions.forEach(occasion => {
     const contexts = USAGE_TO_CONTEXTS[occasion.toLowerCase()] 
       || USAGE_TO_CONTEXTS['default'];
     contexts.forEach(ctx => relevantContextNames.add(ctx));
   });
   
-  // 2. Ajouter des contextes génériques toujours pertinents
-  relevantContextNames.add('Minimalist Studio White');
-  relevantContextNames.add('Cozy Home Comfort');
+  // 2. NOUVEAU: Ajouter des contextes génériques TOUJOURS pertinents (plus nombreux)
+  const alwaysRelevantContexts = [
+    'Minimalist Studio White',
+    'Cozy Home Comfort',
+    'Modern Kitchen Bright',
+    'Outdoor Nature Setting',
+    'Urban Loft Industrial',
+    'Boutique Retail Chic',
+    'Spa Wellness Zen',
+    'Modern Office Workspace',
+    'Parisian Café Classic',
+    'Beach Sunset Romance'
+  ];
   
-  // 3. Filtrer les contextes disponibles
+  alwaysRelevantContexts.forEach(ctx => relevantContextNames.add(ctx));
+  
+  // 3. NOUVEAU: Si pas assez de contextes, ajouter des contextes complémentaires par secteur
+  if (relevantContextNames.size < 15) {
+    console.log(`[PreFilter] Seulement ${relevantContextNames.size} contextes, ajout de contextes complémentaires...`);
+    
+    // Ajouter des contextes lifestyle universels
+    const universalContexts = [
+      'New York Rooftop Urban',
+      'Mediterranean Villa Luxury',
+      'Scandinavian Hygge Cozy',
+      'Japanese Temple Zen',
+      'Botanical Garden Natural',
+      'Street Urban Authentic',
+      'Luxury Hotel Suite',
+      'Family Kitchen Busy',
+      'Summer Beach Vacation',
+      'Music Festival Outdoor',
+      'Sports Stadium Energy',
+      'Art Gallery Contemporary',
+      'Rustic Countryside',
+      'Tech Startup Garage',
+      'Coworking Space Collaborative'
+    ];
+    
+    universalContexts.forEach(ctx => relevantContextNames.add(ctx));
+  }
+  
+  // 4. Filtrer les contextes disponibles
   const filteredContexts = CREATIVE_CONTEXTS.filter(context =>
     relevantContextNames.has(context.name)
   );
   
-  console.log(`[PreFilter] Contextes filtrés: ${filteredContexts.length} (${Array.from(relevantContextNames).join(', ')})`);
+  console.log(`[PreFilter] Contextes filtrés: ${filteredContexts.length} (diversité garantie)`);
   
-  // Limiter à 6 contextes maximum
-  return filteredContexts.slice(0, 6);
+  // 5. NOUVEAU: Garantir un minimum de 15 contextes pour la diversité
+  if (filteredContexts.length < 15) {
+    console.log(`[PreFilter] Ajout de contextes aléatoires pour atteindre 15 minimum...`);
+    
+    // Ajouter des contextes aléatoires parmi ceux non encore sélectionnés
+    const remainingContexts = CREATIVE_CONTEXTS.filter(context =>
+      !relevantContextNames.has(context.name)
+    );
+    
+    // Mélanger et prendre les premiers
+    const shuffled = remainingContexts.sort(() => Math.random() - 0.5);
+    const needed = 15 - filteredContexts.length;
+    const additional = shuffled.slice(0, needed);
+    
+    filteredContexts.push(...additional);
+    console.log(`[PreFilter] ${additional.length} contextes additionnels ajoutés`);
+  }
+  
+  // Limiter à 20 contextes maximum pour éviter la surcharge
+  return filteredContexts.slice(0, 20);
 }
 
 /**

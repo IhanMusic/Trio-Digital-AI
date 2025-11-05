@@ -1,9 +1,110 @@
 import OpenAI from 'openai';
-import { FilteredPresets, CreativePreset } from './CreativePresetsLibrary';
+import { 
+  getRelevantPresetsForGPT,
+  FilteredPresets,
+  CreativePreset
+} from './CreativePresetsLibrary';
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY,
 });
+
+/**
+ * Système anti-répétition pour améliorer la diversité des presets
+ * Évite les répétitions sur les derniers posts générés
+ */
+class AntiRepetitionPresetSelector {
+  private static instance: AntiRepetitionPresetSelector;
+  private recentStyles: string[] = [];
+  private recentContexts: string[] = [];
+  private recentPalettes: string[] = [];
+  private maxHistory = 5; // Éviter les répétitions sur les 5 derniers posts
+
+  static getInstance(): AntiRepetitionPresetSelector {
+    if (!AntiRepetitionPresetSelector.instance) {
+      AntiRepetitionPresetSelector.instance = new AntiRepetitionPresetSelector();
+    }
+    return AntiRepetitionPresetSelector.instance;
+  }
+
+  selectDiversePreset(filteredPresets: any, seed?: number) {
+    console.log('[AntiRepetition] Sélection diversifiée des presets');
+    
+    // Filtrer les styles récemment utilisés
+    const availableStyles = filteredPresets.styles.filter((style: any) => 
+      !this.recentStyles.includes(style.name)
+    );
+    
+    const availableContexts = filteredPresets.contexts.filter((context: any) => 
+      !this.recentContexts.includes(context.name)
+    );
+    
+    const availablePalettes = filteredPresets.palettes.filter((palette: any) => 
+      !this.recentPalettes.includes(palette.name)
+    );
+
+    // Si pas assez d'options disponibles, réinitialiser l'historique
+    if (availableStyles.length < 3) {
+      console.log(`[AntiRepetition] Réinitialisation styles (${availableStyles.length} disponibles)`);
+      this.recentStyles = [];
+    }
+    if (availableContexts.length < 2) {
+      console.log(`[AntiRepetition] Réinitialisation contextes (${availableContexts.length} disponibles)`);
+      this.recentContexts = [];
+    }
+    if (availablePalettes.length < 3) {
+      console.log(`[AntiRepetition] Réinitialisation palettes (${availablePalettes.length} disponibles)`);
+      this.recentPalettes = [];
+    }
+
+    // Sélectionner aléatoirement parmi les options disponibles
+    const timestamp = Date.now();
+    const randomSalt = Math.random() * 1000000;
+    const baseSeed = timestamp + randomSalt + (seed || 0);
+
+    const stylesToUse = availableStyles.length > 0 ? availableStyles : filteredPresets.styles;
+    const contextsToUse = availableContexts.length > 0 ? availableContexts : filteredPresets.contexts;
+    const palettesToUse = availablePalettes.length > 0 ? availablePalettes : filteredPresets.palettes;
+
+    const styleIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7919) * 10000) % stylesToUse.length);
+    const contextIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7937) * 10000) % contextsToUse.length);
+    const paletteIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7927) * 10000) % palettesToUse.length);
+    const frameworkIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7933) * 10000) % filteredPresets.frameworks.length);
+    const lightingIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7949) * 10000) % filteredPresets.lightings.length);
+
+    const selectedStyle = stylesToUse[styleIndex];
+    const selectedContext = contextsToUse[contextIndex];
+    const selectedPalette = palettesToUse[paletteIndex];
+
+    // Ajouter à l'historique
+    this.recentStyles.push(selectedStyle.name);
+    this.recentContexts.push(selectedContext.name);
+    this.recentPalettes.push(selectedPalette.name);
+
+    // Maintenir la taille de l'historique
+    if (this.recentStyles.length > this.maxHistory) {
+      this.recentStyles.shift();
+    }
+    if (this.recentContexts.length > this.maxHistory) {
+      this.recentContexts.shift();
+    }
+    if (this.recentPalettes.length > this.maxHistory) {
+      this.recentPalettes.shift();
+    }
+
+    console.log(`[AntiRepetition] Sélectionné: ${selectedStyle.name} + ${selectedContext.name}`);
+    console.log(`[AntiRepetition] Historique: ${this.recentStyles.length} styles, ${this.recentContexts.length} contextes`);
+
+    return {
+      style: selectedStyle,
+      palette: selectedPalette,
+      framework: filteredPresets.frameworks[frameworkIndex],
+      context: selectedContext,
+      lighting: filteredPresets.lightings[lightingIndex],
+      reference: selectedStyle.reference
+    };
+  }
+}
 
 /**
  * Interface pour la réponse parsée de GPT-5
@@ -259,39 +360,17 @@ export async function selectPresetWithGPT(
 }
 
 /**
- * Fallback : randomisation VRAIMENT ALÉATOIRE parmi les presets pré-filtrés
+ * Fallback amélioré : utilise le système anti-répétition pour garantir la diversité
  * Utilisé si GPT-5 échoue ou si le parsing échoue
- * Garantit la diversité même sur de courtes périodes
+ * Évite les répétitions sur les derniers posts générés
  */
 export function randomizeFromFilteredPresets(
   filteredPresets: FilteredPresets,
   seed?: number
 ): CreativePreset {
-  console.log('[GPTPresetSelector] Fallback: randomisation VRAIMENT ALÉATOIRE parmi les presets filtrés');
+  console.log('[GPTPresetSelector] Fallback amélioré: utilisation du système anti-répétition');
   
-  // 🎲 RANDOMISATION VRAIMENT ALÉATOIRE - Pas de patterns prévisibles !
-  const timestamp = Date.now();
-  const randomSalt = Math.random() * 1000000;
-  const baseSeed = timestamp + randomSalt + (seed || 0);
-  
-  // 🎨 Sélection ANARCHIQUE avec seeds indépendants pour chaque composant
-  // Utiliser des multiplicateurs premiers différents pour éviter les corrélations
-  const styleIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7919) * 10000) % filteredPresets.styles.length);
-  const paletteIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7927) * 10000) % filteredPresets.palettes.length);
-  const frameworkIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7933) * 10000) % filteredPresets.frameworks.length);
-  const contextIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7937) * 10000) % filteredPresets.contexts.length);
-  const lightingIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7949) * 10000) % filteredPresets.lightings.length);
-
-  const selectedStyle = filteredPresets.styles[styleIndex];
-  
-  console.log(`[GPTPresetSelector] Fallback sélectionné: Style=${selectedStyle.name}, Context=${filteredPresets.contexts[contextIndex].name}`);
-  
-  return {
-    style: selectedStyle,
-    palette: filteredPresets.palettes[paletteIndex],
-    framework: filteredPresets.frameworks[frameworkIndex],
-    context: filteredPresets.contexts[contextIndex],
-    lighting: filteredPresets.lightings[lightingIndex],
-    reference: selectedStyle.reference
-  };
+  // Utiliser le système anti-répétition pour garantir la diversité
+  const antiRepetitionSelector = AntiRepetitionPresetSelector.getInstance();
+  return antiRepetitionSelector.selectDiversePreset(filteredPresets, seed);
 }
