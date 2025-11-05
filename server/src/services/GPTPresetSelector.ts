@@ -12,23 +12,32 @@ const openai = new OpenAI({
 /**
  * Système anti-répétition pour améliorer la diversité des presets
  * Évite les répétitions sur les derniers posts générés
+ * VERSION CORRIGÉE : Instance par calendrier (pas globale)
  */
 class AntiRepetitionPresetSelector {
-  private static instance: AntiRepetitionPresetSelector;
+  private static instances: Map<string, AntiRepetitionPresetSelector> = new Map();
   private recentStyles: string[] = [];
   private recentContexts: string[] = [];
   private recentPalettes: string[] = [];
-  private maxHistory = 5; // Éviter les répétitions sur les 5 derniers posts
+  private maxHistory = 15; // AUGMENTÉ : Éviter les répétitions sur les 15 derniers posts
+  private calendarId: string;
 
-  static getInstance(): AntiRepetitionPresetSelector {
-    if (!AntiRepetitionPresetSelector.instance) {
-      AntiRepetitionPresetSelector.instance = new AntiRepetitionPresetSelector();
-    }
-    return AntiRepetitionPresetSelector.instance;
+  private constructor(calendarId: string) {
+    this.calendarId = calendarId;
+    console.log(`[AntiRepetition] 🆕 Nouvelle instance créée pour calendrier: ${calendarId}`);
   }
 
-  selectDiversePreset(filteredPresets: any, seed?: number) {
-    console.log('[AntiRepetition] Sélection diversifiée des presets');
+  static getInstance(calendarId: string): AntiRepetitionPresetSelector {
+    if (!AntiRepetitionPresetSelector.instances.has(calendarId)) {
+      AntiRepetitionPresetSelector.instances.set(calendarId, new AntiRepetitionPresetSelector(calendarId));
+      console.log(`[AntiRepetition] 📊 Instances actives: ${AntiRepetitionPresetSelector.instances.size}`);
+    }
+    return AntiRepetitionPresetSelector.instances.get(calendarId)!;
+  }
+
+  selectDiversePreset(filteredPresets: any, seed?: number, brandId?: string, postIndex?: number) {
+    console.log(`[AntiRepetition] 🎨 Sélection diversifiée pour calendrier: ${this.calendarId}`);
+    console.log(`[AntiRepetition] 📊 État actuel - Styles: ${this.recentStyles.length}/${this.maxHistory}, Contextes: ${this.recentContexts.length}/${this.maxHistory}`);
     
     // Filtrer les styles récemment utilisés
     const availableStyles = filteredPresets.styles.filter((style: any) => 
@@ -43,38 +52,47 @@ class AntiRepetitionPresetSelector {
       !this.recentPalettes.includes(palette.name)
     );
 
+    console.log(`[AntiRepetition] 🔍 Options disponibles - Styles: ${availableStyles.length}/${filteredPresets.styles.length}, Contextes: ${availableContexts.length}/${filteredPresets.contexts.length}`);
+
     // Si pas assez d'options disponibles, réinitialiser l'historique
     if (availableStyles.length < 3) {
-      console.log(`[AntiRepetition] Réinitialisation styles (${availableStyles.length} disponibles)`);
+      console.log(`[AntiRepetition] 🔄 Réinitialisation styles (${availableStyles.length} disponibles < 3)`);
       this.recentStyles = [];
     }
     if (availableContexts.length < 2) {
-      console.log(`[AntiRepetition] Réinitialisation contextes (${availableContexts.length} disponibles)`);
+      console.log(`[AntiRepetition] 🔄 Réinitialisation contextes (${availableContexts.length} disponibles < 2)`);
       this.recentContexts = [];
     }
     if (availablePalettes.length < 3) {
-      console.log(`[AntiRepetition] Réinitialisation palettes (${availablePalettes.length} disponibles)`);
+      console.log(`[AntiRepetition] 🔄 Réinitialisation palettes (${availablePalettes.length} disponibles < 3)`);
       this.recentPalettes = [];
     }
 
-    // Sélectionner aléatoirement parmi les options disponibles
+    // CORRECTION CRITIQUE : Seed vraiment unique par marque/calendrier/post
     const timestamp = Date.now();
     const randomSalt = Math.random() * 1000000;
-    const baseSeed = timestamp + randomSalt + (seed || 0);
+    const brandSeed = brandId ? brandId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) : 0;
+    const calendarSeed = this.calendarId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const baseSeed = timestamp + randomSalt + brandSeed + calendarSeed + (postIndex || 0) + (seed || 0);
+
+    console.log(`[AntiRepetition] 🎲 Seed calculé: ${baseSeed} (timestamp: ${timestamp}, brand: ${brandSeed}, calendar: ${calendarSeed}, post: ${postIndex})`);
 
     const stylesToUse = availableStyles.length > 0 ? availableStyles : filteredPresets.styles;
     const contextsToUse = availableContexts.length > 0 ? availableContexts : filteredPresets.contexts;
     const palettesToUse = availablePalettes.length > 0 ? availablePalettes : filteredPresets.palettes;
 
+    // Utiliser des multiplicateurs premiers différents pour éviter les corrélations
     const styleIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7919) * 10000) % stylesToUse.length);
-    const contextIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7937) * 10000) % contextsToUse.length);
-    const paletteIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7927) * 10000) % palettesToUse.length);
-    const frameworkIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7933) * 10000) % filteredPresets.frameworks.length);
-    const lightingIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7949) * 10000) % filteredPresets.lightings.length);
+    const contextIndex = Math.floor(Math.abs(Math.sin(baseSeed * 8191) * 10000) % contextsToUse.length);
+    const paletteIndex = Math.floor(Math.abs(Math.sin(baseSeed * 8209) * 10000) % palettesToUse.length);
+    const frameworkIndex = Math.floor(Math.abs(Math.sin(baseSeed * 8221) * 10000) % filteredPresets.frameworks.length);
+    const lightingIndex = Math.floor(Math.abs(Math.sin(baseSeed * 8231) * 10000) % filteredPresets.lightings.length);
 
     const selectedStyle = stylesToUse[styleIndex];
     const selectedContext = contextsToUse[contextIndex];
     const selectedPalette = palettesToUse[paletteIndex];
+
+    console.log(`[AntiRepetition] 🎯 Indices calculés - Style: ${styleIndex}/${stylesToUse.length-1}, Context: ${contextIndex}/${contextsToUse.length-1}`);
 
     // Ajouter à l'historique
     this.recentStyles.push(selectedStyle.name);
@@ -83,17 +101,20 @@ class AntiRepetitionPresetSelector {
 
     // Maintenir la taille de l'historique
     if (this.recentStyles.length > this.maxHistory) {
-      this.recentStyles.shift();
+      const removed = this.recentStyles.shift();
+      console.log(`[AntiRepetition] 📤 Style retiré de l'historique: ${removed}`);
     }
     if (this.recentContexts.length > this.maxHistory) {
-      this.recentContexts.shift();
+      const removed = this.recentContexts.shift();
+      console.log(`[AntiRepetition] 📤 Contexte retiré de l'historique: ${removed}`);
     }
     if (this.recentPalettes.length > this.maxHistory) {
-      this.recentPalettes.shift();
+      const removed = this.recentPalettes.shift();
+      console.log(`[AntiRepetition] 📤 Palette retirée de l'historique: ${removed}`);
     }
 
-    console.log(`[AntiRepetition] Sélectionné: ${selectedStyle.name} + ${selectedContext.name}`);
-    console.log(`[AntiRepetition] Historique: ${this.recentStyles.length} styles, ${this.recentContexts.length} contextes`);
+    console.log(`[AntiRepetition] ✅ Sélectionné: "${selectedStyle.name}" + "${selectedContext.name}" + "${selectedPalette.name}"`);
+    console.log(`[AntiRepetition] 📈 Nouvel historique - Styles: [${this.recentStyles.slice(-3).join(', ')}...], Contextes: [${this.recentContexts.slice(-3).join(', ')}...]`);
 
     return {
       style: selectedStyle,
@@ -366,11 +387,14 @@ export async function selectPresetWithGPT(
  */
 export function randomizeFromFilteredPresets(
   filteredPresets: FilteredPresets,
-  seed?: number
+  seed?: number,
+  calendarId: string = 'fallback-calendar',
+  brandId?: string,
+  postIndex?: number
 ): CreativePreset {
-  console.log('[GPTPresetSelector] Fallback amélioré: utilisation du système anti-répétition');
+  console.log(`[GPTPresetSelector] 🔄 Fallback amélioré: utilisation du système anti-répétition pour calendrier: ${calendarId}`);
   
   // Utiliser le système anti-répétition pour garantir la diversité
-  const antiRepetitionSelector = AntiRepetitionPresetSelector.getInstance();
-  return antiRepetitionSelector.selectDiversePreset(filteredPresets, seed);
+  const antiRepetitionSelector = AntiRepetitionPresetSelector.getInstance(calendarId);
+  return antiRepetitionSelector.selectDiversePreset(filteredPresets, seed, brandId, postIndex);
 }

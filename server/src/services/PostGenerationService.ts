@@ -342,7 +342,9 @@ class PostGenerationService {
         // Étape 2: Demander à GPT-5 de sélectionner le preset optimal
         let creativePreset;
         try {
-          logger.info('🤖 Appel à GPT-5 pour sélection intelligente du preset...');
+          logger.info(`🤖 [Post ${i + 1}/${dates.length}] Appel à GPT-5 pour sélection intelligente du preset...`);
+          logger.info(`📊 Contexte: Marque=${brand.name}, Secteur=${brand.sector}, Calendrier=${calendar._id}`);
+          
           const gptSelectedPreset = await selectPresetWithGPT(
             filteredPresets,
             brand,
@@ -353,14 +355,30 @@ class PostGenerationService {
           if (gptSelectedPreset) {
             creativePreset = gptSelectedPreset;
             logger.info('✅ GPT-5 a sélectionné le preset avec succès');
+            logger.info(`🎨 Preset GPT-5: Style="${gptSelectedPreset.style.name}", Context="${gptSelectedPreset.context.name}"`);
           } else {
-            logger.info('⚠️  GPT-5 n\'a pas pu sélectionner, fallback sur randomisation');
-            creativePreset = randomizeFromFilteredPresets(filteredPresets);
+            logger.info('⚠️  GPT-5 n\'a pas pu sélectionner, fallback sur système anti-répétition');
+            logger.info(`🔄 Utilisation du fallback amélioré pour calendrier: ${calendar._id}`);
+            creativePreset = randomizeFromFilteredPresets(
+              filteredPresets,
+              globalPostIndex, // seed basé sur l'index global
+              String(calendar._id), // calendarId pour l'anti-répétition
+              String(brand._id), // brandId pour la diversité
+              i // postIndex dans la plateforme
+            );
           }
         } catch (error: any) {
           logger.error('❌ Erreur lors de la sélection GPT-5:', error.message);
-          logger.info('⚠️  Fallback sur randomisation parmi les presets filtrés');
-          creativePreset = randomizeFromFilteredPresets(filteredPresets);
+          logger.error('📋 Détails erreur:', error.stack?.substring(0, 500));
+          logger.info('⚠️  Fallback sur système anti-répétition amélioré');
+          logger.info(`🔄 Paramètres fallback: calendrier=${calendar._id}, marque=${brand._id}, post=${i}`);
+          creativePreset = randomizeFromFilteredPresets(
+            filteredPresets,
+            globalPostIndex, // seed basé sur l'index global
+            String(calendar._id), // calendarId pour l'anti-répétition
+            String(brand._id), // brandId pour la diversité
+            i // postIndex dans la plateforme
+          );
         }
         
         logger.info(`🎨 Preset créatif sélectionné:`);
