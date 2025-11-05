@@ -35,6 +35,59 @@ class AntiRepetitionPresetSelector {
     return AntiRepetitionPresetSelector.instances.get(calendarId)!;
   }
 
+  /**
+   * Récupère l'historique des presets utilisés pour GPT-5
+   */
+  getUsedPresetsHistory(): string[] {
+    const history: string[] = [];
+    
+    // Ajouter les styles récents
+    this.recentStyles.forEach(style => {
+      history.push(`Style: ${style}`);
+    });
+    
+    // Ajouter les contextes récents
+    this.recentContexts.forEach(context => {
+      history.push(`Context: ${context}`);
+    });
+    
+    // Ajouter les palettes récentes
+    this.recentPalettes.forEach(palette => {
+      history.push(`Palette: ${palette}`);
+    });
+    
+    return history;
+  }
+
+  /**
+   * Enregistre un preset utilisé dans l'historique
+   */
+  recordUsedPreset(preset: CreativePreset) {
+    console.log(`[AntiRepetition] 📝 Enregistrement preset: ${preset.style.name} + ${preset.context.name}`);
+    
+    // Ajouter à l'historique (sera géré par selectDiversePreset si appelé)
+    if (!this.recentStyles.includes(preset.style.name)) {
+      this.recentStyles.push(preset.style.name);
+    }
+    if (!this.recentContexts.includes(preset.context.name)) {
+      this.recentContexts.push(preset.context.name);
+    }
+    if (!this.recentPalettes.includes(preset.palette.name)) {
+      this.recentPalettes.push(preset.palette.name);
+    }
+    
+    // Maintenir la taille de l'historique
+    if (this.recentStyles.length > this.maxHistory) {
+      this.recentStyles.shift();
+    }
+    if (this.recentContexts.length > this.maxHistory) {
+      this.recentContexts.shift();
+    }
+    if (this.recentPalettes.length > this.maxHistory) {
+      this.recentPalettes.shift();
+    }
+  }
+
   selectDiversePreset(filteredPresets: any, seed?: number, brandId?: string, postIndex?: number) {
     console.log(`[AntiRepetition] 🎨 Sélection diversifiée pour calendrier: ${this.calendarId}`);
     console.log(`[AntiRepetition] 📊 État actuel - Styles: ${this.recentStyles.length}/${this.maxHistory}, Contextes: ${this.recentContexts.length}/${this.maxHistory}`);
@@ -146,7 +199,9 @@ function buildPresetSelectionPrompt(
   filteredPresets: FilteredPresets,
   brand: any,
   product: any,
-  calendar: any
+  calendar: any,
+  postIndex: number = 0,
+  usedPresets: string[] = []
 ): string {
   return `Tu es un directeur artistique expert niveau Cannes Lions. Ta mission est de sélectionner le preset créatif optimal pour une publication social media.
 
@@ -169,6 +224,12 @@ CONTEXTE DE LA CAMPAGNE:
 Objectif: ${calendar.campaignObjective || 'Non spécifié'}
 Thématiques: ${calendar.generationSettings?.themes?.join(', ') || 'Non spécifié'}
 Ton: ${calendar.communicationStyle || 'Non spécifié'}
+
+CONTEXTE DE DIVERSITÉ:
+Post numéro: ${postIndex + 1}
+${usedPresets.length > 0 ? `Presets déjà utilisés dans ce calendrier: ${usedPresets.join(', ')}` : 'Premier post du calendrier'}
+
+⚠️ IMPÉRATIF DIVERSITÉ: ${usedPresets.length > 0 ? 'Tu DOIS sélectionner des éléments DIFFÉRENTS des presets déjà utilisés pour garantir la variété visuelle.' : 'Sélectionne le preset optimal pour ce premier post.'}
 
 ═══════════════════════════════════════════════════════════════
 
@@ -223,6 +284,7 @@ CRITÈRES DE SÉLECTION:
 3. Alignement avec l'objectif de campagne
 4. Créativité et impact visuel (niveau Cannes Lions)
 5. Intégration harmonieuse des couleurs de marque
+6. 🎯 DIVERSITÉ MAXIMALE: Éviter absolument les répétitions avec les presets déjà utilisés
 
 FORMAT DE RÉPONSE STRICT (ne pas dévier):
 ---PRESET---
@@ -300,21 +362,30 @@ function validateIndices(
  * @param brand - Données de la marque
  * @param product - Données du produit
  * @param calendar - Données du calendrier
+ * @param postIndex - Index du post (pour diversité)
+ * @param calendarId - ID du calendrier (pour historique)
  * @returns Preset créatif sélectionné par GPT-5, ou null si échec
  */
 export async function selectPresetWithGPT(
   filteredPresets: FilteredPresets,
   brand: any,
   product: any,
-  calendar: any
+  calendar: any,
+  postIndex: number = 0,
+  calendarId?: string
 ): Promise<CreativePreset | null> {
   try {
     console.log('[GPTPresetSelector] Début de la sélection par GPT-5...');
     
-    // 1. Construire le prompt
-    const prompt = buildPresetSelectionPrompt(filteredPresets, brand, product, calendar);
+    // 1. Récupérer l'historique des presets utilisés pour ce calendrier
+    const usedPresets = calendarId ? getUsedPresetsHistory(calendarId) : [];
+    console.log(`[GPTPresetSelector] Historique récupéré: ${usedPresets.length} presets utilisés`);
     
-    // 2. Appeler GPT-5
+    // 2. Construire le prompt avec contexte de diversité
+    const prompt = buildPresetSelectionPrompt(filteredPresets, brand, product, calendar, postIndex, usedPresets);
+    
+    // 3. Appeler GPT-5 avec seed unique pour diversité
+    const uniqueSeed = Date.now() + postIndex + (calendarId ? calendarId.length : 0);
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o', // ou 'gpt-4-turbo' selon disponibilité
       messages: [
@@ -327,8 +398,9 @@ export async function selectPresetWithGPT(
           content: prompt
         }
       ],
-      temperature: 0.7, // Un peu de créativité
-      max_tokens: 500
+      temperature: 0.8, // Plus de créativité pour diversité
+      max_tokens: 500,
+      seed: uniqueSeed // Seed unique pour chaque post
     });
     
     const response = completion.choices[0].message.content;
@@ -339,20 +411,20 @@ export async function selectPresetWithGPT(
     
     console.log('[GPTPresetSelector] Réponse GPT-5 reçue');
     
-    // 3. Parser la réponse
+    // 4. Parser la réponse
     const parsed = parseGPTResponse(response);
     if (!parsed) {
       console.error('[GPTPresetSelector] Échec du parsing de la réponse');
       return null;
     }
     
-    // 4. Valider les indices
+    // 5. Valider les indices
     if (!validateIndices(parsed, filteredPresets)) {
       console.error('[GPTPresetSelector] Indices hors limites');
       return null;
     }
     
-    // 5. Composer le preset créatif
+    // 6. Composer le preset créatif
     const preset: CreativePreset = {
       style: filteredPresets.styles[parsed.styleIndex],
       palette: filteredPresets.palettes[parsed.paletteIndex],
@@ -372,12 +444,33 @@ export async function selectPresetWithGPT(
       console.log(`  - Justification: ${parsed.justification}`);
     }
     
+    // 7. Enregistrer dans l'historique pour éviter les répétitions futures
+    if (calendarId) {
+      recordUsedPreset(calendarId, preset);
+    }
+    
     return preset;
     
   } catch (error) {
     console.error('[GPTPresetSelector] Erreur lors de la sélection:', error);
     return null;
   }
+}
+
+/**
+ * Récupère l'historique des presets utilisés pour un calendrier donné
+ */
+function getUsedPresetsHistory(calendarId: string): string[] {
+  const antiRepetitionSelector = AntiRepetitionPresetSelector.getInstance(calendarId);
+  return antiRepetitionSelector.getUsedPresetsHistory();
+}
+
+/**
+ * Enregistre un preset utilisé dans l'historique d'un calendrier
+ */
+function recordUsedPreset(calendarId: string, preset: CreativePreset): void {
+  const antiRepetitionSelector = AntiRepetitionPresetSelector.getInstance(calendarId);
+  antiRepetitionSelector.recordUsedPreset(preset);
 }
 
 /**

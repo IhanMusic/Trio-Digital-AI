@@ -349,7 +349,9 @@ class PostGenerationService {
             filteredPresets,
             brand,
             products.length > 0 ? products[0] : { name: brand.name, category: 'general' },
-            calendar
+            calendar,
+            i, // postIndex dans la plateforme
+            String(calendar._id) // calendarId pour l'historique anti-répétition
           );
           
           if (gptSelectedPreset) {
