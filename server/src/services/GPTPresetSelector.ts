@@ -5,9 +5,19 @@ import {
   CreativePreset
 } from './CreativePresetsLibrary';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazy initialization d'OpenAI pour éviter les erreurs d'import
+let openai: OpenAI | null = null;
+
+function getOpenAIClient(): OpenAI {
+  if (!openai) {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error('OPENAI_API_KEY manquante dans les variables d\'environnement');
+    }
+    openai = new OpenAI({ apiKey });
+  }
+  return openai;
+}
 
 /**
  * Système anti-répétition pour améliorer la diversité des presets
@@ -386,7 +396,8 @@ export async function selectPresetWithGPT(
     
     // 3. Appeler GPT-5 avec seed unique pour diversité
     const uniqueSeed = Date.now() + postIndex + (calendarId ? calendarId.length : 0);
-    const completion = await openai.chat.completions.create({
+    const openaiClient = getOpenAIClient();
+    const completion = await openaiClient.chat.completions.create({
       model: 'gpt-4o', // ou 'gpt-4-turbo' selon disponibilité
       messages: [
         {
