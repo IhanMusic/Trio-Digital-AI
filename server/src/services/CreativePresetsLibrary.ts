@@ -65,6 +65,33 @@ export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
     technicalSpecs: "Canon EOS R5, 50mm f/1.2 at f/2.8, ISO 400-800, natural light only"
   },
   {
+    name: "Yaourt Grec Protéine Fitness",
+    category: "food",
+    reference: "Yaourt grec high-protein fitness campaigns, post-workout nutrition photography, healthy lifestyle integration, protein-rich breakfast visualization, fitness nutrition aesthetic, clean eating movement, athletic performance fuel",
+    lighting: "Clean bright lighting at 5500K emphasizing freshness and purity, even illumination showing protein-rich texture, fitness-focused brightness, health-conscious lighting, athletic nutrition atmosphere",
+    composition: "Yaourt grec in bowl showing thick creamy texture, fitness equipment subtly visible, post-workout context suggested, protein content emphasized, healthy lifestyle integration, athletic nutrition presentation",
+    mood: "Fitness nutrition confidence, protein power energy, healthy lifestyle commitment, athletic performance fuel, post-workout satisfaction, clean eating dedication",
+    technicalSpecs: "Canon EOS R6, 50mm f/1.2 at f/2.8, ISO 400, bright fitness lighting, protein nutrition aesthetic"
+  },
+  {
+    name: "Yaourt Artisanal Fermentation",
+    category: "food",
+    reference: "Artisan yogurt fermentation process, traditional dairy craftsmanship, small-batch production visualization, fermentation culture celebration, authentic dairy making, artisan food production, traditional yogurt methods",
+    lighting: "Natural artisan workshop lighting at 5000K showing traditional process, authentic craft illumination, fermentation process lighting, artisan dairy atmosphere, traditional production ambiance",
+    composition: "Artisan yogurt in traditional containers, fermentation cultures visible, small-batch production elements, craft dairy tools, traditional yogurt making process, authentic artisan presentation",
+    mood: "Artisan craft pride, traditional fermentation respect, small-batch quality celebration, authentic dairy making, fermentation culture appreciation, artisan food dedication",
+    technicalSpecs: "Fujifilm X-T4, 35mm f/1.4 at f/2.2, ISO 800, natural workshop lighting, artisan craft aesthetic"
+  },
+  {
+    name: "Yaourt Bio Écologique",
+    category: "food",
+    reference: "Organic yogurt ecological campaigns, sustainable dairy farming, eco-friendly packaging, environmental responsibility, organic certification visualization, green dairy production, sustainable food choices",
+    lighting: "Natural eco-friendly lighting at 5200K emphasizing organic purity, sustainable production illumination, green packaging visibility, environmental consciousness lighting, organic dairy atmosphere",
+    composition: "Organic yogurt with eco-friendly packaging prominent, sustainable dairy elements visible, organic certification featured, environmental responsibility emphasized, green lifestyle integration",
+    mood: "Environmental responsibility pride, organic purity confidence, sustainable dairy choice, eco-friendly lifestyle, green consumption consciousness, organic quality assurance",
+    technicalSpecs: "Sony A7III, 50mm f/1.8 at f/2.8, ISO 400, natural eco-lighting, sustainable aesthetic"
+  },
+  {
     name: "Michelin Star Plating Artistry",
     category: "food",
     reference: "Three Michelin star plating photography from Eleven Madison Park campaigns, fine dining as art form, chef's table intimate perspective, culinary precision storytelling, gastronomic excellence visualization, plate as canvas philosophy",
@@ -189,6 +216,60 @@ export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
     composition: "Pour action freeze, liquid movement, dynamic flow",
     mood: "Satisfying anticipation with liquid elegance and sensory pleasure",
     technicalSpecs: "Nikon D850, 85mm f/1.8 at f/4, ISO 400, backlit strobe"
+  },
+  {
+    name: "Cold-Pressed Juice Health Ritual",
+    category: "beverage",
+    reference: "Clean eating wellness lifestyle photography, green juice detox campaigns, health transformation visual storytelling, cold-pressed juice bar aesthetic, wellness influencer morning routines, detox cleanse documentation",
+    lighting: "Bright natural morning light at 5500K creating fresh vitality atmosphere, clean illumination emphasizing juice clarity and color vibrancy, health-focused lighting suggesting purity and wellness",
+    composition: "Green juice glass hero shot with fresh vegetables visible, cold-pressed juicer in background, wellness lifestyle context, health transformation suggestion, clean eating environment",
+    mood: "Health transformation optimism, wellness ritual dedication, clean eating commitment, detox cleanse motivation, vitality and energy boost",
+    technicalSpecs: "Canon EOS R5, 50mm f/1.2 at f/2.8, ISO 400, natural morning light, health-focused color grade"
+  },
+  {
+    name: "Smoothie Bowl Art Creation",
+    category: "food",
+    reference: "Instagram smoothie bowl trend photography, açai bowl artistic styling, breakfast bowl social media aesthetic, colorful healthy breakfast photography, food art creation, wellness breakfast trends",
+    lighting: "Overhead bright natural light at 5500K creating Instagram-ready illumination, even lighting preventing shadows on colorful toppings, vibrant food photography lighting",
+    composition: "Overhead flat-lay of artistically arranged smoothie bowl, colorful toppings creating rainbow patterns, granola and fresh fruit arranged geometrically, Instagram square crop optimization",
+    mood: "Creative breakfast joy, healthy indulgence celebration, Instagram aesthetic perfection, wellness lifestyle visualization, colorful morning happiness",
+    technicalSpecs: "iPhone 15 Pro, overhead natural light, Instagram square format, vibrant color enhancement"
+  },
+  {
+    name: "Kombucha Fermentation Science",
+    category: "beverage",
+    reference: "Artisan brewing photography, fermentation process documentation, craft beverage production, probiotics visualization, traditional fermentation methods, artisan kombucha brewing",
+    lighting: "Natural workshop lighting at 5200K showing authentic brewing process, fermentation vessel illumination, craft beverage production lighting, artisan workshop ambiance",
+    composition: "Kombucha brewing vessels with visible fermentation, SCOBY culture prominently featured, artisan brewing tools, fermentation process stages, craft beverage authenticity",
+    mood: "Artisan brewing pride, fermentation science fascination, craft beverage dedication, probiotic health focus, traditional brewing respect",
+    technicalSpecs: "Nikon D850, 35mm f/1.8 at f/2.8, ISO 800, natural workshop lighting, craft brewing aesthetic"
+  },
+  {
+    name: "Fresh Juice Market Stall",
+    category: "documentary",
+    reference: "Authentic street market photography, fruit vendor documentation, fresh juice pressing action, market life storytelling, street food culture, local market authenticity",
+    lighting: "Natural market lighting at varying temperatures, authentic street vendor illumination, fresh produce natural glow, market atmosphere lighting",
+    composition: "Fruit vendor pressing fresh juice, colorful fruits displayed abundantly, market stall authentic environment, juice pressing action captured, street market energy",
+    mood: "Market authenticity, fresh produce vitality, street vendor dedication, local culture celebration, fresh juice tradition",
+    technicalSpecs: "Leica Q2, 28mm f/1.7 at f/2.8, ISO 1600, available market light, documentary approach"
+  },
+  {
+    name: "Juice Cleanse Transformation",
+    category: "lifestyle",
+    reference: "Health transformation photography, wellness journey documentation, detox cleanse visualization, before-after wellness campaigns, health lifestyle transformation",
+    lighting: "Clean wellness lighting at 5500K suggesting health transformation, bright optimistic illumination, transformation journey lighting, wellness success atmosphere",
+    composition: "Juice cleanse bottles arranged showing program progression, wellness transformation context, health journey visualization, detox program structure, transformation success suggestion",
+    mood: "Health transformation hope, wellness journey commitment, detox cleanse dedication, lifestyle change optimism, wellness success celebration",
+    technicalSpecs: "Sony A7III, 50mm f/1.8 at f/2.8, ISO 400, clean wellness lighting, transformation aesthetic"
+  },
+  {
+    name: "Tropical Juice Paradise",
+    category: "beverage",
+    reference: "Tropical vacation photography, exotic fruit juice campaigns, paradise drink visualization, tropical lifestyle aesthetic, vacation beverage photography, exotic fruit celebration",
+    lighting: "Tropical golden hour lighting at 3800K creating paradise atmosphere, warm exotic illumination, tropical vacation lighting, paradise drink ambiance",
+    composition: "Tropical juice with exotic fruits visible, paradise vacation context, tropical lifestyle setting, exotic fruit abundance, vacation drink presentation",
+    mood: "Tropical paradise escape, exotic fruit celebration, vacation lifestyle aspiration, tropical drink indulgence, paradise found sensation",
+    technicalSpecs: "Canon EOS R6, 35mm f/1.8 at f/2.2, ISO 400, tropical golden hour light, paradise color grade"
   },
   {
     name: "Breakfast Ritual",
@@ -589,6 +670,100 @@ export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
     technicalSpecs: "Canon EOS R5, 100mm f/2.8 macro at f/5.6, ISO 200, bright colorful lighting"
   },
 
+  // ========== NOUVEAUX STYLES GEN Z POUR JUS (6 styles) ==========
+  {
+    name: "TikTok Juice Trend Creator",
+    category: "beverage",
+    reference: "TikTok viral juice trends, Gen Z content creator aesthetic, Emma Chamberlain coffee influence adapted to juice, Addison Rae lifestyle campaigns, vertical video optimized photography, social media juice challenges, influencer morning routine documentation, Gen Z authenticity over perfection",
+    lighting: "Ring light setup at 5500K creating TikTok-ready illumination, LED strip lights with RGB color changing effects, neon accent lighting matching Gen Z aesthetic, phone camera optimized lighting, vertical format friendly illumination",
+    composition: "Vertical 9:16 composition optimized for TikTok, juice bottle or glass prominently featured with trendy background, hands holding product showing relatability, colorful Gen Z props (fairy lights, plants, aesthetic items), ring light reflection visible in liquid, social media ready framing",
+    mood: "Gen Z authenticity, viral trend energy, social media optimized, relatable influencer vibe, colorful youth culture, TikTok algorithm friendly",
+    technicalSpecs: "iPhone 15 Pro, vertical video frame extraction, ring light with RGB strips, ISO 800, TikTok optimized color grade"
+  },
+  {
+    name: "Neon Juice Bar Aesthetic",
+    category: "beverage",
+    reference: "Cyberpunk juice bar aesthetic, neon-lit smoothie shops, Gen Z night photography, Tokyo neon influence, vaporwave color palette, synthwave aesthetic applied to beverages, LED-lit juice bars, futuristic beverage presentation",
+    lighting: "Neon LED lighting at multiple color temperatures creating cyberpunk atmosphere, pink and blue neon strips, UV blacklight making certain elements glow, LED underglow on surfaces, futuristic lighting effects",
+    composition: "Juice glass or bottle with neon lighting reflections, cyberpunk color palette (pink, blue, purple), futuristic bar setting, neon signs visible in background, glass surface reflections, synthwave aesthetic elements",
+    mood: "Cyberpunk futurism, neon aesthetic energy, Gen Z night culture, synthwave nostalgia, futuristic beverage experience, LED-lit atmosphere",
+    technicalSpecs: "Sony A7SIII, 35mm f/1.4 at f/1.8, ISO 3200, neon LED practicals, cyberpunk color grade"
+  },
+  {
+    name: "Influencer Morning Routine Juice",
+    category: "lifestyle",
+    reference: "Instagram influencer morning routine photography, wellness influencer aesthetic, 'That Girl' trend visualization, morning routine optimization, healthy lifestyle influence, wellness journey documentation, morning ritual perfection",
+    lighting: "Golden hour morning light at 3800K streaming through windows, soft natural illumination, Instagram-friendly lighting, wellness lifestyle brightness, morning ritual warmth",
+    composition: "Juice as part of complete morning routine setup, wellness props visible (yoga mat, journal, plants), influencer lifestyle context, morning light creating aspirational atmosphere, healthy lifestyle visualization, routine optimization aesthetic",
+    mood: "Morning routine perfection, wellness lifestyle aspiration, influencer authenticity, healthy living commitment, morning ritual satisfaction, wellness journey pride",
+    technicalSpecs: "Canon EOS R6, 50mm f/1.2 at f/2.0, ISO 400, natural morning light, wellness lifestyle grade"
+  },
+  {
+    name: "Viral Juice Challenge Moment",
+    category: "action",
+    reference: "Social media challenge photography, viral moment capture, juice challenge trends, reaction video aesthetics, social media engagement optimization, challenge participation documentation, viral content creation",
+    lighting: "High-energy lighting at 5800K creating excitement, multiple light sources for dynamic effect, challenge-appropriate illumination, social media optimized brightness, energetic atmosphere lighting",
+    composition: "Mid-challenge action shot, juice splash or reaction moment captured, challenge participant visible showing engagement, social media challenge props, viral moment framing, engagement-optimized composition",
+    mood: "Viral challenge excitement, social media participation energy, challenge completion satisfaction, community engagement, viral moment capture, social media algorithm optimization",
+    technicalSpecs: "Canon EOS R5, 24-70mm f/2.8 at f/4, ISO 1000, high-speed capture, viral content color grade"
+  },
+  {
+    name: "Aesthetic Juice Flat Lay Gen Z",
+    category: "lifestyle",
+    reference: "Gen Z flat lay photography, aesthetic arrangement trends, Pinterest-worthy juice styling, VSCO girl aesthetic, soft girl aesthetic applied to beverages, aesthetic lifestyle photography, Gen Z visual language",
+    lighting: "Soft overhead natural light at 5200K creating aesthetic flat lay illumination, even lighting preventing harsh shadows, Instagram-friendly brightness, aesthetic lifestyle lighting",
+    composition: "Overhead flat lay with juice as centerpiece, aesthetic Gen Z props arranged artfully (crystals, plants, books, jewelry), color-coordinated arrangement, aesthetic lifestyle context, Pinterest-worthy styling, Gen Z visual elements",
+    mood: "Aesthetic lifestyle perfection, Gen Z visual culture, Pinterest-worthy arrangement, soft aesthetic energy, lifestyle curation, visual harmony satisfaction",
+    technicalSpecs: "iPhone 15 Pro, overhead natural light, aesthetic flat lay optimization, soft filter effects"
+  },
+  {
+    name: "Street Style Juice Culture",
+    category: "documentary",
+    reference: "Street style photography meets juice culture, urban beverage trends, street fashion juice pairing, city lifestyle documentation, urban juice bar culture, street photography aesthetic applied to beverages",
+    lighting: "Urban street lighting at varying temperatures, natural city light, street photography authenticity, urban environment illumination, city lifestyle lighting",
+    composition: "Juice in urban street context, street style fashion visible, city environment background, authentic urban moment, street culture documentation, urban lifestyle integration",
+    mood: "Urban culture authenticity, street style confidence, city lifestyle energy, urban beverage culture, street photography realness, metropolitan juice culture",
+    technicalSpecs: "Leica Q2, 28mm f/1.7 at f/2.8, ISO 1600, available street light, urban documentary approach"
+  },
+
+  // ========== NOUVEAUX STYLES PRODUCT COMPOSITING AVEC FRUITS (4 styles) ==========
+  {
+    name: "Hero Product Ingredient Explosion",
+    category: "studio",
+    reference: "Product compositing photography trend, hero product with ingredient explosion, beverage advertising with fruit burst, juice bottle with fresh fruit flying, dynamic product photography, ingredient storytelling visualization",
+    lighting: "High-speed studio lighting at 5500K freezing fruit explosion, dramatic backlighting through flying fruits, rim lighting on product bottle, multiple strobes synchronized for motion freeze, dynamic ingredient illumination",
+    composition: "Juice bottle centered with fresh fruits exploding outward in controlled chaos, ingredients mid-air showing freshness and natural origin, product as hero with supporting cast of fruits, dynamic radial composition, all elements sharp and frozen in time",
+    mood: "Fresh ingredient explosion, natural fruit celebration, product authenticity proof, dynamic freshness energy, ingredient transparency excitement",
+    technicalSpecs: "Canon EOS-1D X Mark III, 100mm f/2.8 macro at f/11, ISO 100, 1/8000s flash sync, multiple Profoto strobes, fruit explosion rig"
+  },
+  {
+    name: "Monochrome Background Fruit Staging",
+    category: "studio",
+    reference: "Minimalist product photography with monochrome background, fruit staging around beverage product, clean product compositing, premium juice presentation with fresh ingredients, studio product photography with natural elements",
+    lighting: "Clean studio lighting at 5000K with monochrome background, even illumination preventing harsh shadows, product and fruit detail lighting, minimalist aesthetic illumination, premium positioning brightness",
+    composition: "Juice product on monochrome background (white, black, or single color) with fresh fruits artfully arranged around bottle, fruits showing natural texture and color contrast against neutral background, clean minimalist composition, product prominence maintained",
+    mood: "Premium product positioning, clean aesthetic confidence, natural ingredient quality, minimalist sophistication, product purity emphasis",
+    technicalSpecs: "Phase One XF, 80mm at f/11, ISO 64, controlled studio lighting, monochrome seamless backdrop, focus stacking"
+  },
+  {
+    name: "Studio Compositing Fresh Ingredients",
+    category: "studio",
+    reference: "Professional studio compositing with fresh ingredients, beverage product photography with fruit elements, ingredient transparency visualization, fresh produce product integration, studio food photography techniques",
+    lighting: "Professional studio lighting setup at 5200K, three-point lighting for product and ingredients, soft key light preventing harsh shadows on fruits, rim lighting separating elements, ingredient detail illumination",
+    composition: "Beverage product with fresh ingredients composited in studio setting, fruits and vegetables showing natural texture and freshness, ingredient variety displaying product complexity, professional product presentation, ingredient authenticity emphasis",
+    mood: "Professional ingredient transparency, fresh produce quality, studio precision, natural ingredient celebration, product craftsmanship confidence",
+    technicalSpecs: "Sony A7RIII, 90mm f/2.8 macro at f/8, ISO 200, professional studio strobes, ingredient styling precision"
+  },
+  {
+    name: "Macro Ingredient Detail Showcase",
+    category: "studio",
+    reference: "Extreme macro photography of fruit ingredients, beverage product with hyper-detailed fruit elements, ingredient texture celebration, macro food photography aesthetic, detailed ingredient storytelling",
+    lighting: "Macro lighting setup at 5500K revealing fruit texture micro-details, ring flash for even macro illumination, detail enhancement lighting, texture revelation illumination, ingredient hero worship lighting",
+    composition: "Extreme close-up of fruit ingredients with beverage product, visible fruit texture details (skin, pulp, juice droplets), macro ingredient beauty, product integration with detailed elements, texture celebration composition",
+    mood: "Ingredient detail fascination, texture appreciation, natural beauty celebration, macro ingredient artistry, product ingredient connection",
+    technicalSpecs: "Nikon D850, 105mm f/2.8 macro at f/11, ISO 100, ring flash macro lighting, focus stacking 20 images, macro ingredient precision"
+  },
+
   // ========== NOUVEAUX STYLES GLACES CANNES LIONS (10 styles additionnels) ==========
   {
     name: "Häagen-Dazs Seduction Cinématique",
@@ -690,6 +865,60 @@ export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
     composition: "Elegant spoon lifting from yogurt cup mid-action frozen in time, thick creamy yogurt texture clinging to spoon showing premium consistency and protein richness, visible smooth texture and natural color, cup slightly tilted showing full yogurt interior, fresh fruit garnish suggesting natural ingredients, clean white background emphasizing purity and dairy freshness",
     mood: "Creamy satisfaction promise, healthy indulgence without guilt, morning ritual freshness, probiotic wellness benefit visualization",
     technicalSpecs: "Canon EOS R5, 100mm f/2.8 macro at f/5.6, ISO 100, 1/500s freezing spoon lift action, large octabox soft overhead light"
+  },
+  {
+    name: "Artisan Cheese Cave Aging",
+    category: "artisanat",
+    reference: "Traditional French fromagerie photography, artisan cheese making documentation, cave aging process visualization, Roquefort caves traditional methods, Comté aging cellars, artisan cheese craftsmanship campaigns, European cheese heritage storytelling, traditional cheese making process",
+    lighting: "Natural cave lighting at 4800K with warm undertones suggesting traditional aging environment, subtle directional light showing cheese texture and aging patterns, authentic cave atmosphere lighting, traditional cheese making illumination, artisan craft ambiance",
+    composition: "Artisan cheese wheels aging in traditional cave setting, visible aging process with natural mold patterns, cheese maker hands checking aging progress, traditional wooden shelves and cave environment, authentic cheese making tools, artisan craftsmanship evident, heritage cheese making process",
+    mood: "Artisan cheese tradition, traditional craft pride, aging process patience, European cheese heritage, authentic cheese making, time-honored methods respect",
+    technicalSpecs: "Leica Q2, 28mm f/1.7 at f/2.8, ISO 1600, natural cave lighting, traditional cheese making aesthetic"
+  },
+  {
+    name: "Farm Fresh Milk Pour",
+    category: "action",
+    reference: "Farm-to-table milk photography, fresh dairy farm campaigns, milk pouring action shots, Got Milk? campaign inspiration, dairy farm authenticity, fresh milk from cow visualization, farm fresh dairy products, natural milk purity campaigns",
+    lighting: "Natural farm lighting at 5500K showing authentic dairy farm environment, milk pour backlit creating luminous white stream, farm morning light, fresh dairy illumination, natural farm atmosphere lighting",
+    composition: "Fresh milk pouring from farm pitcher into glass, visible milk stream showing purity and freshness, farm environment context visible, cow or farm elements in background, authentic farm-to-table moment, natural dairy freshness emphasized",
+    mood: "Farm fresh authenticity, natural milk purity, direct from cow freshness, dairy farm tradition, wholesome natural dairy, farm-to-table transparency",
+    technicalSpecs: "Canon EOS R6, 70-200mm f/2.8 at f/4, ISO 400, natural farm lighting, farm fresh aesthetic"
+  },
+  {
+    name: "Yogurt Parfait Breakfast Layers",
+    category: "food",
+    reference: "Breakfast parfait photography trend, layered yogurt presentation, healthy breakfast visualization, Instagram breakfast bowl aesthetic, yogurt parfait styling, breakfast meal prep photography, healthy morning routine visualization, layered breakfast presentation",
+    lighting: "Natural morning light at 5200K creating fresh breakfast atmosphere, overhead illumination showing parfait layers clearly, bright breakfast lighting, healthy morning meal illumination, fresh breakfast ambiance",
+    composition: "Glass jar or bowl showing distinct beautiful layers of yogurt, granola, fruit compote, and additional yogurt, each layer clearly visible with color and texture contrast, spoon ready for eating, fresh fruit garnish on top, breakfast table setting context",
+    mood: "Healthy breakfast satisfaction, layered flavor experience, morning ritual perfection, nutritious breakfast choice, breakfast meal prep success, healthy indulgence",
+    technicalSpecs: "Sony A7III, 50mm f/1.8 at f/2.8, ISO 400, natural morning light, healthy breakfast aesthetic"
+  },
+  {
+    name: "Cheese Board Gourmet Sophistication",
+    category: "food",
+    reference: "Gourmet cheese board photography, artisan cheese presentation, wine and cheese pairing campaigns, European cheese culture, entertaining lifestyle photography, cheese and charcuterie board styling, sophisticated entertaining aesthetic, gourmet food presentation",
+    lighting: "Warm entertaining lighting at 4500K creating sophisticated dining atmosphere, soft overhead illumination showing cheese textures and colors, wine glass rim light, elegant entertaining ambiance, gourmet presentation lighting",
+    composition: "Artfully arranged cheese board with variety of artisan cheeses, accompaniments like nuts, fruits, and honey, wine glasses and bottle visible, elegant serving board and utensils, sophisticated entertaining context, gourmet lifestyle presentation",
+    mood: "Sophisticated entertaining, gourmet cheese appreciation, wine pairing elegance, European food culture, artisan cheese celebration, refined taste lifestyle",
+    technicalSpecs: "Nikon D850, 85mm f/1.4 at f/2.8, ISO 640, warm entertaining lighting, gourmet sophistication aesthetic"
+  },
+  {
+    name: "Butter Artisan Churning Process",
+    category: "artisanat",
+    reference: "Traditional butter making photography, artisan dairy craftsmanship, butter churning process documentation, farm-to-table butter production, traditional dairy methods, artisan butter making campaigns, heritage dairy craft visualization, handmade butter process",
+    lighting: "Natural artisan workshop lighting at 5000K showing traditional butter making process, authentic craft illumination, traditional dairy workshop ambiance, artisan process lighting, heritage craft atmosphere",
+    composition: "Traditional butter churn in action, artisan hands working butter making process, fresh cream transforming into butter, traditional dairy tools and equipment, authentic butter making environment, artisan craftsmanship evident, heritage dairy process",
+    mood: "Traditional dairy craft, artisan butter making pride, heritage process respect, handmade quality celebration, traditional methods honor, authentic dairy craftsmanship",
+    technicalSpecs: "Fujifilm X-T4, 35mm f/1.4 at f/2.2, ISO 800, natural workshop lighting, traditional craft aesthetic"
+  },
+  {
+    name: "Milk Alternative Plant-Based Innovation",
+    category: "lifestyle",
+    reference: "Plant-based milk campaigns, oat milk and almond milk photography, dairy alternative lifestyle, sustainable milk choices, vegan dairy products, plant-based nutrition visualization, eco-friendly dairy alternatives, modern plant milk innovation",
+    lighting: "Clean modern lighting at 5500K emphasizing plant-based purity, natural plant ingredient illumination, sustainable product lighting, eco-friendly atmosphere, plant-based innovation lighting",
+    composition: "Plant-based milk with source ingredients visible (oats, almonds, coconuts), sustainable packaging prominent, plant ingredients artfully arranged, eco-friendly lifestyle context, modern plant-based living visualization, sustainability emphasis",
+    mood: "Plant-based innovation pride, sustainable dairy choice, eco-friendly lifestyle, modern nutrition evolution, environmental consciousness, plant-based future confidence",
+    technicalSpecs: "Canon EOS R5, 50mm f/1.2 at f/2.8, ISO 400, clean modern lighting, plant-based innovation aesthetic"
   },
   {
     name: "Yoplait Fruity Fresh Explosion",
@@ -1747,6 +1976,136 @@ export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
     technicalSpecs: "Medium format digital, 50mm at f/8, ISO 100, composite photography techniques, extensive post-production surrealism"
   },
 
+  // ========== STYLES SECTEURS ÉMERGENTS - FINTECH & CRYPTO (8 nouveaux) ==========
+  {
+    name: "Crypto Digital Gold Aesthetic",
+    category: "crypto",
+    reference: "Bitcoin digital gold campaigns, cryptocurrency luxury positioning, blockchain wealth visualization, crypto trading platform premium aesthetic, digital asset value representation, NFT marketplace sophistication, Web3 financial revolution imagery",
+    lighting: "Golden digital lighting at 4000K with metallic reflections, cryptocurrency glow effects, blockchain network illumination patterns, premium digital asset lighting, luxury fintech atmosphere with LED accents",
+    composition: "Cryptocurrency symbols floating in digital space, trading screens with market data, blockchain network visualization, digital wallet interfaces, crypto mining equipment, luxury tech setup, premium digital asset presentation",
+    mood: "Digital wealth confidence, cryptocurrency future optimism, blockchain technology trust, fintech innovation excitement, digital gold value perception, crypto revolution energy",
+    technicalSpecs: "Sony A7SIII, 50mm f/1.2 at f/2.0, ISO 1600, LED strip lighting, digital effects overlay, crypto-themed color grading"
+  },
+  {
+    name: "DeFi Protocol Visualization",
+    category: "crypto",
+    reference: "Decentralized finance platform campaigns, DeFi yield farming visualization, liquidity pool representation, smart contract execution imagery, decentralized banking future, crypto lending protocols, blockchain financial services",
+    lighting: "Futuristic DeFi lighting with blue-green tech glow at 5800K, protocol interface illumination, decentralized network lighting effects, smart contract execution visualization, blockchain financial atmosphere",
+    composition: "DeFi protocol interfaces on multiple screens, liquidity pool visualizations, yield farming dashboards, smart contract code visible, decentralized finance ecosystem representation, crypto financial tools",
+    mood: "Decentralized finance freedom, DeFi protocol confidence, smart contract reliability, blockchain banking trust, financial innovation excitement, decentralized economy empowerment",
+    technicalSpecs: "Canon EOS R5, 24-70mm f/2.8 at f/4, ISO 800, LED panel array, DeFi interface lighting, futuristic color grade"
+  },
+  {
+    name: "NFT Digital Art Gallery",
+    category: "crypto",
+    reference: "NFT marketplace campaigns, digital art collectibles showcase, blockchain art verification, crypto art community visualization, digital ownership representation, metaverse gallery experience, Web3 creative economy",
+    lighting: "Digital gallery lighting with RGB color-changing effects at 5500K, NFT display illumination, crypto art presentation lighting, blockchain verification glow, digital collectible showcase atmosphere",
+    composition: "NFT digital art displays on screens, crypto art collections, blockchain verification badges visible, digital ownership certificates, NFT marketplace interfaces, virtual gallery environment",
+    mood: "Digital art ownership pride, NFT collectible excitement, crypto art community belonging, blockchain verification trust, digital creativity celebration, Web3 artistic revolution",
+    technicalSpecs: "Fujifilm X-T4, 35mm f/1.4 at f/2.2, ISO 800, RGB LED lighting, NFT display setup, digital art color enhancement"
+  },
+  {
+    name: "Blockchain Network Infrastructure",
+    category: "crypto",
+    reference: "Blockchain technology infrastructure photography, distributed ledger visualization, crypto mining operations, node network representation, decentralized system architecture, blockchain security visualization, crypto technology backbone",
+    lighting: "Network infrastructure lighting with server room illumination at 5200K, blockchain node LED indicators, crypto mining facility lighting, distributed network visualization, technology infrastructure atmosphere",
+    composition: "Blockchain network servers, crypto mining rigs, distributed nodes visualization, network infrastructure equipment, blockchain technology hardware, decentralized system representation",
+    mood: "Blockchain infrastructure confidence, distributed network reliability, crypto technology trust, decentralized system strength, blockchain innovation pride, network security assurance",
+    technicalSpecs: "Nikon D850, 24-70mm f/2.8 at f/5.6, ISO 800, server room lighting, infrastructure LED indicators, technology aesthetic"
+  },
+  {
+    name: "Metaverse Virtual Reality",
+    category: "crypto",
+    reference: "Metaverse platform visualization, virtual world exploration, Web3 gaming environments, VR crypto integration, digital reality immersion, virtual real estate, metaverse social interaction",
+    lighting: "Virtual world lighting effects with digital environment illumination, metaverse atmosphere lighting, VR headset glow, virtual reality immersion lighting, digital world color effects",
+    composition: "VR headset user immersed in metaverse, virtual world environments visible on screens, metaverse avatars, digital real estate, Web3 gaming interfaces, virtual reality setup",
+    mood: "Virtual world exploration excitement, metaverse future vision, digital reality immersion, Web3 gaming adventure, virtual space creativity, digital universe discovery",
+    technicalSpecs: "Sony A7III, 50mm f/1.8 at f/2.8, ISO 1000, VR setup lighting, digital effects overlay, metaverse color grading"
+  },
+  {
+    name: "Fintech Mobile Banking",
+    category: "fintech",
+    reference: "Mobile banking app campaigns, fintech user experience, digital payment visualization, smartphone financial services, contactless payment technology, mobile wallet usage, digital banking convenience",
+    lighting: "Modern mobile lighting with smartphone screen glow at 5500K, fintech app interface illumination, digital payment lighting, mobile banking atmosphere, contactless technology lighting",
+    composition: "Smartphone with fintech app interface, mobile payment in action, digital banking screens, contactless payment terminals, mobile wallet usage, fintech user experience",
+    mood: "Digital banking convenience, fintech innovation confidence, mobile payment ease, contactless technology trust, smartphone financial freedom, digital wallet security",
+    technicalSpecs: "iPhone 15 Pro, computational photography, mobile app interface capture, fintech lighting setup, digital banking aesthetic"
+  },
+  {
+    name: "AI Trading Algorithm",
+    category: "fintech",
+    reference: "AI-powered trading platforms, algorithmic trading visualization, machine learning finance, automated investment systems, AI financial analysis, robo-advisor technology, quantitative trading algorithms",
+    lighting: "AI algorithm visualization lighting with data flow illumination at 5800K, machine learning interface glow, algorithmic trading screen lighting, AI financial analysis atmosphere",
+    composition: "AI trading algorithms on screens, machine learning data visualization, automated trading interfaces, algorithmic analysis charts, AI financial models, quantitative trading systems",
+    mood: "AI trading confidence, algorithmic precision trust, machine learning finance innovation, automated investment reliability, AI financial intelligence, quantitative analysis sophistication",
+    technicalSpecs: "Canon EOS R6, 85mm f/1.2 at f/2.8, ISO 640, AI interface lighting, algorithmic visualization effects, fintech color grade"
+  },
+  {
+    name: "Digital Payment Ecosystem",
+    category: "fintech",
+    reference: "Digital payment ecosystem visualization, contactless payment networks, mobile payment infrastructure, digital wallet integration, payment processing technology, fintech payment solutions",
+    lighting: "Digital payment network lighting with contactless technology glow at 5500K, payment processing illumination, digital wallet interface lighting, fintech ecosystem atmosphere",
+    composition: "Digital payment terminals, contactless payment in action, mobile payment interfaces, digital wallet screens, payment processing visualization, fintech ecosystem representation",
+    mood: "Digital payment convenience, contactless technology confidence, mobile payment security, fintech ecosystem trust, payment innovation excitement, digital transaction ease",
+    technicalSpecs: "Sony A7III, 35mm f/1.8 at f/2.8, ISO 800, contactless payment lighting, digital interface glow, fintech aesthetic"
+  },
+
+  // ========== STYLES SECTEURS ÉMERGENTS - TÉLÉMÉDECINE & SANTÉ DIGITALE (6 nouveaux) ==========
+  {
+    name: "Telemedicine Consultation Remote",
+    category: "telehealth",
+    reference: "Telemedicine consultation campaigns, remote healthcare visualization, digital health services, virtual medical appointments, telehealth technology integration, remote patient care, digital healthcare accessibility",
+    lighting: "Comfortable home consultation lighting at 5200K, telemedicine screen glow, remote healthcare atmosphere, digital health service illumination, virtual appointment lighting setup",
+    composition: "Patient at home during video consultation, doctor on screen, telemedicine technology setup, remote healthcare equipment, digital health interfaces, virtual medical appointment",
+    mood: "Remote healthcare accessibility, telemedicine convenience, digital health confidence, virtual medical care trust, telehealth innovation comfort, remote consultation ease",
+    technicalSpecs: "Canon EOS R6, 50mm f/1.2 at f/2.0, ISO 800, home consultation lighting, telemedicine screen glow, healthcare aesthetic"
+  },
+  {
+    name: "Wearable Health Monitoring",
+    category: "telehealth",
+    reference: "Wearable health technology campaigns, continuous health monitoring, fitness tracker visualization, health data collection, digital wellness tracking, biometric monitoring devices, personal health technology",
+    lighting: "Health monitoring device LED indicators at 5500K, wearable technology glow, fitness tracker screen illumination, health data visualization lighting, digital wellness atmosphere",
+    composition: "Wearable health devices on wrist, fitness tracker screens showing data, health monitoring in daily life, biometric sensors, digital wellness interfaces, continuous health tracking",
+    mood: "Health monitoring empowerment, wearable technology confidence, continuous wellness tracking, digital health data trust, personal health control, fitness technology motivation",
+    technicalSpecs: "Sony A7III, 85mm f/1.8 at f/2.8, ISO 400, wearable device lighting, health data visualization, wellness aesthetic"
+  },
+  {
+    name: "AI Medical Diagnosis",
+    category: "telehealth",
+    reference: "AI medical diagnosis campaigns, artificial intelligence healthcare, medical AI analysis, diagnostic algorithm visualization, machine learning medicine, AI-powered medical imaging, healthcare AI technology",
+    lighting: "Medical AI interface lighting at 5500K, diagnostic algorithm visualization, healthcare AI screen glow, medical analysis illumination, AI diagnosis atmosphere",
+    composition: "AI medical analysis interfaces, diagnostic algorithms on screens, medical AI processing medical images, healthcare artificial intelligence systems, AI diagnosis visualization",
+    mood: "AI medical precision, diagnostic technology confidence, healthcare AI advancement, medical analysis intelligence, AI diagnosis reliability, medical technology trust",
+    technicalSpecs: "Nikon D850, 105mm f/2.8 macro at f/5.6, ISO 200, medical AI interface lighting, diagnostic visualization, healthcare technology aesthetic"
+  },
+  {
+    name: "Digital Health Records",
+    category: "telehealth",
+    reference: "Digital health records management, electronic medical records, health data security, patient information systems, digital healthcare documentation, medical data visualization, health information technology",
+    lighting: "Secure digital health data lighting at 5200K, electronic medical records illumination, health information system glow, digital healthcare documentation atmosphere",
+    composition: "Digital health records on screens, electronic medical data, patient information systems, health data visualization, medical documentation interfaces, healthcare IT systems",
+    mood: "Digital health data security, electronic medical records confidence, health information system trust, medical data organization, digital healthcare efficiency, patient data protection",
+    technicalSpecs: "Canon EOS R5, 24-70mm f/2.8 at f/4, ISO 640, digital health interface lighting, medical data visualization, healthcare IT aesthetic"
+  },
+  {
+    name: "Remote Patient Monitoring",
+    category: "telehealth",
+    reference: "Remote patient monitoring systems, continuous health surveillance, patient care technology, remote healthcare monitoring, digital patient care, health monitoring devices, telehealth patient tracking",
+    lighting: "Patient monitoring device lighting at 5000K, remote healthcare surveillance illumination, patient care technology glow, health monitoring atmosphere, digital care lighting",
+    composition: "Remote patient monitoring devices, continuous health surveillance equipment, patient care technology in home setting, health monitoring interfaces, digital patient care systems",
+    mood: "Remote patient care confidence, continuous monitoring reliability, healthcare surveillance precision, patient monitoring dedication, remote care advancement, digital health security",
+    technicalSpecs: "Sony A7III, 50mm f/1.8 at f/2.8, ISO 800, patient monitoring lighting, healthcare surveillance aesthetic, remote care visualization"
+  },
+  {
+    name: "Digital Pharmacy Services",
+    category: "telehealth",
+    reference: "Digital pharmacy delivery services, online prescription management, e-pharmacy technology, digital medication management, pharmacy automation systems, online pharmaceutical services, digital prescription processing",
+    lighting: "Digital pharmacy interface lighting at 5500K, e-pharmacy service illumination, online prescription glow, digital medication management atmosphere, pharmacy technology lighting",
+    composition: "Digital pharmacy interfaces, online prescription systems, e-pharmacy delivery services, medication management apps, digital pharmaceutical technology, automated pharmacy systems",
+    mood: "Digital pharmacy convenience, e-pharmacy reliability, online prescription confidence, medication management efficiency, digital pharmacy innovation, pharmaceutical technology trust",
+    technicalSpecs: "Fujifilm X-T4, 35mm f/1.4 at f/2.8, ISO 800, digital pharmacy lighting, e-pharmacy interface glow, pharmaceutical technology aesthetic"
+  },
+
   // ========== INTELLIGENCE ARTIFICIELLE & MACHINE LEARNING (6 styles) ==========
   {
     name: "AI Neural Network Visualization",
@@ -2254,10 +2613,11 @@ export const COLOR_PALETTES: ColorPalette[] = [
 ];
 
 // ==========================================
-// 🧠 FRAMEWORKS CRÉATIFS (8 variations)
+// 🧠 FRAMEWORKS CRÉATIFS ENRICHIS (25 variations catégorisées)
 // ==========================================
 
 export const CREATIVE_FRAMEWORKS: CreativeFramework[] = [
+  // ========== CATÉGORIE A : FRAMEWORKS CLASSIQUES MARKETING (8 frameworks originaux) ==========
   {
     name: "AIDA Framework",
     structure: "Attention → Interest → Desire → Action",
@@ -2297,6 +2657,170 @@ export const CREATIVE_FRAMEWORKS: CreativeFramework[] = [
     name: "Value-First Approach",
     structure: "Value → Insight → Soft offer",
     application: "Donner de la valeur immédiate, partager un insight unique, mention subtile du produit"
+  },
+
+  // ========== CATÉGORIE B : FRAMEWORKS ÉMOTIONNELS AVANCÉS (5 nouveaux) ==========
+  {
+    name: "Emotional Rollercoaster",
+    structure: "Peak Emotion → Valley Reflection → Resolution Triumph",
+    application: "Créer un pic émotionnel intense, moment de réflexion vulnérable, résolution triomphante avec produit comme catalyseur de transformation"
+  },
+  {
+    name: "Nostalgia-Future Bridge",
+    structure: "Nostalgic Memory → Present Reality → Future Vision",
+    application: "Évoquer un souvenir nostalgique puissant, contraster avec réalité présente, projeter vision future désirable avec produit comme pont temporel"
+  },
+  {
+    name: "Fear-Relief-Empowerment",
+    structure: "Fear Acknowledgment → Relief Discovery → Empowerment Action",
+    application: "Reconnaître peur légitime audience, révéler soulagement possible, transformer en empowerment actionnable avec produit comme solution"
+  },
+  {
+    name: "Surprise-Delight-Share",
+    structure: "Unexpected Surprise → Genuine Delight → Compulsive Sharing",
+    application: "Créer surprise authentique, générer délice sincère, déclencher envie irrésistible de partager expérience avec produit comme source"
+  },
+  {
+    name: "Vulnerability-Connection-Strength",
+    structure: "Authentic Vulnerability → Human Connection → Collective Strength",
+    application: "Montrer vulnérabilité authentique, créer connexion humaine profonde, révéler force collective avec produit comme lien unificateur"
+  },
+
+  // ========== CATÉGORIE C : FRAMEWORKS NARRATIFS SOPHISTIQUÉS (4 nouveaux) ==========
+  {
+    name: "Parallel Lives Convergence",
+    structure: "Two Parallel Stories → Convergence Point → Unified Outcome",
+    application: "Raconter deux histoires parallèles apparemment distinctes, révéler point de convergence surprenant, unifier dans résultat commun avec produit"
+  },
+  {
+    name: "Time-Loop Revelation",
+    structure: "Repetitive Pattern → Breaking Point → Liberation Moment",
+    application: "Montrer pattern répétitif frustrant, identifier moment de rupture, révéler libération avec produit comme clé de sortie du cycle"
+  },
+  {
+    name: "Reverse Chronology Discovery",
+    structure: "End Result → Backward Journey → Origin Revelation",
+    application: "Commencer par résultat final intriguant, remonter chronologie, révéler origine surprenante avec produit comme catalyseur initial"
+  },
+  {
+    name: "Multiple Perspective Truth",
+    structure: "Perspective A → Perspective B → Unified Truth",
+    application: "Présenter perspective initiale, révéler perspective alternative, synthétiser vérité unifiée avec produit comme pont entre visions"
+  },
+
+  // ========== CATÉGORIE D : FRAMEWORKS PSYCHOLOGIQUES PERSUASIFS (4 nouveaux) ==========
+  {
+    name: "Cognitive Dissonance Resolution",
+    structure: "Contradictory Beliefs → Tension Creation → Harmonious Resolution",
+    application: "Présenter croyances contradictoires audience, créer tension cognitive inconfortable, résoudre harmonieusement avec produit comme solution logique"
+  },
+  {
+    name: "Scarcity-Abundance Paradox",
+    structure: "Scarcity Awareness → Abundance Possibility → Exclusive Access",
+    application: "Révéler rareté réelle, montrer abondance possible, offrir accès exclusif avec produit comme passerelle vers abondance"
+  },
+  {
+    name: "Authority-Rebellion Balance",
+    structure: "Authority Respect → Rebellion Spirit → Balanced Independence",
+    application: "Reconnaître autorité légitime, célébrer esprit rebelle, équilibrer en indépendance mature avec produit comme outil d'autonomie"
+  },
+  {
+    name: "Conformity-Uniqueness Synthesis",
+    structure: "Belonging Need → Uniqueness Desire → Authentic Expression",
+    application: "Adresser besoin d'appartenance, honorer désir d'unicité, synthétiser en expression authentique avec produit comme moyen d'individualité"
+  },
+
+  // ========== CATÉGORIE E : FRAMEWORKS SENSORIELS & EXPÉRIENTIELS (4 nouveaux) ==========
+  {
+    name: "Five Senses Journey",
+    structure: "Sensory Awakening → Multi-Sensory Experience → Memorable Imprint",
+    application: "Éveiller sens spécifique, créer expérience multi-sensorielle riche, laisser empreinte mémorable avec produit comme déclencheur sensoriel"
+  },
+  {
+    name: "Texture-Temperature-Taste Trinity",
+    structure: "Tactile Discovery → Temperature Sensation → Taste Memory",
+    application: "Découverte tactile intriguante, sensation température distinctive, mémoire gustative durable avec produit comme expérience sensorielle complète"
+  },
+  {
+    name: "Sound-Silence-Symphony",
+    structure: "Distinctive Sound → Meaningful Silence → Harmonious Symphony",
+    application: "Son distinctif captivant, silence significatif, symphonie harmonieuse avec produit comme chef d'orchestre expérience auditive"
+  },
+  {
+    name: "Color-Light-Shadow Play",
+    structure: "Color Psychology → Light Dynamics → Shadow Mystery",
+    application: "Psychologie couleur évocatrice, dynamique lumière changeante, mystère ombres intriguantes avec produit comme prisme expérience visuelle"
+  },
+
+  // ========== CATÉGORIE F : FRAMEWORKS B2B PROFESSIONNELS (6 nouveaux) ==========
+  {
+    name: "Problem-Solution-Transformation B2B",
+    structure: "Business Problem → Solution Demonstration → ROI Transformation",
+    application: "Identifier problème métier spécifique, démontrer solution concrète, quantifier transformation ROI avec produit comme catalyseur business"
+  },
+  {
+    name: "Expertise-Trust-Partnership",
+    structure: "Domain Expertise → Trust Building → Long-term Partnership",
+    application: "Démontrer expertise sectorielle, construire confiance professionnelle, établir partenariat durable avec produit comme fondation relation"
+  },
+  {
+    name: "Challenge-Innovation-Leadership",
+    structure: "Industry Challenge → Innovation Response → Market Leadership",
+    application: "Présenter défi industriel, répondre par innovation, positionner leadership marché avec produit comme différenciateur concurrentiel"
+  },
+  {
+    name: "Efficiency-Productivity-Growth",
+    structure: "Current Inefficiency → Productivity Boost → Business Growth",
+    application: "Révéler inefficacité actuelle, booster productivité mesurable, générer croissance business avec produit comme levier performance"
+  },
+  {
+    name: "Risk-Security-Compliance",
+    structure: "Risk Assessment → Security Solution → Compliance Achievement",
+    application: "Évaluer risques métier, sécuriser par solution, atteindre conformité avec produit comme bouclier protection"
+  },
+  {
+    name: "Legacy-Modernization-Future",
+    structure: "Legacy Limitations → Modernization Path → Future-Ready State",
+    application: "Limites système legacy, chemin modernisation, état future-ready avec produit comme pont transformation digitale"
+  },
+
+  // ========== CATÉGORIE G : FRAMEWORKS COMMUNAUTÉ & APPARTENANCE (4 nouveaux) ==========
+  {
+    name: "Community-Belonging-Identity",
+    structure: "Community Discovery → Belonging Feeling → Identity Expression",
+    application: "Découvrir communauté alignée, ressentir appartenance authentique, exprimer identité unique avec produit comme symbole tribal"
+  },
+  {
+    name: "Tribe-Values-Movement",
+    structure: "Tribe Formation → Shared Values → Movement Creation",
+    application: "Former tribu engagée, partager valeurs communes, créer mouvement social avec produit comme étendard rassembleur"
+  },
+  {
+    name: "Outsider-Insider-Leader",
+    structure: "Outsider Status → Insider Access → Community Leader",
+    application: "Statut outsider initial, accès insider exclusif, leadership communautaire avec produit comme clé d'entrée"
+  },
+  {
+    name: "Local-Global-Impact",
+    structure: "Local Connection → Global Awareness → Collective Impact",
+    application: "Connexion locale authentique, conscience globale, impact collectif avec produit comme pont local-global"
+  },
+
+  // ========== CATÉGORIE H : FRAMEWORKS HÉRITAGE & INNOVATION (3 nouveaux) ==========
+  {
+    name: "Heritage-Innovation-Future",
+    structure: "Heritage Respect → Innovation Integration → Future Vision",
+    application: "Respecter héritage traditionnel, intégrer innovation moderne, visionner futur avec produit comme pont temporel"
+  },
+  {
+    name: "Tradition-Disruption-Evolution",
+    structure: "Traditional Foundation → Disruptive Element → Evolutionary Leap",
+    application: "Fondation traditionnelle solide, élément disruptif contrôlé, saut évolutionnaire avec produit comme catalyseur changement"
+  },
+  {
+    name: "Craft-Technology-Mastery",
+    structure: "Artisan Craft → Technology Enhancement → Modern Mastery",
+    application: "Artisanat traditionnel, amélioration technologique, maîtrise moderne avec produit comme fusion craft-tech"
   }
 ];
 
@@ -2911,6 +3435,48 @@ export const CREATIVE_CONTEXTS: CreativeContext[] = [
     description: "Agence recrutement catalyseur carrière, talents révélés, opportunités créées, matching parfait, ambitions réalisées, potentiel libéré, succès professionnel"
   },
 
+  // ========== NOUVEAUX ENVIRONNEMENTS URBAINS & JUNGLE (10 nouveaux) ==========
+  {
+    name: "Urban Rooftop Garden Oasis",
+    description: "Jardin urbain sur toit-terrasse, oasis verte au cœur de la métropole, gratte-ciels en arrière-plan, agriculture urbaine, biodiversité citadine, nature reconquise, écologie urbaine, respiration verte"
+  },
+  {
+    name: "Neon-Lit Street Market Night",
+    description: "Marché de rue nocturne éclairé au néon, vendeurs ambulants colorés, street food authentique, énergie urbaine nocturne, néons multicolores, foule cosmopolite, vie nocturne vibrante, culture urbaine"
+  },
+  {
+    name: "Industrial Warehouse Converted Loft",
+    description: "Ancien entrepôt industriel converti en loft moderne, poutres métalliques apparentes, grandes fenêtres industrielles, béton brut et design contemporain, gentrification urbaine, architecture industrielle réhabilitée"
+  },
+  {
+    name: "Underground Metro Station Urban",
+    description: "Station de métro souterraine, architecture urbaine fonctionnelle, flux de voyageurs, éclairage artificiel, carrelage et métal, transport urbain, vie souterraine métropolitaine, mobilité urbaine"
+  },
+  {
+    name: "City Bridge Architectural Marvel",
+    description: "Pont urbain architectural emblématique, structure métallique imposante, circulation automobile et piétonne, vue panoramique sur la ville, ingénierie urbaine, connexion urbaine, infrastructure monumentale"
+  },
+  {
+    name: "Tropical Rainforest Canopy Dense",
+    description: "Canopée dense de forêt tropicale, végétation luxuriante multicouche, lianes et épiphytes, lumière filtrée verte, biodiversité tropicale, écosystème complexe, nature sauvage préservée, jungle primaire"
+  },
+  {
+    name: "Jungle Waterfall Hidden Paradise",
+    description: "Cascade cachée au cœur de la jungle, bassin naturel cristallin, végétation tropicale dense, rochers moussus, brume d'eau, paradis naturel secret, oasis jungle, beauté sauvage intacte"
+  },
+  {
+    name: "Mangrove Swamp Ecosystem Rich",
+    description: "Mangrove tropicale écosystème riche, racines aériennes complexes, eau saumâtre, biodiversité aquatique et terrestre, nurserie naturelle, écosystème fragile, zone humide tropicale, nature amphibie"
+  },
+  {
+    name: "Bamboo Forest Zen Pathway",
+    description: "Forêt de bambous géants, sentier zen serpentant, lumière verte filtrée, tiges élancées créant cathédrale naturelle, sérénité asiatique, méditation nature, harmonie végétale, temple naturel"
+  },
+  {
+    name: "Jungle Lodge Eco-Tourism",
+    description: "Lodge écologique au cœur de la jungle, architecture durable intégrée, terrasse sur pilotis, observation faune, tourisme responsable, immersion nature, confort écologique, aventure durable"
+  },
+
   // ========== CATÉGORIE M : CONTEXTES ÉMERGENTS 2024-2025 (10 nouveaux) ==========
   {
     name: "AI Workplace Integration Seamless",
@@ -2951,6 +3517,162 @@ export const CREATIVE_CONTEXTS: CreativeContext[] = [
   {
     name: "Quantum Computing Revolution Dawn",
     description: "Révolution informatique quantique aube, calculs impossibles, problèmes résolus, science accélérée, découvertes exponentielles, futur computationnel, réalité transformée"
+  },
+
+  // ========== CATÉGORIE N : CONTEXTES BEAUTÉ & SOINS (37 nouveaux) ==========
+  
+  // === RITUELS QUOTIDIENS BEAUTÉ (15 contextes) ===
+  {
+    name: "Morning Skincare Ritual Zen",
+    description: "Rituel skincare matinal zen, salle de bain lumineuse, produits organisés sur marbre, miroir éclairé LED, routine 7 étapes méthodique, moment personnel sacré, lumière douce naturelle, tranquillité matinale, bien-être quotidien"
+  },
+  {
+    name: "Evening Skincare Routine Cocooning",
+    description: "Routine skincare soir cocooning, démaquillage doux, nettoyage profond, sérums précieux, crèmes de nuit réparatrices, bougies parfumées, atmosphère apaisante, régénération nocturne, self-care rituel"
+  },
+  {
+    name: "Bathroom Vanity Moment Personal",
+    description: "Moment vanité salle de bain personnel, miroir Hollywood éclairé, produits beauté organisés esthétiquement, pinceaux alignés, palette couleurs, intimité féminine, préparation transformation, confiance construction"
+  },
+  {
+    name: "Shower Self-Care Time Relaxation",
+    description: "Temps self-care douche relaxation, vapeur enveloppante, gommages exfoliants, masques capillaires nourrissants, huiles essentielles, détente corporelle, purification rituelle, moment déconnexion"
+  },
+  {
+    name: "Makeup Application Focus Precision",
+    description: "Application maquillage focus précision, concentration artistique, pinceaux professionnels, palette couleurs variées, transformation progressive, créativité expression, confiance construction, art visage"
+  },
+  {
+    name: "Hair Styling Session Confidence",
+    description: "Session coiffage confiance, brushing professionnel, produits capillaires premium, fer à lisser/boucler, transformation capillaire, style personnel affirmé, beauté cheveux célébrée, élégance quotidienne"
+  },
+  {
+    name: "Nail Care Ritual Patience",
+    description: "Rituel soin ongles patience, manucure méticuleuse, vernis application précise, nail art créatif, temps pour soi prolongé, détails perfectionnés, beauté mains célébrée, zen attitude"
+  },
+  {
+    name: "Face Mask Relaxation Meditation",
+    description: "Relaxation masque visage méditation, masque posé uniformément, temps pause obligatoire, détente profonde, régénération peau, moment introspection, bien-être holistique, beauté naturelle"
+  },
+  {
+    name: "Perfume Selection Personality",
+    description: "Sélection parfum personnalité, choix fragrance quotidienne, humeur olfactive, identité parfumée, collection flacons élégants, signature olfactive, séduction subtile, aura personnelle"
+  },
+  {
+    name: "Beauty Tools Organization Aesthetic",
+    description: "Organisation outils beauté esthétique, pinceaux rangés artistiquement, accessoires classés, tiroirs organisés, collection produits, ordre visuel apaisant, efficacité beauté, plaisir organisation"
+  },
+  {
+    name: "Skincare Layering Science Precision",
+    description: "Layering skincare science précision, superposition produits méthodique, actifs cosmétiques, pH respecté, timing application, routine scientifique, efficacité maximisée, peau transformée"
+  },
+  {
+    name: "Beauty Routine Travel Adaptation",
+    description: "Routine beauté voyage adaptation, produits format voyage, trousse organisée, adaptation climat, efficacité nomade, beauté simplicité, praticité élégante, continuité soins"
+  },
+  {
+    name: "Weekend Beauty Ritual Extended",
+    description: "Rituel beauté weekend prolongé, temps étendu self-care, masques multiples, gommages corps, soins intensifs, détente maximale, régénération complète, bien-être total"
+  },
+  {
+    name: "Quick Beauty Touch-Up Emergency",
+    description: "Retouche beauté rapide urgence, miroir poche, produits essentiels, réparation express, confiance restaurée, efficacité beauté, solution nomade, élégance préservée"
+  },
+  {
+    name: "Beauty Sleep Preparation Night",
+    description: "Préparation beauty sleep nuit, soins nocturnes intensifs, cheveux protégés, peau nourrie, régénération optimisée, beauté sommeil, réparation naturelle, réveil radieux"
+  },
+
+  // === ENVIRONNEMENTS BEAUTÉ SPÉCIALISÉS (12 contextes) ===
+  {
+    name: "Professional Makeup Studio Artistry",
+    description: "Studio maquillage professionnel artistry, éclairage cinéma parfait, fauteuil directeur, artiste maquilleur expert, palette professionnelle, transformation spectaculaire, art maquillage, excellence technique"
+  },
+  {
+    name: "Hair Salon Experience Transformation",
+    description: "Expérience salon coiffure transformation, fauteuils design, miroirs infinis, coiffeur styliste, produits professionnels, ambiance musicale, métamorphose capillaire, expertise coiffure"
+  },
+  {
+    name: "Spa Treatment Room Serenity",
+    description: "Salle soins spa sérénité, ambiance zen absolue, lit massage confortable, huiles essentielles, musique relaxante, thérapeute expert, détente profonde, bien-être holistique"
+  },
+  {
+    name: "Beauty Counter Consultation Expert",
+    description: "Comptoir beauté consultation experte, conseillère beauté professionnelle, test produits personnalisé, diagnostic peau, recommandations sur-mesure, découverte produits, expertise conseil"
+  },
+  {
+    name: "Dermatologist Office Medical Beauty",
+    description: "Cabinet dermatologue beauté médicale, consultation peau experte, équipement médical, diagnostic professionnel, soins dermatologiques, santé peau priorité, expertise médicale"
+  },
+  {
+    name: "Nail Salon Pampering Social",
+    description: "Salon ongles pampering social, manucure pédicure luxe, fauteuils massage, ambiance conviviale, socialisation détente, nail art créatif, beauté mains pieds, moment plaisir"
+  },
+  {
+    name: "Beauty Influencer Setup Ring Light",
+    description: "Setup beauté influencer ring light, éclairage parfait, caméra HD, démonstration produits, tutoriel beauté, audience engagement, création contenu, influence beauté"
+  },
+  {
+    name: "Pharmacy Skincare Aisle Scientific",
+    description: "Rayon skincare pharmacie scientifique, produits dermatologiques, conseils pharmacien, approche médicale, efficacité prouvée, soin peau santé, expertise pharmaceutique"
+  },
+  {
+    name: "Luxury Beauty Boutique Premium",
+    description: "Boutique beauté luxe premium, produits haut de gamme, présentation raffinée, service personnalisé, expérience shopping exclusive, marques prestigieuses, luxe accessible"
+  },
+  {
+    name: "Home Beauty Corner Intimate",
+    description: "Coin beauté maison intime, coiffeuse personnelle, miroir éclairé, collection produits, organisation personnalisée, intimité beauté, routine privée, espace personnel"
+  },
+  {
+    name: "Beauty School Learning Environment",
+    description: "École beauté environnement apprentissage, formation professionnelle, techniques enseignées, pratique étudiante, matériel pédagogique, futur professionnel, passion beauté"
+  },
+  {
+    name: "Backstage Fashion Show Beauty Prep",
+    description: "Coulisses défilé préparation beauté, maquilleurs professionnels, coiffeurs stylistes, mannequins transformation, stress créatif, excellence beauté, show préparation"
+  },
+
+  // === MICRO-MOMENTS BEAUTÉ (10 contextes) ===
+  {
+    name: "Pre-Date Beauty Preparation Excitement",
+    description: "Préparation beauté pré-rendez-vous excitation, stress positif, choix tenue maquillage, séduction préparation, confiance construction, anticipation romantique, beauté séduction"
+  },
+  {
+    name: "Post-Workout Beauty Refresh Quick",
+    description: "Refresh beauté post-sport rapide, nettoyage express, remise en forme, fraîcheur restaurée, efficacité beauté, transition activité, bien-être maintenu"
+  },
+  {
+    name: "Seasonal Skin Transition Adaptation",
+    description: "Transition peau saisonnière adaptation, changement routine, produits ajustés, climat adaptation, peau préparée, soin évolutif, beauté saisonnière"
+  },
+  {
+    name: "Acne Spot Treatment Hope Patience",
+    description: "Traitement bouton acné espoir patience, soin ciblé précis, attente guérison, espoir amélioration, routine anti-acné, peau claire objectif, patience beauté"
+  },
+  {
+    name: "Anti-Aging Ritual Prevention Wisdom",
+    description: "Rituel anti-âge prévention sagesse, soins préventifs, acceptation vieillissement, beauté mature, sagesse âge, prévention active, élégance temporelle"
+  },
+  {
+    name: "Sensitive Skin Care Gentle Protection",
+    description: "Soin peau sensible douceur protection, produits hypoallergéniques, précaution extrême, douceur absolue, peau fragile respectée, protection maximale"
+  },
+  {
+    name: "Confidence Boost Beauty Moment Power",
+    description: "Moment beauté boost confiance pouvoir, produit signature, transformation instantanée, estime soi restaurée, pouvoir beauté, confiance rayonnante"
+  },
+  {
+    name: "Beauty Emergency Fix Creative Solution",
+    description: "Urgence beauté solution créative, problème inattendu, créativité beauté, solution rapide, adaptabilité beauté, débrouillardise féminine"
+  },
+  {
+    name: "Self-Care Sunday Beauty Marathon",
+    description: "Self-care dimanche marathon beauté, temps prolongé soins, multiple rituels, bien-être total, détente maximale, beauté holistique, jour personnel"
+  },
+  {
+    name: "Mirror Confidence Check Daily Ritual",
+    description: "Vérification confiance miroir rituel quotidien, regard bienveillant, acceptation soi, beauté naturelle, confiance intérieure, amour-propre, beauté authentique"
   }
 ];
 
@@ -3000,6 +3722,38 @@ export const LIGHTING_SETUPS: LightingSetup[] = [
     timeOfDay: "Environnement contrôlé",
     characteristics: "Éclairage professionnel contrôlé, précision technique, résultat prévisible",
     mood: "Professionnel, précis, contrôlé, commercial"
+  },
+
+  // ========== ÉCLAIRAGES SAISONNIERS (5 nouveaux) ==========
+  {
+    name: "Spring Fresh Light",
+    timeOfDay: "Lumière printanière variable",
+    characteristics: "Lumière douce renaissance, éclat naturel renouvelé, fraîcheur saisonnière, verdure naissante illuminée, clarté cristalline après pluie, renouveau lumineux",
+    mood: "Renouveau, fraîcheur, optimisme printanier, croissance, éveil de la nature, espoir nouveau"
+  },
+  {
+    name: "Summer Bright Radiance",
+    timeOfDay: "Éclat estival maximal",
+    characteristics: "Éclat maximal solaire, énergie lumineuse intense, vitalité rayonnante, chaleur dorée enveloppante, luminosité éclatante, puissance solaire",
+    mood: "Éclat maximal, énergie débordante, vitalité estivale, joie solaire, liberté lumineuse, bonheur radieux"
+  },
+  {
+    name: "Autumn Warm Glow",
+    timeOfDay: "Chaleur automnale dorée",
+    characteristics: "Chaleur dorée nostalgique, éclat cuivré des feuillages, lumière ambrée transition, douceur mélancolique, richesse chromatique automnale, lumière harvest",
+    mood: "Chaleur nostalgique, transition douce, nostalgie dorée, richesse saisonnière, mélancolie belle, récolte lumineuse"
+  },
+  {
+    name: "Winter Cozy Soft",
+    timeOfDay: "Douceur hivernale feutrée",
+    characteristics: "Douceur feutrée intimiste, éclairage cocon chaleureux, lumière tamisée réconfortante, ambiance hygge hivernale, chaleur intérieure contrastant froid extérieur",
+    mood: "Douceur feutrée, intimité hivernale, réconfort lumineux, cocon chaleureux, sérénité froide, refuge lumineux"
+  },
+  {
+    name: "Holiday Festive Sparkle",
+    timeOfDay: "Éclat festif célébration",
+    characteristics: "Éclat festif scintillant, magie célébration lumineuse, brillance joyeuse, illuminations festives, sparkle magique, lumière de fête enchantée",
+    mood: "Éclat festif, magie célébration, sparkle joyeux, enchantement lumineux, fête scintillante, joie illuminée"
   }
 ];
 
@@ -3009,174 +3763,237 @@ export const LIGHTING_SETUPS: LightingSetup[] = [
 
 /**
  * Mapping des secteurs vers les catégories photographiques pertinentes
- * 🎯 DISPATCH SECTORIEL ÉLARGI - VERSION OPTIMISÉE POUR DIVERSITÉ MAXIMALE
+ * 🎯 VERSION CANNES LIONS "NO LIMITS" - CRÉATIVITÉ MAXIMALE RÉALISTE
  * 
- * Chaque secteur dispose maintenant de 8-12 catégories (au lieu de 3-6)
- * pour garantir une diversité créative exceptionnelle tout en maintenant la pertinence.
+ * Chaque secteur dispose de 15-20 catégories pour une diversité créative exceptionnelle
+ * tout en restant applicable à TOUTES les catégories d'entreprises.
+ * Approche "cross-pollination" inspirée des campagnes primées Cannes Lions.
  */
 export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
-  // ========== ALIMENTAIRE & BOISSONS (12 catégories - était 6) ==========
+  // ========== ALIMENTAIRE & BOISSONS (18 catégories - CRÉATIVITÉ RÉALISTE UNIVERSELLE) ==========
   'food': ['food', 'beverage', 'lifestyle', 'minimal', 'luxury', 'studio', 
-           'nature', 'documentary', 'action', 'editorial', 'cinematic', 'beauty'],
+           'nature', 'documentary', 'action', 'editorial', 'cinematic', 'beauty',
+           'fashion', 'experimental', 'conceptual', 'digital', 'artisanat', 'healthcare'],
   'dairy': ['food', 'studio', 'lifestyle', 'minimal', 'luxury', 'nature', 
-            'beauty', 'documentary', 'editorial', 'action'],
+            'beauty', 'documentary', 'editorial', 'action', 'fashion', 'experimental',
+            'conceptual', 'artisanat', 'healthcare'],
   'beverage': ['beverage', 'food', 'lifestyle', 'minimal', 'luxury', 'studio', 
-               'action', 'nature', 'documentary', 'cinematic', 'editorial', 'beauty'],
+               'action', 'nature', 'documentary', 'cinematic', 'editorial', 'beauty',
+               'fashion', 'experimental', 'conceptual', 'digital', 'ai_tech', 'healthcare'],
   
-  // ========== BEAUTÉ & COSMÉTIQUE (10 catégories - était 4) ==========
+  // ========== BEAUTÉ & COSMÉTIQUE (16 catégories - FUSION CRÉATIVE) ==========
   'cosmetic': ['beauty', 'cosmetic', 'luxury', 'lifestyle', 'minimal', 'studio', 
-               'editorial', 'cinematic', 'nature', 'experimental'],
+               'editorial', 'cinematic', 'nature', 'experimental', 'fashion', 'food',
+               'digital', 'ai_tech', 'conceptual', 'artisanat'],
   'beauty': ['beauty', 'cosmetic', 'luxury', 'lifestyle', 'minimal', 'studio', 
-             'editorial', 'documentary', 'nature', 'action'],
+             'editorial', 'documentary', 'nature', 'action', 'fashion', 'food',
+             'experimental', 'conceptual', 'digital', 'telehealth'],
   
-  // ========== MODE & LIFESTYLE (11 catégories - était 3) ==========
+  // ========== MODE & LIFESTYLE (17 catégories - CROSS-POLLINATION MAXIMALE) ==========
   'fashion': ['fashion', 'lifestyle', 'editorial', 'luxury', 'beauty', 'minimal', 
-              'documentary', 'cinematic', 'studio', 'conceptual', 'experimental'],
+              'documentary', 'cinematic', 'studio', 'conceptual', 'experimental',
+              'food', 'digital', 'ai_tech', 'crypto', 'artisanat', 'nature'],
   'lifestyle': ['lifestyle', 'fashion', 'minimal', 'nature', 'documentary', 
-                'editorial', 'beauty', 'luxury', 'cinematic', 'studio'],
+                'editorial', 'beauty', 'luxury', 'cinematic', 'studio', 'food',
+                'experimental', 'conceptual', 'digital', 'telehealth', 'artisanat'],
   
-  // ========== TECHNOLOGIE (9 catégories - était 3) ==========
+  // ========== TECHNOLOGIE (16 catégories - INNOVATION CRÉATIVE) ==========
   'technology': ['minimal', 'studio', 'lifestyle', 'ai_tech', 'digital', 
-                 'experimental', 'conceptual', 'cinematic', 'editorial'],
+                 'experimental', 'conceptual', 'cinematic', 'editorial', 'fashion',
+                 'beauty', 'luxury', 'nature', 'crypto', 'food', 'artisanat'],
   'tech': ['minimal', 'studio', 'lifestyle', 'ai_tech', 'digital', 
-           'experimental', 'conceptual', 'documentary', 'cinematic'],
+           'experimental', 'conceptual', 'documentary', 'cinematic', 'fashion',
+           'beauty', 'luxury', 'nature', 'crypto', 'food', 'artisanat'],
   
-  // ========== LUXE (8 catégories - était 3) ==========
+  // ========== LUXE (15 catégories - SOPHISTICATION CRÉATIVE) ==========
   'luxury': ['luxury', 'editorial', 'lifestyle', 'beauty', 'fashion', 
-             'cinematic', 'minimal', 'studio'],
+             'cinematic', 'minimal', 'studio', 'food', 'experimental',
+             'conceptual', 'artisanat', 'nature', 'digital', 'automobile'],
   
-  // ========== AUTOMOBILE (8 catégories - était 2) ==========
+  // ========== AUTOMOBILE (16 catégories - DYNAMISME CRÉATIF) ==========
   'automobile': ['automobile', 'luxury', 'lifestyle', 'cinematic', 'action', 
-                 'documentary', 'minimal', 'studio'],
+                 'documentary', 'minimal', 'studio', 'fashion', 'experimental',
+                 'conceptual', 'digital', 'ai_tech', 'nature', 'beauty', 'editorial'],
   'automotive': ['automobile', 'luxury', 'lifestyle', 'cinematic', 'action', 
-                 'documentary', 'editorial', 'studio'],
+                 'documentary', 'editorial', 'studio', 'fashion', 'experimental',
+                 'conceptual', 'digital', 'ai_tech', 'nature', 'beauty', 'minimal'],
   
-  // ========== FINANCE & BANQUE (8 catégories - était 3) ==========
+  // ========== FINANCE & BANQUE (17 catégories - INNOVATION FINANCIÈRE) ==========
   'finance': ['finance', 'minimal', 'studio', 'lifestyle', 'documentary', 
-              'editorial', 'luxury', 'cinematic'],
+              'editorial', 'luxury', 'cinematic', 'ai_tech', 'digital', 'crypto',
+              'experimental', 'conceptual', 'fashion', 'beauty', 'nature', 'food'],
   'banking': ['finance', 'minimal', 'studio', 'lifestyle', 'documentary', 
-              'luxury', 'editorial', 'cinematic'],
+              'luxury', 'editorial', 'cinematic', 'ai_tech', 'digital', 'crypto',
+              'experimental', 'conceptual', 'fashion', 'beauty', 'nature'],
   'fintech': ['finance', 'minimal', 'ai_tech', 'digital', 'lifestyle', 
-              'studio', 'experimental', 'editorial'],
+              'studio', 'experimental', 'editorial', 'crypto', 'conceptual',
+              'fashion', 'beauty', 'luxury', 'cinematic', 'nature', 'food'],
   
-  // ========== SANTÉ (9 catégories - était 3) ==========
+  // ========== SANTÉ (16 catégories - BIEN-ÊTRE HOLISTIQUE) ==========
   'health': ['healthcare', 'minimal', 'telehealth', 'lifestyle', 'nature', 
-             'documentary', 'beauty', 'studio', 'editorial'],
+             'documentary', 'beauty', 'studio', 'editorial', 'food', 'luxury',
+             'fashion', 'experimental', 'conceptual', 'digital', 'ai_tech'],
   'healthcare': ['healthcare', 'minimal', 'telehealth', 'lifestyle', 'nature', 
-                 'documentary', 'studio', 'beauty', 'editorial'],
+                 'documentary', 'studio', 'beauty', 'editorial', 'food', 'luxury',
+                 'fashion', 'experimental', 'conceptual', 'digital', 'ai_tech'],
   'medical': ['healthcare', 'minimal', 'telehealth', 'studio', 'documentary', 
-              'lifestyle', 'nature', 'editorial', 'beauty'],
+              'lifestyle', 'nature', 'editorial', 'beauty', 'food', 'luxury',
+              'experimental', 'conceptual', 'digital', 'ai_tech', 'fashion'],
   'telehealth': ['telehealth', 'healthcare', 'minimal', 'lifestyle', 'nature', 
-                 'documentary', 'studio', 'beauty', 'editorial'],
+                 'documentary', 'studio', 'beauty', 'editorial', 'food', 'luxury',
+                 'fashion', 'experimental', 'conceptual', 'digital', 'ai_tech'],
   
-  // ========== ÉDUCATION (9 catégories - était 3) ==========
+  // ========== ÉDUCATION (16 catégories - APPRENTISSAGE CRÉATIF) ==========
   'education': ['education', 'lifestyle', 'minimal', 'documentary', 'editorial', 
-                'studio', 'nature', 'beauty', 'cinematic'],
+                'studio', 'nature', 'beauty', 'cinematic', 'ai_tech', 'digital',
+                'experimental', 'conceptual', 'fashion', 'food', 'artisanat'],
   'learning': ['education', 'lifestyle', 'minimal', 'documentary', 'editorial', 
-               'studio', 'nature', 'beauty', 'cinematic'],
+               'studio', 'nature', 'beauty', 'cinematic', 'ai_tech', 'digital',
+               'experimental', 'conceptual', 'fashion', 'food', 'artisanat'],
   
-  // ========== AGRICULTURE (9 catégories - était 3) ==========
+  // ========== AGRICULTURE (16 catégories - NATURE CRÉATIVE) ==========
   'agriculture': ['agriculture', 'food', 'lifestyle', 'nature', 'documentary', 
-                  'editorial', 'minimal', 'studio', 'cinematic'],
+                  'editorial', 'minimal', 'studio', 'cinematic', 'artisanat',
+                  'beauty', 'luxury', 'experimental', 'conceptual', 'fashion', 'telehealth'],
   'farming': ['agriculture', 'food', 'lifestyle', 'nature', 'documentary', 
-              'editorial', 'minimal', 'studio', 'cinematic'],
+              'editorial', 'minimal', 'studio', 'cinematic', 'artisanat',
+              'beauty', 'luxury', 'experimental', 'conceptual', 'fashion', 'telehealth'],
   
-  // ========== ARTISANAT (9 catégories - était 2) ==========
+  // ========== ARTISANAT (16 catégories - SAVOIR-FAIRE CRÉATIF) ==========
   'craft': ['artisanat', 'lifestyle', 'documentary', 'editorial', 'luxury', 
-            'minimal', 'studio', 'nature', 'conceptual'],
+            'minimal', 'studio', 'nature', 'conceptual', 'food', 'beauty',
+            'fashion', 'experimental', 'cinematic', 'digital', 'ai_tech'],
   'artisanat': ['artisanat', 'lifestyle', 'documentary', 'editorial', 'luxury', 
-                'minimal', 'studio', 'nature', 'conceptual'],
+                'minimal', 'studio', 'nature', 'conceptual', 'food', 'beauty',
+                'fashion', 'experimental', 'cinematic', 'digital', 'ai_tech'],
   'handmade': ['artisanat', 'lifestyle', 'documentary', 'editorial', 'luxury', 
-               'minimal', 'studio', 'nature', 'conceptual'],
+               'minimal', 'studio', 'nature', 'conceptual', 'food', 'beauty',
+               'fashion', 'experimental', 'cinematic', 'digital', 'ai_tech'],
   
-  // ========== BIENS DE CONSOMMATION (10 catégories - était 4) ==========
+  // ========== BIENS DE CONSOMMATION (17 catégories - CONSOMMATION CRÉATIVE) ==========
   'consumer-goods': ['consumer_goods', 'studio', 'lifestyle', 'minimal', 'beauty', 
-                     'documentary', 'editorial', 'luxury', 'nature', 'action'],
+                     'documentary', 'editorial', 'luxury', 'nature', 'action', 'food',
+                     'fashion', 'experimental', 'conceptual', 'digital', 'cinematic', 'artisanat'],
   'retail': ['consumer_goods', 'studio', 'lifestyle', 'minimal', 'beauty', 
-             'documentary', 'editorial', 'luxury', 'nature', 'action'],
+             'documentary', 'editorial', 'luxury', 'nature', 'action', 'food',
+             'fashion', 'experimental', 'conceptual', 'digital', 'cinematic', 'artisanat'],
   
-  // ========== COMMUNICATION & MÉDIAS (10 catégories - était 4) ==========
+  // ========== COMMUNICATION & MÉDIAS (18 catégories - CRÉATIVITÉ MÉDIATIQUE) ==========
   'media': ['media', 'minimal', 'lifestyle', 'studio', 'documentary', 
-            'editorial', 'cinematic', 'digital', 'experimental', 'conceptual'],
+            'editorial', 'cinematic', 'digital', 'experimental', 'conceptual',
+            'fashion', 'beauty', 'luxury', 'food', 'ai_tech', 'crypto', 'nature', 'artisanat'],
   'communication': ['media', 'minimal', 'lifestyle', 'studio', 'documentary', 
-                    'editorial', 'cinematic', 'digital', 'experimental', 'conceptual'],
+                    'editorial', 'cinematic', 'digital', 'experimental', 'conceptual',
+                    'fashion', 'beauty', 'luxury', 'food', 'ai_tech', 'crypto', 'nature', 'artisanat'],
   'advertising': ['media', 'minimal', 'lifestyle', 'studio', 'documentary', 
-                  'editorial', 'cinematic', 'digital', 'experimental', 'conceptual'],
+                  'editorial', 'cinematic', 'digital', 'experimental', 'conceptual',
+                  'fashion', 'beauty', 'luxury', 'food', 'ai_tech', 'crypto', 'nature', 'artisanat'],
   
-  // ========== INDUSTRIE MANUFACTURIÈRE (9 catégories - était 3) ==========
+  // ========== INDUSTRIE MANUFACTURIÈRE (16 catégories - INDUSTRIE CRÉATIVE) ==========
   'manufacturing': ['manufacturing', 'studio', 'minimal', 'documentary', 
-                    'editorial', 'lifestyle', 'cinematic', 'conceptual', 'action'],
+                    'editorial', 'lifestyle', 'cinematic', 'conceptual', 'action',
+                    'ai_tech', 'digital', 'experimental', 'luxury', 'nature', 'artisanat', 'fashion'],
   'industry': ['manufacturing', 'studio', 'minimal', 'documentary', 
-               'editorial', 'lifestyle', 'cinematic', 'conceptual', 'action'],
+               'editorial', 'lifestyle', 'cinematic', 'conceptual', 'action',
+               'ai_tech', 'digital', 'experimental', 'luxury', 'nature', 'artisanat', 'fashion'],
   'industrial': ['manufacturing', 'studio', 'minimal', 'documentary', 
-                 'editorial', 'lifestyle', 'cinematic', 'conceptual', 'action'],
+                 'editorial', 'lifestyle', 'cinematic', 'conceptual', 'action',
+                 'ai_tech', 'digital', 'experimental', 'luxury', 'nature', 'artisanat', 'fashion'],
   
-  // ========== IMMOBILIER & ARCHITECTURE (10 catégories - était 3) ==========
+  // ========== IMMOBILIER & ARCHITECTURE (17 catégories - HABITAT CRÉATIF) ==========
   'real-estate': ['real_estate', 'lifestyle', 'luxury', 'minimal', 'documentary', 
-                  'editorial', 'cinematic', 'nature', 'studio', 'conceptual'],
+                  'editorial', 'cinematic', 'nature', 'studio', 'conceptual', 'fashion',
+                  'beauty', 'food', 'experimental', 'digital', 'ai_tech', 'artisanat'],
   'realestate': ['real_estate', 'lifestyle', 'luxury', 'minimal', 'documentary', 
-                 'editorial', 'cinematic', 'nature', 'studio', 'conceptual'],
+                 'editorial', 'cinematic', 'nature', 'studio', 'conceptual', 'fashion',
+                 'beauty', 'food', 'experimental', 'digital', 'ai_tech', 'artisanat'],
   'architecture': ['real_estate', 'lifestyle', 'luxury', 'minimal', 'editorial', 
-                   'cinematic', 'documentary', 'conceptual', 'experimental', 'studio'],
+                   'cinematic', 'documentary', 'conceptual', 'experimental', 'studio',
+                   'fashion', 'beauty', 'food', 'digital', 'ai_tech', 'nature', 'artisanat'],
   'property': ['real_estate', 'lifestyle', 'luxury', 'minimal', 'documentary', 
-               'editorial', 'cinematic', 'nature', 'studio', 'conceptual'],
+               'editorial', 'cinematic', 'nature', 'studio', 'conceptual', 'fashion',
+               'beauty', 'food', 'experimental', 'digital', 'ai_tech', 'artisanat'],
   
-  // ========== ÉNERGIE & ENVIRONNEMENT (9 catégories - était 4) ==========
+  // ========== ÉNERGIE & ENVIRONNEMENT (16 catégories - DURABILITÉ CRÉATIVE) ==========
   'energy': ['energy', 'lifestyle', 'minimal', 'nature', 'documentary', 
-             'editorial', 'cinematic', 'conceptual', 'experimental'],
+             'editorial', 'cinematic', 'conceptual', 'experimental', 'ai_tech',
+             'digital', 'luxury', 'fashion', 'beauty', 'food', 'artisanat'],
   'renewable': ['energy', 'lifestyle', 'minimal', 'nature', 'documentary', 
-                'editorial', 'cinematic', 'conceptual', 'experimental'],
+                'editorial', 'cinematic', 'conceptual', 'experimental', 'ai_tech',
+                'digital', 'luxury', 'fashion', 'beauty', 'food', 'artisanat'],
   'environment': ['energy', 'lifestyle', 'minimal', 'nature', 'documentary', 
-                  'editorial', 'cinematic', 'conceptual', 'experimental'],
+                  'editorial', 'cinematic', 'conceptual', 'experimental', 'ai_tech',
+                  'digital', 'luxury', 'fashion', 'beauty', 'food', 'artisanat'],
   'sustainability': ['energy', 'lifestyle', 'minimal', 'nature', 'documentary', 
-                     'beauty', 'editorial', 'conceptual', 'experimental'],
+                     'beauty', 'editorial', 'conceptual', 'experimental', 'ai_tech',
+                     'digital', 'luxury', 'fashion', 'food', 'artisanat'],
   
-  // ========== WEB3 & CRYPTO (8 catégories - était 3) ==========
+  // ========== WEB3 & CRYPTO (16 catégories - FUTUR CRÉATIF) ==========
   'crypto': ['crypto', 'ai_tech', 'minimal', 'digital', 'experimental', 
-             'conceptual', 'cinematic', 'lifestyle'],
+             'conceptual', 'cinematic', 'lifestyle', 'luxury', 'fashion',
+             'beauty', 'food', 'nature', 'editorial', 'studio', 'artisanat'],
   'blockchain': ['crypto', 'ai_tech', 'minimal', 'digital', 'experimental', 
-                 'conceptual', 'cinematic', 'lifestyle'],
+                 'conceptual', 'cinematic', 'lifestyle', 'luxury', 'fashion',
+                 'beauty', 'food', 'nature', 'editorial', 'studio', 'artisanat'],
   'web3': ['crypto', 'ai_tech', 'minimal', 'digital', 'experimental', 
-           'conceptual', 'cinematic', 'lifestyle'],
+           'conceptual', 'cinematic', 'lifestyle', 'luxury', 'fashion',
+           'beauty', 'food', 'nature', 'editorial', 'studio', 'artisanat'],
   'nft': ['crypto', 'ai_tech', 'minimal', 'digital', 'experimental', 
-          'conceptual', 'cinematic', 'lifestyle'],
+          'conceptual', 'cinematic', 'lifestyle', 'luxury', 'fashion',
+          'beauty', 'food', 'nature', 'editorial', 'studio', 'artisanat'],
   
-  // ========== INTELLIGENCE ARTIFICIELLE (9 catégories - était 3) ==========
+  // ========== INTELLIGENCE ARTIFICIELLE (17 catégories - IA CRÉATIVE) ==========
   'ai': ['ai_tech', 'minimal', 'studio', 'digital', 'experimental', 
-         'conceptual', 'cinematic', 'lifestyle', 'editorial'],
+         'conceptual', 'cinematic', 'lifestyle', 'editorial', 'luxury',
+         'fashion', 'beauty', 'food', 'nature', 'crypto', 'artisanat', 'healthcare'],
   'artificial-intelligence': ['ai_tech', 'minimal', 'studio', 'digital', 'experimental', 
-                              'conceptual', 'cinematic', 'lifestyle', 'editorial'],
+                              'conceptual', 'cinematic', 'lifestyle', 'editorial', 'luxury',
+                              'fashion', 'beauty', 'food', 'nature', 'crypto', 'artisanat', 'healthcare'],
   'machine-learning': ['ai_tech', 'minimal', 'studio', 'digital', 'experimental', 
-                       'conceptual', 'cinematic', 'lifestyle', 'editorial'],
+                       'conceptual', 'cinematic', 'lifestyle', 'editorial', 'luxury',
+                       'fashion', 'beauty', 'food', 'nature', 'crypto', 'artisanat', 'healthcare'],
   'robotics': ['ai_tech', 'minimal', 'studio', 'digital', 'experimental', 
-               'conceptual', 'cinematic', 'lifestyle', 'editorial'],
+               'conceptual', 'cinematic', 'lifestyle', 'editorial', 'luxury',
+               'fashion', 'beauty', 'food', 'nature', 'crypto', 'artisanat', 'healthcare'],
   
-  // ========== TRANSPORT & LOGISTIQUE (9 catégories - était 4) ==========
+  // ========== TRANSPORT & LOGISTIQUE (16 catégories - MOBILITÉ CRÉATIVE) ==========
   'transport': ['transport', 'lifestyle', 'minimal', 'documentary', 'action', 
-                'cinematic', 'editorial', 'studio', 'conceptual'],
-  'logistics': ['transport', 'lifestyle', 'minimal', 'documentary', 'action', 
-                'cinematic', 'editorial', 'studio', 'conceptual'],
-  'shipping': ['transport', 'lifestyle', 'minimal', 'documentary', 'action', 
-               'cinematic', 'editorial', 'studio', 'conceptual'],
-  'delivery': ['transport', 'lifestyle', 'minimal', 'documentary', 'action', 
-               'cinematic', 'editorial', 'studio', 'conceptual'],
-  
-  // ========== FALLBACK GÉNÉRIQUE ÉLARGI (10 catégories - était 3) ==========
-  'default': ['lifestyle', 'minimal', 'studio', 'documentary', 'editorial', 
-              'nature', 'beauty', 'cinematic', 'luxury', 'conceptual']
+                'cinematic', 'editorial', 'studio', 'conceptual', 'ai_tech',
+                'digital', 'luxury', 'fashion', 'beauty', 'food', 'artisanat'],
+
+  'default': ['lifestyle', 'minimal', 'studio', 'documentary', 'editorial',
+              'nature', 'beauty', 'cinematic', 'luxury', 'conceptual', 'fashion', 'action']
 };
 
 /**
  * Mapping des occasions d'usage vers les contextes visuels pertinents
- * ENRICHI MASSIVEMENT avec les 100 contextes disponibles pour MAXIMISER LA DIVERSITÉ
+ * 🎯 VERSION ULTRA-ENRICHIE - 50+ nouvelles clés pour diversité maximale
+ * Chaque clé dispose maintenant de 6-8 contextes (au lieu de 3-4) pour éviter la répétition
  */
 export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
-  // ========== MOMENTS ALIMENTAIRES ==========
-  'breakfast': ['Modern Kitchen Bright', 'Cozy Home Comfort', 'Family Kitchen Busy', 'Home Office Remote Work', 'Scandinavian Hygge Cozy', 'Parisian Café Classic'],
-  'lunch': ['Modern Kitchen Bright', 'Business Lunch Restaurant', 'Outdoor Nature Setting', 'Coworking Space Collaborative', 'Parisian Café Classic', 'Mediterranean Villa Luxury'],
-  'dinner': ['Cozy Home Comfort', 'Luxury Hotel Suite', 'Rustic Countryside', 'Family Kitchen Busy', 'Mediterranean Villa Luxury', 'Parisian Café Classic'],
-  'snack': ['Modern Kitchen Bright', 'Outdoor Nature Setting', 'Street Urban Authentic', 'Convenience Store 24/7', 'Coworking Space Collaborative', 'Urban Loft Industrial'],
-  'dessert': ['Cozy Home Comfort', 'Parisian Café Classic', 'Luxury Hotel Suite', 'Birthday Party Celebration', 'Mediterranean Villa Luxury', 'Wedding Reception Elegant'],
+  // ========== MOMENTS ALIMENTAIRES ENRICHIS ==========
+  'breakfast': ['Modern Kitchen Bright', 'Cozy Home Comfort', 'Family Kitchen Busy', 'Home Office Remote Work', 'Scandinavian Hygge Cozy', 'Parisian Café Classic', 'Morning Skincare Ritual Zen', 'Sunday Morning Slow'],
+  'lunch': ['Modern Kitchen Bright', 'Business Lunch Restaurant', 'Outdoor Nature Setting', 'Coworking Space Collaborative', 'Parisian Café Classic', 'Mediterranean Villa Luxury', 'Lunch Break Office Escape', 'Market Stall Authentic'],
+  'dinner': ['Cozy Home Comfort', 'Luxury Hotel Suite', 'Rustic Countryside', 'Family Kitchen Busy', 'Mediterranean Villa Luxury', 'Parisian Café Classic', 'Evening Wind-Down Ritual', 'Wedding Reception Elegant'],
+  'snack': ['Modern Kitchen Bright', 'Outdoor Nature Setting', 'Street Urban Authentic', 'Convenience Store 24/7', 'Coworking Space Collaborative', 'Urban Loft Industrial', 'Gaming Room RGB', 'Student Dorm Campus'],
+  'dessert': ['Cozy Home Comfort', 'Parisian Café Classic', 'Luxury Hotel Suite', 'Birthday Party Celebration', 'Mediterranean Villa Luxury', 'Wedding Reception Elegant', 'Christmas Holiday Festive', 'Award Ceremony Prestige'],
+  
+  // ========== NOUVEAUX MOMENTS ALIMENTAIRES SPÉCIFIQUES (15 nouvelles clés) ==========
+  'brunch': ['Parisian Café Classic', 'Mediterranean Villa Luxury', 'Scandinavian Hygge Cozy', 'Sunday Morning Slow', 'Cozy Home Comfort', 'New York Rooftop Urban', 'Luxury Hotel Suite', 'Botanical Garden Natural'],
+  'picnic': ['Outdoor Nature Setting', 'Beach Sunset Romance', 'Botanical Garden Natural', 'Summer Beach Vacation', 'Forest Enchanted Magical', 'Mountain Peak Achievement', 'Family Kitchen Busy', 'Spring Renewal Fresh'],
+  'barbecue': ['Outdoor Nature Setting', 'Summer Beach Vacation', 'Family Kitchen Busy', 'Brazilian Carnival Energy', 'Rustic Countryside', 'Beach Sunset Romance', 'Music Festival Outdoor', 'Shared Apartment Roommates'],
+  'midnight-snack': ['Cozy Home Comfort', 'Late Night Study Grind', 'Gaming Room RGB', 'Student Dorm Campus', 'Home Office Remote Work', 'Urban Loft Industrial', 'Teenager Bedroom Personal', 'Convenience Store 24/7'],
+  'comfort-food': ['Cozy Home Comfort', 'Family Kitchen Busy', 'Scandinavian Hygge Cozy', 'Rustic Countryside', 'Christmas Holiday Festive', 'Autumn Harvest Cozy', 'Baby Nursery Tender', 'Senior Living Comfort'],
+  'gourmet-dining': ['Luxury Hotel Suite', 'Mediterranean Villa Luxury', 'Award Ceremony Prestige', 'Business Lunch Restaurant', 'Parisian Café Classic', 'Wedding Reception Elegant', 'Charity Gala Fundraising', 'New York Rooftop Urban'],
+  'street-food': ['Street Urban Authentic', 'Market Stall Authentic', 'Brazilian Carnival Energy', 'Indian Bazaar Colorful', 'Moroccan Souk Vibrant', 'Tokyo Neon Cyberpunk', 'Music Festival Outdoor', 'African Savanna Wild'],
+  'healthy-eating': ['Spa Wellness Zen', 'Botanical Garden Natural', 'Yoga Lifestyle Flow', 'Sustainable Eco-Home', 'Modern Office Workspace', 'Biophilic Design Nature-Tech', 'Zero-Waste Lifestyle', 'Sports Stadium Energy'],
+  'meal-prep': ['Modern Kitchen Bright', 'Home Office Remote Work', 'Sustainable Eco-Home', 'Minimalist Apartment Urban', 'Zero-Waste Lifestyle', 'Modern Office Workspace', 'Coworking Space Collaborative', 'Family Kitchen Busy'],
+  'fine-dining': ['Luxury Hotel Suite', 'Mediterranean Villa Luxury', 'Award Ceremony Prestige', 'Wedding Reception Elegant', 'Business Lunch Restaurant', 'Charity Gala Fundraising', 'Gallery Opening Vernissage', 'Corporate Event Networking'],
+  'fast-food': ['Street Urban Authentic', 'Convenience Store 24/7', 'Drive-Through Fast Service', 'Gaming Room RGB', 'Student Dorm Campus', 'Urban Loft Industrial', 'Morning Commute Urban', 'Late Night Study Grind'],
+  'family-meal': ['Family Kitchen Busy', 'Cozy Home Comfort', 'Christmas Holiday Festive', 'Birthday Party Celebration', 'Sunday Morning Slow', 'Thanksgiving Family Gathering', 'Rustic Countryside', 'Mediterranean Villa Luxury'],
+  'romantic-dinner': ['Beach Sunset Romance', 'Luxury Hotel Suite', 'Parisian Café Classic', 'Mediterranean Villa Luxury', 'Valentine\'s Day Romantic', 'Wedding Reception Elegant', 'New York Rooftop Urban', 'Candlelit Intimate Setting'],
+  'business-lunch': ['Business Lunch Restaurant', 'Corporate Boardroom Executive', 'Luxury Hotel Suite', 'Airport Business Lounge', 'Conference Center Professional', 'Modern Office Workspace', 'Hotel Conference Room', 'New York Rooftop Urban'],
+  'celebration-feast': ['Birthday Party Celebration', 'Wedding Reception Elegant', 'Christmas Holiday Festive', 'Award Ceremony Prestige', 'Brazilian Carnival Energy', 'New Year\'s Eve Celebration', 'Charity Gala Fundraising', 'Music Festival Outdoor'],
   
   // ========== BOISSONS - JUS & SMOOTHIES (ENRICHI MASSIVEMENT) ==========
   'juice': ['Beach Sunset Romance', 'Botanical Garden Natural', 'Brazilian Carnival Energy', 'African Savanna Wild', 'Tokyo Neon Cyberpunk', 'New York Rooftop Urban', 'Summer Beach Vacation', 'Outdoor Nature Setting', 'Market Stall Authentic', 'Spa Wellness Zen', 'Modern Kitchen Bright', 'Cozy Home Comfort', 'Urban Loft Industrial', 'Mediterranean Villa Luxury', 'Parisian Café Classic', 'Scandinavian Hygge Cozy', 'Music Festival Outdoor', 'Sports Stadium Energy', 'Yoga Lifestyle Flow', 'Minimalist Studio White'],
@@ -3186,13 +4003,13 @@ export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
   'fruit-juice': ['Botanical Garden Natural', 'Summer Beach Vacation', 'Brazilian Carnival Energy', 'Market Stall Authentic', 'Beach Sunset Romance', 'Outdoor Nature Setting', 'Indian Bazaar Colorful'],
   'vegetable-juice': ['Sustainable Eco-Home', 'Market Stall Authentic', 'Botanical Garden Natural', 'Modern Kitchen Bright', 'Zero-Waste Lifestyle', 'Biophilic Design Nature-Tech'],
   
-  // ========== BOISSONS CHAUDES ==========
-  'coffee': ['Parisian Café Classic', 'Coworking Space Collaborative', 'Home Office Remote Work', 'Scandinavian Hygge Cozy', 'Modern Office Workspace', 'Airport Business Lounge', 'Urban Loft Industrial', 'New York Rooftop Urban'],
-  'espresso': ['Parisian Café Classic', 'Urban Loft Industrial', 'Modern Office Workspace', 'New York Rooftop Urban', 'Coworking Space Collaborative', 'Business Lunch Restaurant'],
-  'cappuccino': ['Parisian Café Classic', 'Scandinavian Hygge Cozy', 'Cozy Home Comfort', 'Coworking Space Collaborative', 'Mediterranean Villa Luxury', 'Urban Loft Industrial'],
+  // ========== BOISSONS CHAUDES (RÉALISTE POUR TOUTES ENTREPRISES) ==========
+  'coffee': ['Parisian Café Classic', 'Coworking Space Collaborative', 'Home Office Remote Work', 'Scandinavian Hygge Cozy', 'Modern Office Workspace', 'Airport Business Lounge', 'Urban Loft Industrial', 'Business Lunch Restaurant'],
+  'espresso': ['Parisian Café Classic', 'Urban Loft Industrial', 'Modern Office Workspace', 'Business Lunch Restaurant', 'Coworking Space Collaborative', 'Airport Business Lounge'],
+  'cappuccino': ['Parisian Café Classic', 'Scandinavian Hygge Cozy', 'Cozy Home Comfort', 'Coworking Space Collaborative', 'Modern Office Workspace', 'Urban Loft Industrial'],
   'latte': ['Parisian Café Classic', 'Coworking Space Collaborative', 'Modern Office Workspace', 'Scandinavian Hygge Cozy', 'Urban Loft Industrial', 'Home Office Remote Work'],
-  'tea': ['Japanese Temple Zen', 'Spa Wellness Zen', 'Cozy Home Comfort', 'Botanical Garden Natural', 'Scandinavian Hygge Cozy', 'Parisian Café Classic', 'Moroccan Souk Vibrant', 'Indian Bazaar Colorful'],
-  'hot-chocolate': ['Cozy Home Comfort', 'Winter Sports Mountain', 'Christmas Holiday Festive', 'Scandinavian Hygge Cozy', 'Family Kitchen Busy', 'Mountain Peak Achievement'],
+  'tea': ['Cozy Home Comfort', 'Spa Wellness Zen', 'Botanical Garden Natural', 'Scandinavian Hygge Cozy', 'Parisian Café Classic', 'Modern Office Workspace', 'Home Office Remote Work', 'Business Lunch Restaurant'],
+  'hot-chocolate': ['Cozy Home Comfort', 'Christmas Holiday Festive', 'Scandinavian Hygge Cozy', 'Family Kitchen Busy', 'Winter Sports Mountain', 'Mountain Peak Achievement'],
   
   // ========== BOISSONS ALCOOLISÉES ==========
   'cocktail': ['New York Rooftop Urban', 'Luxury Hotel Suite', 'Beach Sunset Romance', 'Tokyo Neon Cyberpunk', 'Mediterranean Villa Luxury', 'Urban Loft Industrial', 'Music Festival Outdoor', 'Award Ceremony Prestige'],
@@ -3230,12 +4047,15 @@ export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
   'almond-milk': ['Sustainable Eco-Home', 'Botanical Garden Natural', 'Spa Wellness Zen', 'Modern Office Workspace', 'Yoga Lifestyle Flow', 'Biophilic Design Nature-Tech'],
   'oat-milk': ['Sustainable Eco-Home', 'Scandinavian Hygge Cozy', 'Modern Office Workspace', 'Cozy Home Comfort', 'Botanical Garden Natural', 'Zero-Waste Lifestyle'],
   
-  // ========== GLACES & DESSERTS GLACÉS ==========
-  'ice-cream': ['Beach Sunset Romance', 'Summer Beach Vacation', 'Family Kitchen Busy', 'Music Festival Outdoor', 'Birthday Party Celebration', 'Cozy Home Comfort', 'Street Urban Authentic'],
-  'gelato': ['Mediterranean Villa Luxury', 'Parisian Café Classic', 'Street Urban Authentic', 'Summer Beach Vacation', 'Beach Sunset Romance', 'Market Stall Authentic'],
-  'sorbet': ['Beach Sunset Romance', 'Botanical Garden Natural', 'Summer Beach Vacation', 'Spa Wellness Zen', 'Mediterranean Villa Luxury', 'Outdoor Nature Setting'],
-  'frozen-yogurt': ['Beach Sunset Romance', 'Summer Beach Vacation', 'Sports Stadium Energy', 'Spa Wellness Zen', 'Yoga Lifestyle Flow', 'Modern Office Workspace'],
-  'popsicle': ['Summer Beach Vacation', 'Beach Sunset Romance', 'Outdoor Nature Setting', 'Family Kitchen Busy', 'Birthday Party Celebration', 'Music Festival Outdoor'],
+  // ========== GLACES & DESSERTS GLACÉS - SECTION DÉDIÉE SÉPARÉE ==========
+  // ⚠️ IMPORTANT: Ces contextes sont EXCLUSIVEMENT pour les produits glacés
+  // Ne PAS utiliser pour les boissons (jus, smoothies, etc.)
+  'ice-cream': ['Beach Sunset Romance', 'Summer Beach Vacation', 'Family Kitchen Busy', 'Music Festival Outdoor', 'Birthday Party Celebration', 'Cozy Home Comfort', 'Street Urban Authentic', 'Childhood Memory Nostalgic', 'Retro Americana Nostalgia'],
+  'gelato': ['Mediterranean Villa Luxury', 'Parisian Café Classic', 'Street Urban Authentic', 'Summer Beach Vacation', 'Beach Sunset Romance', 'Market Stall Authentic', 'Italian Artisan Tradition', 'Rustic Countryside'],
+  'sorbet': ['Beach Sunset Romance', 'Botanical Garden Natural', 'Summer Beach Vacation', 'Spa Wellness Zen', 'Mediterranean Villa Luxury', 'Outdoor Nature Setting', 'Fresh Fruit Paradise', 'Healthy Indulgence'],
+  'frozen-yogurt': ['Beach Sunset Romance', 'Summer Beach Vacation', 'Sports Stadium Energy', 'Spa Wellness Zen', 'Yoga Lifestyle Flow', 'Modern Office Workspace', 'Health-Conscious Lifestyle'],
+  'popsicle': ['Summer Beach Vacation', 'Beach Sunset Romance', 'Outdoor Nature Setting', 'Family Kitchen Busy', 'Birthday Party Celebration', 'Music Festival Outdoor', 'Childhood Summer Joy'],
+  'frozen-dessert': ['Luxury Hotel Suite', 'Premium Indulgence', 'Sensual Chocolate Moment', 'Artisan Craft Workshop', 'Scientific Innovation Lab', 'Nostalgic Memory Lane'],
   
   // ========== MOMENTS DE CONSOMMATION SPÉCIFIQUES ==========
   'on-the-go': ['Street Urban Authentic', 'New York Rooftop Urban', 'Tokyo Neon Cyberpunk', 'Airport Business Lounge', 'Urban Loft Industrial', 'Convenience Store 24/7'],
@@ -3245,10 +4065,10 @@ export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
   'indulgence': ['Luxury Hotel Suite', 'Cozy Home Comfort', 'Parisian Café Classic', 'Mediterranean Villa Luxury', 'Scandinavian Hygge Cozy', 'Wedding Reception Elegant'],
   'healthy-snack': ['Spa Wellness Zen', 'Modern Office Workspace', 'Yoga Lifestyle Flow', 'Botanical Garden Natural', 'Home Office Remote Work', 'Coworking Space Collaborative'],
   
-  // ========== CONTEXTES URBAINS & MODERNES ==========
-  'urban': ['Tokyo Neon Cyberpunk', 'New York Rooftop Urban', 'Street Urban Authentic', 'Urban Loft Industrial', 'Business District Skyline', 'Tech Startup Garage'],
-  'modern': ['Modern Office Workspace', 'Tech Startup Garage', 'Fintech Office Modern', 'Minimalist Apartment Urban', 'Data Center Futuristic', 'Innovation Lab Cutting-Edge'],
-  'trendy': ['Pop-Up Store Trendy', 'TikTok House Gen-Z', 'Gaming Room RGB', 'Streaming Studio Setup', 'Tokyo Neon Cyberpunk', 'New York Rooftop Urban'],
+  // ========== CONTEXTES URBAINS & MODERNES (APPLICABLES À TOUS SECTEURS) ==========
+  'urban': ['Street Urban Authentic', 'Urban Loft Industrial', 'Business District Skyline', 'New York Rooftop Urban', 'Modern Office Workspace', 'Coworking Space Collaborative'],
+  'modern': ['Modern Office Workspace', 'Minimalist Apartment Urban', 'Urban Loft Industrial', 'Coworking Space Collaborative', 'Business District Skyline', 'Modern Kitchen Bright'],
+  'trendy': ['Pop-Up Store Trendy', 'Urban Loft Industrial', 'Modern Office Workspace', 'Coworking Space Collaborative', 'Street Urban Authentic', 'New York Rooftop Urban'],
   
   // ========== NATURE & AVENTURE ==========
   'nature': ['Botanical Garden Natural', 'Forest Enchanted Magical', 'Mountain Peak Achievement', 'African Savanna Wild', 'Outdoor Nature Setting', 'Beach Sunset Romance'],
@@ -3256,9 +4076,9 @@ export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
   'tropical': ['Brazilian Carnival Energy', 'Beach Sunset Romance', 'Botanical Garden Natural', 'Summer Beach Vacation', 'Mediterranean Villa Luxury', 'Indian Bazaar Colorful'],
   'jungle': ['Botanical Garden Natural', 'Brazilian Carnival Energy', 'African Savanna Wild', 'Forest Enchanted Magical', 'Outdoor Nature Setting'],
   
-  // ========== LUXE & PREMIUM ==========
-  'premium': ['Luxury Hotel Suite', 'Mediterranean Villa Luxury', 'New York Rooftop Urban', 'Award Ceremony Prestige', 'Department Store Luxury', 'Boutique Retail Chic'],
-  'exclusive': ['Luxury Hotel Suite', 'Award Ceremony Prestige', 'Gallery Opening Vernissage', 'Corporate Boardroom Executive', 'Charity Gala Fundraising', 'Wedding Reception Elegant'],
+  // ========== LUXE & PREMIUM (ACCESSIBLE À TOUS BUDGETS) ==========
+  'premium': ['Luxury Hotel Suite', 'Mediterranean Villa Luxury', 'New York Rooftop Urban', 'Boutique Retail Chic', 'Modern Office Workspace', 'Spa Wellness Zen'],
+  'exclusive': ['Luxury Hotel Suite', 'Mediterranean Villa Luxury', 'Boutique Retail Chic', 'Modern Office Workspace', 'Urban Loft Industrial', 'Parisian Café Classic'],
   
   // ========== SPORT & BIEN-ÊTRE ==========
   'sport': ['Outdoor Nature Setting', 'Sports Stadium Energy', 'Mountain Peak Achievement', 'Beach Sunset Romance', 'Winter Sports Mountain', 'Music Festival Outdoor'],
@@ -3337,15 +4157,15 @@ export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
   'music': ['Music Festival Outdoor', 'Recording Studio Creative', 'Theater Performance Arts', 'Brazilian Carnival Energy'],
   'fashion': ['Fashion Runway Backstage', 'Boutique Retail Chic', 'Pop-Up Store Trendy', 'New York Rooftop Urban'],
   
-  // ========== CONTEXTES TECHNOLOGIQUES ==========
-  'tech': ['Tech Startup Garage', 'Data Center Futuristic', 'Innovation Lab Cutting-Edge', 'Fintech Office Modern'],
-  'gaming': ['Gaming Room RGB', 'Streaming Studio Setup', 'TikTok House Gen-Z', 'Metaverse Digital World'],
-  'digital': ['Streaming Studio Setup', 'Online Shopping Studio', 'Metaverse Digital World', 'Tech Startup Garage'],
+  // ========== CONTEXTES TECHNOLOGIQUES (RÉALISTES POUR PME) ==========
+  'tech': ['Modern Office Workspace', 'Coworking Space Collaborative', 'Urban Loft Industrial', 'Home Office Remote Work'],
+  'gaming': ['Modern Office Workspace', 'Urban Loft Industrial', 'Coworking Space Collaborative', 'Home Office Remote Work'],
+  'digital': ['Modern Office Workspace', 'Home Office Remote Work', 'Coworking Space Collaborative', 'Urban Loft Industrial'],
   
-  // ========== CONTEXTES DURABLES ==========
-  'eco': ['Sustainable Eco-Home', 'Zero-Waste Lifestyle', 'Solar Punk Future', 'Biophilic Design Nature-Tech'],
-  'organic': ['Rustic Countryside', 'Market Stall Authentic', 'Botanical Garden Natural', 'Sustainable Eco-Home'],
-  'natural': ['Botanical Garden Natural', 'Forest Enchanted Magical', 'Outdoor Nature Setting', 'Beach Sunset Romance'],
+  // ========== CONTEXTES DURABLES (APPLICABLES À TOUS) ==========
+  'eco': ['Botanical Garden Natural', 'Outdoor Nature Setting', 'Modern Kitchen Bright', 'Spa Wellness Zen'],
+  'organic': ['Rustic Countryside', 'Market Stall Authentic', 'Botanical Garden Natural', 'Modern Kitchen Bright'],
+  'natural': ['Botanical Garden Natural', 'Outdoor Nature Setting', 'Beach Sunset Romance', 'Spa Wellness Zen'],
   
   // ========== CONTEXTES ÉMOTIONNELS ==========
   'romantic': ['Beach Sunset Romance', 'Parisian Café Classic', 'Luxury Hotel Suite', 'Valentine\'s Day Romantic'],
@@ -3440,8 +4260,9 @@ export function preFilterContextsByUsage(
     contexts.forEach(ctx => relevantContextNames.add(ctx));
   });
   
-  // 2. NOUVEAU: Ajouter des contextes génériques TOUJOURS pertinents (plus nombreux)
+  // 2. NOUVEAU: Ajouter des contextes génériques TOUJOURS pertinents (30 contextes pour diversité maximale)
   const alwaysRelevantContexts = [
+    // === CONTEXTES GÉNÉRIQUES ESSENTIELS (10) ===
     'Minimalist Studio White',
     'Cozy Home Comfort',
     'Modern Kitchen Bright',
@@ -3451,7 +4272,33 @@ export function preFilterContextsByUsage(
     'Spa Wellness Zen',
     'Modern Office Workspace',
     'Parisian Café Classic',
-    'Beach Sunset Romance'
+    'Beach Sunset Romance',
+    
+    // === CONTEXTES BEAUTÉ & BIEN-ÊTRE (8) ===
+    'Morning Skincare Ritual Zen',
+    'Evening Skincare Routine Cocooning',
+    'Professional Makeup Studio Artistry',
+    'Hair Salon Experience Transformation',
+    'Spa Treatment Room Serenity',
+    'Yoga Lifestyle Flow',
+    'Nature Wellness Serenity',
+    'Skincare Ritual Zen',
+    
+    // === CONTEXTES SAISONNIERS & TEMPORELS (6) ===
+    'Summer Beach Vacation',
+    'Christmas Holiday Festive',
+    'Spring Renewal Fresh',
+    'Autumn Harvest Cozy',
+    'Golden Hour Romance',
+    'Sunday Morning Slow',
+    
+    // === CONTEXTES CULTURELS & LIFESTYLE (6) ===
+    'Mediterranean Villa Luxury',
+    'Scandinavian Hygge Cozy',
+    'Japanese Temple Zen',
+    'New York Rooftop Urban',
+    'Tokyo Neon Cyberpunk',
+    'Brazilian Carnival Energy'
   ];
   
   alwaysRelevantContexts.forEach(ctx => relevantContextNames.add(ctx));
