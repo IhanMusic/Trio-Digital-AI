@@ -39,19 +39,19 @@ const GENERATION_STEPS: Omit<GenerationStep, 'completed' | 'current' | 'error'>[
   {
     id: 'content_generation',
     title: 'Génération du contenu',
-    description: 'Création des textes avec GPT-5 et sélection des presets créatifs',
+    description: 'Création des textes avec notre moteur créatif et sélection des presets premium',
     estimatedDuration: 30
   },
   {
     id: 'image_generation',
     title: 'Création des images',
-    description: 'Génération des visuels avec Gemini et optimisation Cannes Lions',
+    description: 'Génération des visuels avec notre studio graphique IA et optimisation qualité',
     estimatedDuration: 45
   },
   {
     id: 'video_generation',
     title: 'Création des vidéos',
-    description: 'Animation des REELs avec VEO3 (si activé)',
+    description: 'Animation des REELs avec notre technologie cinématographique avancée (si activé)',
     estimatedDuration: 60
   },
   {
@@ -402,9 +402,9 @@ const EnhancedGenerationProgress: React.FC<EnhancedGenerationProgressProps> = ({
         <div className="glass-panel p-6 rounded-xl">
           <h4 className="text-lg font-medium text-white/80 mb-3">💡 Le saviez-vous ?</h4>
           <div className="text-white/60 text-sm space-y-2">
-            <p>• Chaque publication est générée avec GPT-5 et optimisée selon les standards Cannes Lions</p>
-            <p>• Les images sont créées avec Gemini et scorées automatiquement pour garantir la qualité</p>
-            <p>• Les vidéos REELs utilisent VEO3 pour une animation cinématographique</p>
+            <p>• Chaque publication est générée avec notre intelligence créative et optimisée selon nos standards de qualité premium</p>
+            <p>• Les images sont créées avec notre studio visuel et scorées automatiquement pour garantir la qualité</p>
+            <p>• Les vidéos REELs utilisent notre moteur d'animation pour une qualité cinématographique</p>
             <p>• Le contenu est adapté aux spécificités de chaque réseau social</p>
           </div>
         </div>
