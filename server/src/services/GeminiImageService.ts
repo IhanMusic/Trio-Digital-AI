@@ -7,7 +7,8 @@ interface GeminiGenerationOptions {
   numberOfImages?: number;
   imageSize?: '1K' | '2K';
   aspectRatio?: '1:1' | '3:4' | '4:3' | '9:16' | '16:9';
-  referenceImage?: string; // Base64 encoded image
+  referenceImage?: string; // Base64 encoded image (legacy - single product)
+  referenceImages?: string[]; // Base64 encoded images (multi-products support)
   referenceImageStrength?: number;
 }
 
@@ -49,6 +50,7 @@ export class GeminiImageService {
 
   /**
    * Génère des images avec Gemini (Nano Banana)
+   * Supporte maintenant plusieurs images de référence (multi-produits)
    */
   static async generateImages(
     prompt: string,
@@ -62,16 +64,29 @@ export class GeminiImageService {
         imageSize = '1K',
         aspectRatio = '1:1',
         referenceImage,
+        referenceImages,
         referenceImageStrength = 0.35
       } = options;
 
-      console.log('Génération Gemini avec les paramètres:', {
+      // 🎯 SUPPORT MULTI-PRODUITS : Utiliser referenceImages si disponible
+      const finalReferenceImages = referenceImages || (referenceImage ? [referenceImage] : []);
+      const hasReferences = finalReferenceImages.length > 0;
+
+      console.log('🎨 Génération Gemini MULTI-PRODUITS avec les paramètres:', {
         prompt: prompt.substring(0, 100) + '...',
         numberOfImages,
         imageSize,
         aspectRatio,
-        hasReferenceImage: !!referenceImage
+        numberOfReferenceImages: finalReferenceImages.length,
+        hasReferences
       });
+
+      if (finalReferenceImages.length > 0) {
+        console.log(`📦 ${finalReferenceImages.length} produit(s) de référence détecté(s)`);
+        finalReferenceImages.forEach((_, index) => {
+          console.log(`   - Produit ${index + 1}: ${finalReferenceImages[index].length} chars base64`);
+        });
+      }
 
       // Attendre pour respecter le rate limit de Gemini (2 RPM max)
       await this.waitForRateLimit();
@@ -81,24 +96,35 @@ export class GeminiImageService {
         ? ' Generate a square image with 1:1 aspect ratio (same width and height).'
         : aspectRatio === '16:9'
         ? ' Generate a landscape image with 16:9 aspect ratio.'
+        : aspectRatio === '9:16'
+        ? ' Generate a vertical image with 9:16 aspect ratio.'
         : '';
       
       const enhancedPrompt = prompt + aspectRatioInstruction;
 
-      // Construire le contenu du prompt
+      // 🎯 CONSTRUIRE LE CONTENU AVEC SUPPORT MULTI-RÉFÉRENCES
       let promptContent: any = enhancedPrompt;
       
-      // Si une image de référence est fournie, construire un tableau
-      if (referenceImage) {
+      // Si des images de référence sont fournies, construire un tableau avec toutes les références
+      if (hasReferences) {
+        console.log('🔗 Construction du prompt avec références multiples...');
+        
         promptContent = [
-          { text: enhancedPrompt },
-          {
+          { text: enhancedPrompt }
+        ];
+        
+        // Ajouter chaque image de référence au contenu
+        finalReferenceImages.forEach((imageBase64, index) => {
+          promptContent.push({
             inlineData: {
               mimeType: "image/png",
-              data: referenceImage,
+              data: imageBase64,
             },
-          },
-        ];
+          });
+          console.log(`   ✅ Référence ${index + 1} ajoutée au prompt`);
+        });
+        
+        console.log(`🎯 Prompt final construit avec ${finalReferenceImages.length} référence(s) produit(s)`);
       }
 
       // Générer l'image avec Gemini en utilisant generateContent (méthode correcte)

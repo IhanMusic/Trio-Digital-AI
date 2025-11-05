@@ -15,6 +15,7 @@ export function parseEnhancedGPTResponse(content: string): Array<{
   competitiveEdge?: string;
   legalCompliance?: string;
   culturalRelevance?: string;
+  productsSelected?: string;
 }> {
   const posts = [];
   const sections = content.split('---POST #');
@@ -99,7 +100,10 @@ export function parseEnhancedGPTResponse(content: string): Array<{
     const legalCompliance = extractContent(section, '---LEGAL COMPLIANCE---', ['---CULTURAL RELEVANCE---', '---PERFORMANCE METRICS---']);
     
     // Extraire la pertinence culturelle
-    const culturalRelevance = extractContent(section, '---CULTURAL RELEVANCE---', ['---PERFORMANCE METRICS---']);
+    const culturalRelevance = extractContent(section, '---CULTURAL RELEVANCE---', ['---PERFORMANCE METRICS---', '---PRODUITS SÉLECTIONNÉS---']);
+    
+    // 🎯 EXTRAIRE LA SÉLECTION DE PRODUITS GPT-5
+    const productsSelected = extractContent(section, '---PRODUITS SÉLECTIONNÉS---', ['---PERFORMANCE METRICS---']);
     
     // Si aucun prompt d'image n'est trouvé, essayer le format original
     if (!imagePrompt) {
@@ -127,7 +131,8 @@ export function parseEnhancedGPTResponse(content: string): Array<{
       audienceTargeting,
       competitiveEdge,
       legalCompliance,
-      culturalRelevance
+      culturalRelevance,
+      productsSelected
     });
   }
   
@@ -179,6 +184,7 @@ export function parseGPTResponse(content: string): Array<{
   competitiveEdge?: string;
   legalCompliance?: string;
   culturalRelevance?: string;
+  productsSelected?: string;
 }> {
   // Détecter si le format est amélioré
   const hasEnhancedFormat = content.includes('---HASHTAGS---') || 

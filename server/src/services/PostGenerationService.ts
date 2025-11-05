@@ -875,7 +875,7 @@ ANALYSE STRATÉGIQUE DE MARQUE
 - USP (Unique Selling Proposition) : ${briefData.uniqueSellingPoints || "À déterminer à partir de la description"}
             
 ${briefData.products.length > 0 ? `
-PRODUITS À METTRE EN AVANT :
+PRODUITS DISPONIBLES POUR SÉLECTION INTELLIGENTE :
 ${briefData.products.map((product, index) => `
 Produit ${index + 1}: ${product.name}
 - Description: ${product.description}
@@ -889,8 +889,21 @@ ${product.technicalDetails.highlights ? `- Points clés: ${product.technicalDeta
 ${product.technicalDetails.usage ? `- Utilisation: ${product.technicalDetails.usage}` : ''}
 ${Object.keys(product.specifications).length > 0 ? `- Spécifications: ${Object.entries(product.specifications).map(([key, value]) => `${key}: ${value}`).join(', ')}` : ''}
 `).join('\n')}
-            
-Assurez-vous d'intégrer ces produits dans votre contenu de manière naturelle et persuasive.
+
+🎯 SÉLECTION INTELLIGENTE DES PRODUITS (IMPÉRATIF) :
+Vous devez choisir intelligemment le(s) produit(s) optimal(aux) selon le contexte créatif de ce post :
+
+📋 RÈGLES DE SÉLECTION :
+- 1 PRODUIT : Pour un focus spécifique, storytelling centré, mise en avant d'une innovation
+- 2-3 PRODUITS : Pour montrer une gamme, créer une comparaison, démontrer la variété
+- TOUTE LA GAMME : Pour une vision d'ensemble de la marque, campagne de lancement
+
+⚠️ OBLIGATION : Dans votre réponse, vous DEVEZ inclure une section :
+---PRODUITS SÉLECTIONNÉS---
+[Numéros des produits choisis : ex. "1,3" ou "1,2,3" ou "1"]
+[Justification de votre choix en 1-2 phrases]
+
+Cette sélection déterminera quelles images de référence seront utilisées pour la génération visuelle.
 ` : ''}
 
 AUDIENCE CIBLE & INSIGHTS PSYCHOGRAPHIQUES
@@ -951,6 +964,33 @@ DIRECTIVES CRÉATIVES
         
         const parsedPost = parsedPosts[0];
         
+        // 🎯 EXTRAIRE LA SÉLECTION DE PRODUITS DE GPT-5
+        let selectedProductIndices: number[] = [];
+        let selectedProducts: IProduct[] = [];
+        
+        // Chercher la section "PRODUITS SÉLECTIONNÉS" dans la réponse GPT-5
+        if (parsedPost.productsSelected) {
+          try {
+            // Parser les indices des produits sélectionnés (ex: "1,3" ou "1,2,3")
+            const indices = parsedPost.productsSelected.split(',').map(s => parseInt(s.trim()) - 1); // -1 car GPT utilise 1-based indexing
+            selectedProductIndices = indices.filter(i => i >= 0 && i < products.length);
+            selectedProducts = selectedProductIndices.map(i => products[i]);
+            
+            logger.info(`🎯 GPT-5 a sélectionné ${selectedProducts.length} produit(s):`);
+            selectedProducts.forEach((product, index) => {
+              logger.info(`   ${index + 1}. ${product.name}`);
+            });
+          } catch (error: any) {
+            logger.error('❌ Erreur parsing sélection produits GPT-5:', error.message);
+            logger.info('⚠️  Fallback: utilisation du premier produit');
+            selectedProducts = products.length > 0 ? [products[0]] : [];
+          }
+        } else {
+          // Fallback si GPT-5 n'a pas fourni de sélection
+          logger.info('⚠️  Aucune sélection produits détectée, utilisation du premier produit');
+          selectedProducts = products.length > 0 ? [products[0]] : [];
+        }
+        
         // Ajouter les dates clés associées au post
         const keyDatesData = relevantKeyDates.length > 0 ? 
           relevantKeyDates.map(kd => ({ 
@@ -983,8 +1023,8 @@ DIRECTIVES CRÉATIVES
           culturalRelevance: parsedPost.culturalRelevance,
           keyDates: keyDatesData,
           aiGenerated: true,
-          // Ajouter les références aux produits
-          products: calendar.selectedProducts || []
+          // Ajouter les références aux produits SÉLECTIONNÉS
+          products: selectedProducts.map(p => p._id) || calendar.selectedProducts || []
         };
         
           // 🏆 GÉNÉRATION D'IMAGE NIVEAU CANNES LIONS
@@ -996,70 +1036,89 @@ DIRECTIVES CRÉATIVES
             const rawImagePrompt = parsedPost.imagePrompt;
             logger.info('Prompt GPT-5 original (premiers 200 chars):', rawImagePrompt.substring(0, 200) + '...');
             
-            // Préparer l'image de référence si un produit est sélectionné
+            // 🎯 PRÉPARER LES IMAGES DE RÉFÉRENCE MULTI-PRODUITS
             let referenceImageBase64: string | undefined;
+            let referenceImagesBase64: string[] = [];
             let hasProductReference = false;
             
-            if (calendar.selectedProducts && calendar.selectedProducts.length > 0 && products.length > 0) {
-              const product = products[0];
-              logger.info(`📦 Produit sélectionné: ${product.name}`);
+            if (selectedProducts.length > 0) {
+              logger.info(`📦 Traitement de ${selectedProducts.length} produit(s) sélectionné(s) par GPT-5:`);
+              selectedProducts.forEach((product, index) => {
+                logger.info(`   ${index + 1}. ${product.name}`);
+              });
               
-              // Vérifier si le produit a une image
-              if (product.images && product.images.main) {
-                const productImagePath = product.images.main;
-                logger.info(`📸 Image du produit trouvée: ${productImagePath}`);
+              // Traiter chaque produit sélectionné
+              for (const [index, product] of selectedProducts.entries()) {
+                logger.info(`\n📸 Traitement image produit ${index + 1}/${selectedProducts.length}: ${product.name}`);
                 
-                try {
-                  let imageBuffer: Buffer;
+                // Vérifier si le produit a une image
+                if (product.images && product.images.main) {
+                  const productImagePath = product.images.main;
+                  logger.info(`📸 Image du produit trouvée: ${productImagePath}`);
                   
-                  // Vérifier si c'est une URL (Cloudinary ou autre)
-                  if (productImagePath.startsWith('http://') || productImagePath.startsWith('https://') || productImagePath.includes('cloudinary.com')) {
-                    logger.info('📥 Téléchargement depuis URL:', productImagePath.substring(0, 80) + '...');
+                  try {
+                    let imageBuffer: Buffer;
                     
-                    const response = await axios.get(productImagePath, { 
-                      responseType: 'arraybuffer',
-                      timeout: 30000
-                    });
-                    imageBuffer = Buffer.from(response.data);
-                    logger.info('✅ Image téléchargée:', imageBuffer.length, 'bytes');
-                  } else {
-                    // Chemin local - pour développement ou fallback
-                    const fullPath = path.join(process.cwd(), 'public', productImagePath);
-                    logger.info('📂 Lecture depuis le système de fichiers:', fullPath);
-                    
-                    const fs = await import('fs');
-                    if (!fs.existsSync(fullPath)) {
-                      throw new Error(`Fichier introuvable: ${fullPath}`);
+                    // Vérifier si c'est une URL (Cloudinary ou autre)
+                    if (productImagePath.startsWith('http://') || productImagePath.startsWith('https://') || productImagePath.includes('cloudinary.com')) {
+                      logger.info('📥 Téléchargement depuis URL:', productImagePath.substring(0, 80) + '...');
+                      
+                      const response = await axios.get(productImagePath, { 
+                        responseType: 'arraybuffer',
+                        timeout: 30000
+                      });
+                      imageBuffer = Buffer.from(response.data);
+                      logger.info('✅ Image téléchargée:', imageBuffer.length, 'bytes');
+                    } else {
+                      // Chemin local - pour développement ou fallback
+                      const fullPath = path.join(process.cwd(), 'public', productImagePath);
+                      logger.info('📂 Lecture depuis le système de fichiers:', fullPath);
+                      
+                      const fs = await import('fs');
+                      if (!fs.existsSync(fullPath)) {
+                        throw new Error(`Fichier introuvable: ${fullPath}`);
+                      }
+                      
+                      imageBuffer = await fs.promises.readFile(fullPath);
+                      logger.info('✅ Image lue:', imageBuffer.length, 'bytes');
                     }
                     
-                    imageBuffer = await fs.promises.readFile(fullPath);
-                    logger.info('✅ Image lue:', imageBuffer.length, 'bytes');
+                    // 🎯 HAUTE RÉSOLUTION : Transformer en carré 2048x2048
+                    logger.info('🎯 Transformation en haute résolution 2048x2048 (qualité maximale)...');
+                    const highResBuffer = await sharp(imageBuffer)
+                      .resize(2048, 2048, {
+                        fit: 'contain',
+                        background: { r: 255, g: 255, b: 255, alpha: 1 }
+                      })
+                      .png({ quality: 100 })
+                      .toBuffer();
+                    
+                    const productImageBase64 = highResBuffer.toString('base64');
+                    referenceImagesBase64.push(productImageBase64);
+                    
+                    // Pour compatibilité avec l'ancien système, utiliser le premier produit comme référence principale
+                    if (index === 0) {
+                      referenceImageBase64 = productImageBase64;
+                    }
+                    
+                    hasProductReference = true;
+                    logger.info(`✅ Image produit ${index + 1} convertie en base64: ${productImageBase64.length} chars`);
+                  } catch (error: any) {
+                    logger.error(`❌ Erreur lors du traitement de l'image produit ${product.name}:`);
+                    logger.error('Details:', error.message);
+                    if (error.response) {
+                      logger.error('HTTP Status:', error.response.status);
+                    }
+                    logger.info(`⚠️  Produit ${product.name} ignoré pour la génération`);
                   }
-                  
-                  // 🎯 HAUTE RÉSOLUTION : Transformer en carré 2048x2048 (au lieu de 1024x1024)
-                  logger.info('🎯 Transformation en haute résolution 2048x2048 (qualité maximale)...');
-                  const highResBuffer = await sharp(imageBuffer)
-                    .resize(2048, 2048, {
-                      fit: 'contain',
-                      background: { r: 255, g: 255, b: 255, alpha: 1 }
-                    })
-                    .png({ quality: 100 })
-                    .toBuffer();
-                  
-                  referenceImageBase64 = highResBuffer.toString('base64');
-                  hasProductReference = true;
-                  logger.info('✅ Image produit 2048x2048 convertie en base64 :', referenceImageBase64.length, 'chars');
-                } catch (error: any) {
-                  logger.error('❌ Erreur lors du traitement de l\'image produit:');
-                  logger.error('Details:', error.message);
-                  if (error.response) {
-                    logger.error('HTTP Status:', error.response.status);
-                  }
-                  logger.info('⚠️  Génération sans image de référence');
+                } else {
+                  logger.info(`ℹ️  Aucune image associée au produit ${product.name}`);
                 }
-              } else {
-                logger.info('ℹ️  Aucune image associée au produit');
               }
+              
+              logger.info(`\n🎯 Résumé des images de référence:`);
+              logger.info(`   - Images collectées: ${referenceImagesBase64.length}/${selectedProducts.length}`);
+              logger.info(`   - Support multi-produits: ${referenceImagesBase64.length > 1 ? 'OUI' : 'NON'}`);
             }
             
             // 🎨 OPTIMISER LE PROMPT AVEC L'OPTIMISEUR PROFESSIONNEL
@@ -1101,16 +1160,46 @@ DIRECTIVES CRÉATIVES
               }
               
               try {
-                const geminiResults = await GeminiImageService.generateImages(
-                  optimizedPrompt.mainPrompt,
-                  {
-                    numberOfImages: 1,
-                    aspectRatio: optimizedPrompt.generationParams.aspectRatio,
-                    imageSize: optimizedPrompt.generationParams.imageSize,
-                    referenceImage: referenceImageBase64,
-                    referenceImageStrength: adjustedStrength
-                  }
-                );
+                // 🎯 UTILISER LE SUPPORT MULTI-PRODUITS DE GEMINI
+                let geminiResults;
+
+                // Choisir entre référence unique ou multiple selon le nombre de produits
+                if (referenceImagesBase64.length > 1) {
+                  logger.info(`🎯 Utilisation du mode MULTI-PRODUITS avec ${referenceImagesBase64.length} références`);
+                  geminiResults = await GeminiImageService.generateImages(
+                    optimizedPrompt.mainPrompt,
+                    {
+                      numberOfImages: 1,
+                      aspectRatio: optimizedPrompt.generationParams.aspectRatio,
+                      imageSize: optimizedPrompt.generationParams.imageSize,
+                      referenceImages: referenceImagesBase64,
+                      referenceImageStrength: adjustedStrength
+                    }
+                  );
+                } else if (referenceImageBase64) {
+                  logger.info(`🎯 Utilisation du mode PRODUIT UNIQUE avec 1 référence`);
+                  geminiResults = await GeminiImageService.generateImages(
+                    optimizedPrompt.mainPrompt,
+                    {
+                      numberOfImages: 1,
+                      aspectRatio: optimizedPrompt.generationParams.aspectRatio,
+                      imageSize: optimizedPrompt.generationParams.imageSize,
+                      referenceImage: referenceImageBase64,
+                      referenceImageStrength: adjustedStrength
+                    }
+                  );
+                } else {
+                  logger.info(`🎯 Génération sans référence produit`);
+                  geminiResults = await GeminiImageService.generateImages(
+                    optimizedPrompt.mainPrompt,
+                    {
+                      numberOfImages: 1,
+                      aspectRatio: optimizedPrompt.generationParams.aspectRatio,
+                      imageSize: optimizedPrompt.generationParams.imageSize,
+                      referenceImageStrength: adjustedStrength
+                    }
+                  );
+                }
                 
                 if (geminiResults.length > 0) {
                   generatedVariations.push({
