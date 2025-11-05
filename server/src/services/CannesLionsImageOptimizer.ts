@@ -494,7 +494,7 @@ STYLE REQUIREMENTS:
       numberOfImages: 2, // Générer 2 variations comme demandé
       imageSize: '2K', // Maximum quality
       aspectRatio: essence.preferredAspectRatio,
-      referenceImageStrength: hasProductRef ? 0.70 : undefined // Haute fidélité au produit
+      referenceImageStrength: hasProductRef ? 0.85 : undefined // FIDÉLITÉ MAXIMALE au produit uploadé
     };
   }
   
