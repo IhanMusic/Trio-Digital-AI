@@ -3009,103 +3009,161 @@ export const LIGHTING_SETUPS: LightingSetup[] = [
 
 /**
  * Mapping des secteurs vers les catégories photographiques pertinentes
- * ÉLARGI pour maximiser la diversité tout en gardant la cohérence
+ * 🎯 DISPATCH SECTORIEL ÉLARGI - VERSION OPTIMISÉE POUR DIVERSITÉ MAXIMALE
+ * 
+ * Chaque secteur dispose maintenant de 8-12 catégories (au lieu de 3-6)
+ * pour garantir une diversité créative exceptionnelle tout en maintenant la pertinence.
  */
 export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
-  // ALIMENTAIRE & BOISSONS - ÉLARGI POUR PLUS DE DIVERSITÉ
-  'food': ['food', 'beverage', 'studio', 'lifestyle', 'minimal', 'luxury'],
-  'dairy': ['food', 'studio', 'lifestyle', 'minimal', 'luxury'],
-  'beverage': ['beverage', 'food', 'lifestyle', 'minimal', 'luxury', 'studio'],
+  // ========== ALIMENTAIRE & BOISSONS (12 catégories - était 6) ==========
+  'food': ['food', 'beverage', 'lifestyle', 'minimal', 'luxury', 'studio', 
+           'nature', 'documentary', 'action', 'editorial', 'cinematic', 'beauty'],
+  'dairy': ['food', 'studio', 'lifestyle', 'minimal', 'luxury', 'nature', 
+            'beauty', 'documentary', 'editorial', 'action'],
+  'beverage': ['beverage', 'food', 'lifestyle', 'minimal', 'luxury', 'studio', 
+               'action', 'nature', 'documentary', 'cinematic', 'editorial', 'beauty'],
   
-  // BEAUTÉ & COSMÉTIQUE
-  'cosmetic': ['beauty', 'cosmetic', 'luxury', 'lifestyle'],
-  'beauty': ['beauty', 'cosmetic', 'luxury'],
+  // ========== BEAUTÉ & COSMÉTIQUE (10 catégories - était 4) ==========
+  'cosmetic': ['beauty', 'cosmetic', 'luxury', 'lifestyle', 'minimal', 'studio', 
+               'editorial', 'cinematic', 'nature', 'experimental'],
+  'beauty': ['beauty', 'cosmetic', 'luxury', 'lifestyle', 'minimal', 'studio', 
+             'editorial', 'documentary', 'nature', 'action'],
   
-  // MODE & LIFESTYLE
-  'fashion': ['fashion', 'lifestyle', 'editorial', 'luxury'],
-  'lifestyle': ['lifestyle', 'fashion', 'minimal'],
+  // ========== MODE & LIFESTYLE (11 catégories - était 3) ==========
+  'fashion': ['fashion', 'lifestyle', 'editorial', 'luxury', 'beauty', 'minimal', 
+              'documentary', 'cinematic', 'studio', 'conceptual', 'experimental'],
+  'lifestyle': ['lifestyle', 'fashion', 'minimal', 'nature', 'documentary', 
+                'editorial', 'beauty', 'luxury', 'cinematic', 'studio'],
   
-  // TECHNOLOGIE
-  'technology': ['minimal', 'studio', 'lifestyle', 'ai_tech'],
-  'tech': ['minimal', 'studio', 'lifestyle', 'ai_tech'],
+  // ========== TECHNOLOGIE (9 catégories - était 3) ==========
+  'technology': ['minimal', 'studio', 'lifestyle', 'ai_tech', 'digital', 
+                 'experimental', 'conceptual', 'cinematic', 'editorial'],
+  'tech': ['minimal', 'studio', 'lifestyle', 'ai_tech', 'digital', 
+           'experimental', 'conceptual', 'documentary', 'cinematic'],
   
-  // LUXE
-  'luxury': ['luxury', 'editorial', 'lifestyle'],
+  // ========== LUXE (8 catégories - était 3) ==========
+  'luxury': ['luxury', 'editorial', 'lifestyle', 'beauty', 'fashion', 
+             'cinematic', 'minimal', 'studio'],
   
-  // AUTOMOBILE
-  'automobile': ['automobile', 'luxury'],
-  'automotive': ['automobile', 'luxury'],
+  // ========== AUTOMOBILE (8 catégories - était 2) ==========
+  'automobile': ['automobile', 'luxury', 'lifestyle', 'cinematic', 'action', 
+                 'documentary', 'minimal', 'studio'],
+  'automotive': ['automobile', 'luxury', 'lifestyle', 'cinematic', 'action', 
+                 'documentary', 'editorial', 'studio'],
   
-  // FINANCE & BANQUE
-  'finance': ['finance', 'minimal', 'studio'],
-  'banking': ['finance', 'minimal', 'studio'],
-  'fintech': ['finance', 'minimal', 'ai_tech'],
+  // ========== FINANCE & BANQUE (8 catégories - était 3) ==========
+  'finance': ['finance', 'minimal', 'studio', 'lifestyle', 'documentary', 
+              'editorial', 'luxury', 'cinematic'],
+  'banking': ['finance', 'minimal', 'studio', 'lifestyle', 'documentary', 
+              'luxury', 'editorial', 'cinematic'],
+  'fintech': ['finance', 'minimal', 'ai_tech', 'digital', 'lifestyle', 
+              'studio', 'experimental', 'editorial'],
   
-  // SANTÉ
-  'health': ['healthcare', 'minimal', 'telehealth'],
-  'healthcare': ['healthcare', 'minimal', 'telehealth'],
-  'medical': ['healthcare', 'minimal', 'telehealth'],
-  'telehealth': ['telehealth', 'healthcare', 'minimal'],
+  // ========== SANTÉ (9 catégories - était 3) ==========
+  'health': ['healthcare', 'minimal', 'telehealth', 'lifestyle', 'nature', 
+             'documentary', 'beauty', 'studio', 'editorial'],
+  'healthcare': ['healthcare', 'minimal', 'telehealth', 'lifestyle', 'nature', 
+                 'documentary', 'studio', 'beauty', 'editorial'],
+  'medical': ['healthcare', 'minimal', 'telehealth', 'studio', 'documentary', 
+              'lifestyle', 'nature', 'editorial', 'beauty'],
+  'telehealth': ['telehealth', 'healthcare', 'minimal', 'lifestyle', 'nature', 
+                 'documentary', 'studio', 'beauty', 'editorial'],
   
-  // ÉDUCATION
-  'education': ['education', 'lifestyle', 'minimal'],
-  'learning': ['education', 'lifestyle', 'minimal'],
+  // ========== ÉDUCATION (9 catégories - était 3) ==========
+  'education': ['education', 'lifestyle', 'minimal', 'documentary', 'editorial', 
+                'studio', 'nature', 'beauty', 'cinematic'],
+  'learning': ['education', 'lifestyle', 'minimal', 'documentary', 'editorial', 
+               'studio', 'nature', 'beauty', 'cinematic'],
   
-  // AGRICULTURE
-  'agriculture': ['agriculture', 'food', 'lifestyle'],
-  'farming': ['agriculture', 'food', 'lifestyle'],
+  // ========== AGRICULTURE (9 catégories - était 3) ==========
+  'agriculture': ['agriculture', 'food', 'lifestyle', 'nature', 'documentary', 
+                  'editorial', 'minimal', 'studio', 'cinematic'],
+  'farming': ['agriculture', 'food', 'lifestyle', 'nature', 'documentary', 
+              'editorial', 'minimal', 'studio', 'cinematic'],
   
-  // ARTISANAT
-  'craft': ['artisanat', 'lifestyle'],
-  'artisanat': ['artisanat', 'lifestyle'],
-  'handmade': ['artisanat', 'lifestyle'],
+  // ========== ARTISANAT (9 catégories - était 2) ==========
+  'craft': ['artisanat', 'lifestyle', 'documentary', 'editorial', 'luxury', 
+            'minimal', 'studio', 'nature', 'conceptual'],
+  'artisanat': ['artisanat', 'lifestyle', 'documentary', 'editorial', 'luxury', 
+                'minimal', 'studio', 'nature', 'conceptual'],
+  'handmade': ['artisanat', 'lifestyle', 'documentary', 'editorial', 'luxury', 
+               'minimal', 'studio', 'nature', 'conceptual'],
   
-  // BIENS DE CONSOMMATION
-  'consumer-goods': ['consumer_goods', 'studio', 'lifestyle', 'minimal'],
-  'retail': ['consumer_goods', 'studio', 'lifestyle'],
+  // ========== BIENS DE CONSOMMATION (10 catégories - était 4) ==========
+  'consumer-goods': ['consumer_goods', 'studio', 'lifestyle', 'minimal', 'beauty', 
+                     'documentary', 'editorial', 'luxury', 'nature', 'action'],
+  'retail': ['consumer_goods', 'studio', 'lifestyle', 'minimal', 'beauty', 
+             'documentary', 'editorial', 'luxury', 'nature', 'action'],
   
-  // COMMUNICATION & MÉDIAS
-  'media': ['media', 'minimal', 'lifestyle', 'studio'],
-  'communication': ['media', 'minimal', 'lifestyle', 'studio'],
-  'advertising': ['media', 'minimal', 'lifestyle', 'studio'],
+  // ========== COMMUNICATION & MÉDIAS (10 catégories - était 4) ==========
+  'media': ['media', 'minimal', 'lifestyle', 'studio', 'documentary', 
+            'editorial', 'cinematic', 'digital', 'experimental', 'conceptual'],
+  'communication': ['media', 'minimal', 'lifestyle', 'studio', 'documentary', 
+                    'editorial', 'cinematic', 'digital', 'experimental', 'conceptual'],
+  'advertising': ['media', 'minimal', 'lifestyle', 'studio', 'documentary', 
+                  'editorial', 'cinematic', 'digital', 'experimental', 'conceptual'],
   
-  // INDUSTRIE MANUFACTURIÈRE
-  'manufacturing': ['manufacturing', 'studio', 'minimal'],
-  'industry': ['manufacturing', 'studio', 'minimal'],
-  'industrial': ['manufacturing', 'studio', 'minimal'],
+  // ========== INDUSTRIE MANUFACTURIÈRE (9 catégories - était 3) ==========
+  'manufacturing': ['manufacturing', 'studio', 'minimal', 'documentary', 
+                    'editorial', 'lifestyle', 'cinematic', 'conceptual', 'action'],
+  'industry': ['manufacturing', 'studio', 'minimal', 'documentary', 
+               'editorial', 'lifestyle', 'cinematic', 'conceptual', 'action'],
+  'industrial': ['manufacturing', 'studio', 'minimal', 'documentary', 
+                 'editorial', 'lifestyle', 'cinematic', 'conceptual', 'action'],
   
-  // IMMOBILIER & ARCHITECTURE
-  'real-estate': ['real_estate', 'lifestyle', 'luxury'],
-  'realestate': ['real_estate', 'lifestyle', 'luxury'],
-  'architecture': ['real_estate', 'lifestyle', 'luxury'],
-  'property': ['real_estate', 'lifestyle', 'luxury'],
+  // ========== IMMOBILIER & ARCHITECTURE (10 catégories - était 3) ==========
+  'real-estate': ['real_estate', 'lifestyle', 'luxury', 'minimal', 'documentary', 
+                  'editorial', 'cinematic', 'nature', 'studio', 'conceptual'],
+  'realestate': ['real_estate', 'lifestyle', 'luxury', 'minimal', 'documentary', 
+                 'editorial', 'cinematic', 'nature', 'studio', 'conceptual'],
+  'architecture': ['real_estate', 'lifestyle', 'luxury', 'minimal', 'editorial', 
+                   'cinematic', 'documentary', 'conceptual', 'experimental', 'studio'],
+  'property': ['real_estate', 'lifestyle', 'luxury', 'minimal', 'documentary', 
+               'editorial', 'cinematic', 'nature', 'studio', 'conceptual'],
   
-  // ÉNERGIE & ENVIRONNEMENT
-  'energy': ['energy', 'lifestyle', 'minimal'],
-  'renewable': ['energy', 'lifestyle', 'minimal'],
-  'environment': ['energy', 'lifestyle', 'minimal'],
-  'sustainability': ['energy', 'lifestyle', 'minimal'],
+  // ========== ÉNERGIE & ENVIRONNEMENT (9 catégories - était 4) ==========
+  'energy': ['energy', 'lifestyle', 'minimal', 'nature', 'documentary', 
+             'editorial', 'cinematic', 'conceptual', 'experimental'],
+  'renewable': ['energy', 'lifestyle', 'minimal', 'nature', 'documentary', 
+                'editorial', 'cinematic', 'conceptual', 'experimental'],
+  'environment': ['energy', 'lifestyle', 'minimal', 'nature', 'documentary', 
+                  'editorial', 'cinematic', 'conceptual', 'experimental'],
+  'sustainability': ['energy', 'lifestyle', 'minimal', 'nature', 'documentary', 
+                     'beauty', 'editorial', 'conceptual', 'experimental'],
   
-  // WEB3 & CRYPTO
-  'crypto': ['crypto', 'ai_tech', 'minimal'],
-  'blockchain': ['crypto', 'ai_tech', 'minimal'],
-  'web3': ['crypto', 'ai_tech', 'minimal'],
-  'nft': ['crypto', 'ai_tech', 'minimal'],
+  // ========== WEB3 & CRYPTO (8 catégories - était 3) ==========
+  'crypto': ['crypto', 'ai_tech', 'minimal', 'digital', 'experimental', 
+             'conceptual', 'cinematic', 'lifestyle'],
+  'blockchain': ['crypto', 'ai_tech', 'minimal', 'digital', 'experimental', 
+                 'conceptual', 'cinematic', 'lifestyle'],
+  'web3': ['crypto', 'ai_tech', 'minimal', 'digital', 'experimental', 
+           'conceptual', 'cinematic', 'lifestyle'],
+  'nft': ['crypto', 'ai_tech', 'minimal', 'digital', 'experimental', 
+          'conceptual', 'cinematic', 'lifestyle'],
   
-  // INTELLIGENCE ARTIFICIELLE
-  'ai': ['ai_tech', 'minimal', 'studio'],
-  'artificial-intelligence': ['ai_tech', 'minimal', 'studio'],
-  'machine-learning': ['ai_tech', 'minimal', 'studio'],
-  'robotics': ['ai_tech', 'minimal', 'studio'],
+  // ========== INTELLIGENCE ARTIFICIELLE (9 catégories - était 3) ==========
+  'ai': ['ai_tech', 'minimal', 'studio', 'digital', 'experimental', 
+         'conceptual', 'cinematic', 'lifestyle', 'editorial'],
+  'artificial-intelligence': ['ai_tech', 'minimal', 'studio', 'digital', 'experimental', 
+                              'conceptual', 'cinematic', 'lifestyle', 'editorial'],
+  'machine-learning': ['ai_tech', 'minimal', 'studio', 'digital', 'experimental', 
+                       'conceptual', 'cinematic', 'lifestyle', 'editorial'],
+  'robotics': ['ai_tech', 'minimal', 'studio', 'digital', 'experimental', 
+               'conceptual', 'cinematic', 'lifestyle', 'editorial'],
   
-  // TRANSPORT & LOGISTIQUE
-  'transport': ['transport', 'lifestyle', 'minimal'],
-  'logistics': ['transport', 'lifestyle', 'minimal'],
-  'shipping': ['transport', 'lifestyle', 'minimal'],
-  'delivery': ['transport', 'lifestyle', 'minimal'],
+  // ========== TRANSPORT & LOGISTIQUE (9 catégories - était 4) ==========
+  'transport': ['transport', 'lifestyle', 'minimal', 'documentary', 'action', 
+                'cinematic', 'editorial', 'studio', 'conceptual'],
+  'logistics': ['transport', 'lifestyle', 'minimal', 'documentary', 'action', 
+                'cinematic', 'editorial', 'studio', 'conceptual'],
+  'shipping': ['transport', 'lifestyle', 'minimal', 'documentary', 'action', 
+               'cinematic', 'editorial', 'studio', 'conceptual'],
+  'delivery': ['transport', 'lifestyle', 'minimal', 'documentary', 'action', 
+               'cinematic', 'editorial', 'studio', 'conceptual'],
   
-  // FALLBACK GÉNÉRIQUE
-  'default': ['lifestyle', 'minimal', 'studio']
+  // ========== FALLBACK GÉNÉRIQUE ÉLARGI (10 catégories - était 3) ==========
+  'default': ['lifestyle', 'minimal', 'studio', 'documentary', 'editorial', 
+              'nature', 'beauty', 'cinematic', 'luxury', 'conceptual']
 };
 
 /**

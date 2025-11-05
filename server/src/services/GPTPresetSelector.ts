@@ -29,7 +29,7 @@ class AntiRepetitionPresetSelector {
   private recentStyles: string[] = [];
   private recentContexts: string[] = [];
   private recentPalettes: string[] = [];
-  private maxHistory = 15; // AUGMENTÉ : Éviter les répétitions sur les 15 derniers posts
+  private maxHistory = 20; // AUGMENTÉ ENCORE : Avec le dispatch élargi, on peut éviter plus de répétitions
   private calendarId: string;
 
   private constructor(calendarId: string) {
@@ -204,6 +204,7 @@ interface ParsedPresetSelection {
 
 /**
  * Construit le prompt de sélection de preset pour GPT-5
+ * VERSION OPTIMISÉE avec dispatch sectoriel élargi
  */
 function buildPresetSelectionPrompt(
   filteredPresets: FilteredPresets,
@@ -213,7 +214,11 @@ function buildPresetSelectionPrompt(
   postIndex: number = 0,
   usedPresets: string[] = []
 ): string {
-  return `Tu es un directeur artistique expert niveau Cannes Lions. Ta mission est de sélectionner le preset créatif optimal pour une publication social media.
+  return `Tu es un directeur artistique expert niveau Cannes Lions Gold. Ta mission est de sélectionner le preset créatif optimal pour une publication social media en exploitant la DIVERSITÉ MAXIMALE disponible.
+
+🎯 CONTEXTE DIVERSITÉ ÉLARGIE:
+Grâce au nouveau dispatch sectoriel, tu disposes maintenant de 8-12 catégories par secteur (au lieu de 3-6 précédemment).
+Cela représente une augmentation de +150% à +300% de styles disponibles pour garantir une diversité créative exceptionnelle.
 
 CONTEXTE DE LA MARQUE:
 Nom: ${brand.name}
