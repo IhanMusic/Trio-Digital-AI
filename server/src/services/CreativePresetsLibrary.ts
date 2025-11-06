@@ -280,6 +280,44 @@ export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
     mood: "Serene morning optimism with intentional living and quiet luxury",
     technicalSpecs: "Canon EOS R5, 50mm f/1.2 at f/2.0, ISO 400, window light"
   },
+
+  // ========== NOUVEAUX STYLES JUS NIVEAU CANNES LIONS (4 styles) ==========
+  {
+    name: "Juice Burst Explosion Kinetic",
+    category: "beverage",
+    reference: "Tropicana 'Squeeze the Day' Gold Cannes Lions 2019 by FCB New York, Minute Maid 'Burst of Flavor' explosive campaigns, Innocent Smoothies 'Fruit Explosion' viral series, high-speed photography meets fruit chaos, kinetic energy visualization, explosive freshness moment capture, fruit ingredients mid-air choreography",
+    lighting: "Ultra high-speed strobe lighting at 5500K freezing explosive fruit action, multiple synchronized flash units at 1/8000s, dramatic backlighting through flying fruit creating luminous glow, rim lighting on juice droplets, explosive energy illumination, kinetic moment freeze lighting",
+    composition: "Radial explosion composition with juice bottle as epicenter, fresh fruits (berries, citrus, tropical) exploding outward in controlled chaos, juice droplets frozen mid-air creating dynamic patterns, 360-degree fruit choreography, explosive energy radiating from center, high-speed action freeze at peak moment",
+    mood: "Explosive freshness energy, kinetic fruit celebration, dynamic flavor burst, high-energy refreshment, explosive natural vitality, fruit chaos controlled artistry",
+    technicalSpecs: "Canon EOS-1D X Mark III, 100mm f/2.8 macro at f/11, ISO 100, 1/8000s flash sync, multiple Profoto B1X strobes, fruit explosion rig system, high-speed trigger"
+  },
+  {
+    name: "Orange Grove Farm-to-Bottle Heritage",
+    category: "beverage",
+    reference: "Tropicana 'Not From Concentrate' heritage campaigns by Arnell Group, Simply Orange 'Grove to Glass' transparency storytelling, Florida's Natural 'Straight from the Grove' authenticity, agricultural heritage meets premium juice positioning, farm-to-bottle journey visualization, citrus grove cinematic beauty, agricultural authenticity Gold Cannes Lions tradition",
+    lighting: "Golden hour agricultural lighting at 3200K creating warm grove atmosphere, natural sunlight filtering through orange tree canopy, dappled light patterns on fruit, warm agricultural heritage illumination, farm authenticity lighting, grove morning light magic",
+    composition: "Wide cinematic grove establishing shot with juice bottle integrated naturally, orange trees heavy with ripe fruit, agricultural workers suggesting harvest authenticity, farm-to-bottle journey visualization, heritage agricultural landscape, bottle as natural grove element",
+    mood: "Agricultural heritage pride, farm-to-bottle transparency, citrus grove authenticity, natural origin celebration, heritage farming respect, grove-to-glass journey",
+    technicalSpecs: "Canon EOS R5, 24-70mm f/2.8 at 35mm f/5.6, ISO 400, natural golden hour light, circular polarizing filter, agricultural heritage aesthetic"
+  },
+  {
+    name: "Premium Juice Studio Luxury",
+    category: "beverage",
+    reference: "Naked Juice 'Nothing to Hide' premium positioning by Deutsch LA, Bolthouse Farms luxury vegetable juice campaigns, Evolution Fresh premium cold-pressed positioning, luxury beverage studio photography tradition, premium juice as lifestyle accessory, sophisticated health luxury visualization, clean eating premium aesthetic",
+    lighting: "Sophisticated studio lighting at 5000K creating premium luxury atmosphere, three-point lighting with key light at 45° highlighting bottle design, subtle rim lighting creating premium halo effect, clean luxury illumination, sophisticated product lighting, premium positioning brightness",
+    composition: "Centered luxury product hero shot with premium bottle design emphasized, clean minimalist background suggesting premium positioning, sophisticated props (marble surfaces, premium glassware), luxury lifestyle context subtle, premium packaging details highlighted, sophisticated simplicity",
+    mood: "Premium luxury sophistication, sophisticated health choice, luxury wellness lifestyle, premium positioning confidence, sophisticated nutrition, clean luxury aesthetic",
+    technicalSpecs: "Phase One XF 100MP, 80mm at f/8, ISO 64, controlled luxury studio lighting, premium product photography setup, luxury brand aesthetic"
+  },
+  {
+    name: "Juice Splash Action Refreshment",
+    category: "beverage",
+    reference: "Coca-Cola 'Taste the Feeling' splash moments adapted for juice, Pepsi 'Live for Now' dynamic action aesthetic, Red Bull 'Gives You Wings' energy visualization applied to natural juice, dynamic refreshment moment capture, liquid motion artistry, splash photography mastery, refreshing action freeze",
+    lighting: "Dynamic action lighting with high-speed flash freezing splash at peak moment, backlight through liquid creating translucent glow, side lighting adding dimension to splash patterns, dramatic shadows enhancing liquid movement, refreshing action illumination, splash moment freeze lighting",
+    composition: "Dynamic splash action with juice creating artistic liquid patterns, glass or bottle with liquid explosion captured mid-motion, splash crown formation at peak moment, liquid droplets frozen in artistic patterns, refreshing action as hero moment, dynamic liquid choreography",
+    mood: "Refreshing action excitement, liquid motion artistry, dynamic refreshment energy, splash satisfaction, cooling liquid relief, refreshing moment capture",
+    technicalSpecs: "Sony A7RIII, 90mm f/2.8 macro at f/8, ISO 200, 1/4000s high-speed sync, splash photography rig, liquid motion capture setup, refreshment action aesthetic"
+  },
   {
     name: "Noma Nordic Gastronomy",
     category: "food",
@@ -2821,6 +2859,38 @@ export const CREATIVE_FRAMEWORKS: CreativeFramework[] = [
     name: "Craft-Technology-Mastery",
     structure: "Artisan Craft → Technology Enhancement → Modern Mastery",
     application: "Artisanat traditionnel, amélioration technologique, maîtrise moderne avec produit comme fusion craft-tech"
+  },
+
+  // ========== CATÉGORIE I : FRAMEWORKS SPÉCIFIQUES JUS & BOISSONS (6 nouveaux) ==========
+  {
+    name: "Fresh-Squeeze-Vitality",
+    structure: "Fresh Ingredient Discovery → Squeeze Moment Action → Vitality Transformation",
+    application: "Découvrir ingrédient frais authentique, capturer moment pressage/extraction, révéler transformation vitalité avec jus comme essence pure nature"
+  },
+  {
+    name: "Orchard-to-Glass-Journey",
+    structure: "Orchard Origin Story → Processing Transparency → Glass Perfection",
+    application: "Raconter origine verger authentique, montrer transparence transformation, célébrer perfection verre final avec jus comme voyage complet"
+  },
+  {
+    name: "Thirst-Refreshment-Satisfaction",
+    structure: "Thirst Recognition → Refreshment Moment → Deep Satisfaction",
+    application: "Reconnaître soif légitime, capturer moment rafraîchissement, révéler satisfaction profonde avec jus comme solution parfaite"
+  },
+  {
+    name: "Natural-Pure-Essential",
+    structure: "Natural Source Celebration → Pure Process Emphasis → Essential Nutrition",
+    application: "Célébrer source naturelle authentique, emphasiser processus pur, révéler nutrition essentielle avec jus comme concentré nature"
+  },
+  {
+    name: "Energy-Boost-Performance",
+    structure: "Energy Need Recognition → Boost Delivery → Performance Enhancement",
+    application: "Reconnaître besoin énergie, livrer boost immédiat, améliorer performance avec jus comme carburant naturel"
+  },
+  {
+    name: "Seasonal-Harvest-Celebration",
+    structure: "Seasonal Peak Timing → Harvest Abundance → Celebration Moment",
+    application: "Timing pic saisonnier parfait, abondance récolte, moment célébration avec jus comme essence saison capturée"
   }
 ];
 
@@ -3477,6 +3547,24 @@ export const CREATIVE_CONTEXTS: CreativeContext[] = [
     description: "Lodge écologique au cœur de la jungle, architecture durable intégrée, terrasse sur pilotis, observation faune, tourisme responsable, immersion nature, confort écologique, aventure durable"
   },
 
+  // ========== NOUVEAUX CONTEXTES JUS SPÉCIFIQUES (4 nouveaux) ==========
+  {
+    name: "Fruit Explosion Studio Chaos",
+    description: "Studio explosion contrôlée, fruits volant en formation chorégraphiée, éclairage haute vitesse, chaos organisé artistique, énergie cinétique visible, explosion de fraîcheur, studio haute performance, action figée perfection"
+  },
+  {
+    name: "Heritage Orange Grove Sunrise",
+    description: "Verger d'orangers au lever du soleil, patrimoine agricole, authenticité fermière, lumière dorée matinale, arbres chargés de fruits, tradition agricole, transparence origine, beauté agricole cinématographique"
+  },
+  {
+    name: "Premium Wellness Sanctuary",
+    description: "Sanctuaire wellness premium, surfaces marbre, éclairage sophistiqué, luxe santé, bien-être haut de gamme, nutrition premium, lifestyle sophistiqué, élégance minimaliste, luxe accessible"
+  },
+  {
+    name: "Dynamic Splash Laboratory",
+    description: "Laboratoire splash dynamique, capture mouvement liquide, éclaboussures artistiques, action rafraîchissante, studio haute vitesse, perfection liquide, moment rafraîchissement, art liquide"
+  },
+
   // ========== CATÉGORIE M : CONTEXTES ÉMERGENTS 2024-2025 (10 nouveaux) ==========
   {
     name: "AI Workplace Integration Seamless",
@@ -3996,11 +4084,11 @@ export const USAGE_TO_CONTEXTS: Record<string, string[]> = {
   'celebration-feast': ['Birthday Party Celebration', 'Wedding Reception Elegant', 'Christmas Holiday Festive', 'Award Ceremony Prestige', 'Brazilian Carnival Energy', 'New Year\'s Eve Celebration', 'Charity Gala Fundraising', 'Music Festival Outdoor'],
   
   // ========== BOISSONS - JUS & SMOOTHIES (ENRICHI MASSIVEMENT) ==========
-  'juice': ['Beach Sunset Romance', 'Botanical Garden Natural', 'Brazilian Carnival Energy', 'African Savanna Wild', 'Tokyo Neon Cyberpunk', 'New York Rooftop Urban', 'Summer Beach Vacation', 'Outdoor Nature Setting', 'Market Stall Authentic', 'Spa Wellness Zen', 'Modern Kitchen Bright', 'Cozy Home Comfort', 'Urban Loft Industrial', 'Mediterranean Villa Luxury', 'Parisian Café Classic', 'Scandinavian Hygge Cozy', 'Music Festival Outdoor', 'Sports Stadium Energy', 'Yoga Lifestyle Flow', 'Minimalist Studio White'],
-  'fresh-juice': ['Market Stall Authentic', 'Botanical Garden Natural', 'Summer Beach Vacation', 'Outdoor Nature Setting', 'Brazilian Carnival Energy', 'Beach Sunset Romance', 'Indian Bazaar Colorful', 'Moroccan Souk Vibrant'],
-  'smoothie': ['Spa Wellness Zen', 'Beach Sunset Romance', 'Sports Stadium Energy', 'Yoga Lifestyle Flow', 'Botanical Garden Natural', 'Outdoor Nature Setting', 'Modern Office Workspace', 'Summer Beach Vacation'],
-  'green-juice': ['Sustainable Eco-Home', 'Botanical Garden Natural', 'Yoga Lifestyle Flow', 'Biophilic Design Nature-Tech', 'Spa Wellness Zen', 'Forest Enchanted Magical', 'Zero-Waste Lifestyle', 'Solar Punk Future'],
-  'fruit-juice': ['Botanical Garden Natural', 'Summer Beach Vacation', 'Brazilian Carnival Energy', 'Market Stall Authentic', 'Beach Sunset Romance', 'Outdoor Nature Setting', 'Indian Bazaar Colorful'],
+  'juice': ['Fruit Explosion Studio Chaos', 'Heritage Orange Grove Sunrise', 'Premium Wellness Sanctuary', 'Dynamic Splash Laboratory', 'Beach Sunset Romance', 'Botanical Garden Natural', 'Brazilian Carnival Energy', 'African Savanna Wild', 'Tokyo Neon Cyberpunk', 'New York Rooftop Urban', 'Summer Beach Vacation', 'Outdoor Nature Setting', 'Market Stall Authentic', 'Spa Wellness Zen', 'Modern Kitchen Bright', 'Cozy Home Comfort', 'Urban Loft Industrial', 'Mediterranean Villa Luxury', 'Parisian Café Classic', 'Scandinavian Hygge Cozy', 'Music Festival Outdoor', 'Sports Stadium Energy', 'Yoga Lifestyle Flow', 'Minimalist Studio White'],
+  'fresh-juice': ['Heritage Orange Grove Sunrise', 'Fruit Explosion Studio Chaos', 'Market Stall Authentic', 'Botanical Garden Natural', 'Summer Beach Vacation', 'Outdoor Nature Setting', 'Brazilian Carnival Energy', 'Beach Sunset Romance', 'Indian Bazaar Colorful', 'Moroccan Souk Vibrant'],
+  'smoothie': ['Premium Wellness Sanctuary', 'Dynamic Splash Laboratory', 'Spa Wellness Zen', 'Beach Sunset Romance', 'Sports Stadium Energy', 'Yoga Lifestyle Flow', 'Botanical Garden Natural', 'Outdoor Nature Setting', 'Modern Office Workspace', 'Summer Beach Vacation'],
+  'green-juice': ['Premium Wellness Sanctuary', 'Heritage Orange Grove Sunrise', 'Sustainable Eco-Home', 'Botanical Garden Natural', 'Yoga Lifestyle Flow', 'Biophilic Design Nature-Tech', 'Spa Wellness Zen', 'Forest Enchanted Magical', 'Zero-Waste Lifestyle', 'Solar Punk Future'],
+  'fruit-juice': ['Fruit Explosion Studio Chaos', 'Heritage Orange Grove Sunrise', 'Dynamic Splash Laboratory', 'Botanical Garden Natural', 'Summer Beach Vacation', 'Brazilian Carnival Energy', 'Market Stall Authentic', 'Beach Sunset Romance', 'Outdoor Nature Setting', 'Indian Bazaar Colorful'],
   'vegetable-juice': ['Sustainable Eco-Home', 'Market Stall Authentic', 'Botanical Garden Natural', 'Modern Kitchen Bright', 'Zero-Waste Lifestyle', 'Biophilic Design Nature-Tech'],
   
   // ========== BOISSONS CHAUDES (RÉALISTE POUR TOUTES ENTREPRISES) ==========
