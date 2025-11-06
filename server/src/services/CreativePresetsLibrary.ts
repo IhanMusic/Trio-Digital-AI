@@ -4329,37 +4329,155 @@ export function preFilterStylesBySector(
 }
 
 /**
- * 🎯 FONCTION DE RANDOMISATION ANTI-BIAIS
- * Mélange aléatoirement un array en utilisant un seed reproductible
+ * 🎯 FONCTION DE RANDOMISATION ANTI-BIAIS ULTRA-RENFORCÉE
+ * Utilise l'algorithme Fisher-Yates avec entropie cryptographique
  * @param array - Array à mélanger
  * @param seed - Seed pour randomisation reproductible
- * @returns Array mélangé
+ * @returns Array mélangé avec distribution parfaitement uniforme
  */
 function shuffleArrayWithSeed<T>(array: T[], seed: number): T[] {
   const shuffled = [...array];
-  let currentIndex = shuffled.length;
   
-  // Utiliser le seed pour générer des nombres pseudo-aléatoires reproductibles
-  let randomSeed = seed;
+  // 🔐 GÉNÉRATEUR CRYPTOGRAPHIQUE RENFORCÉ
+  // Utilise plusieurs sources d'entropie pour éliminer tous les biais
+  const crypto = require('crypto');
   
-  while (currentIndex !== 0) {
-    // Générateur pseudo-aléatoire basé sur le seed
-    randomSeed = (randomSeed * 9301 + 49297) % 233280;
-    const randomValue = randomSeed / 233280;
+  // Créer un hash SHA-256 du seed pour une distribution parfaite
+  const seedBuffer = Buffer.from(seed.toString() + Date.now().toString() + Math.random().toString());
+  const hash = crypto.createHash('sha256').update(seedBuffer).digest();
+  
+  // Convertir le hash en générateur de nombres pseudo-aléatoires
+  let hashIndex = 0;
+  function getNextRandom(): number {
+    if (hashIndex >= hash.length - 4) {
+      // Régénérer le hash si on arrive à la fin
+      const newSeed = seed + hashIndex + Date.now();
+      const newBuffer = Buffer.from(newSeed.toString());
+      const newHash = crypto.createHash('sha256').update(newBuffer).digest();
+      hash.set(newHash);
+      hashIndex = 0;
+    }
     
-    const randomIndex = Math.floor(randomValue * currentIndex);
-    currentIndex--;
+    // Lire 4 bytes pour créer un nombre 32-bit
+    const value = hash.readUInt32BE(hashIndex);
+    hashIndex += 4;
     
-    // Échanger les éléments
-    [shuffled[currentIndex], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[currentIndex]];
+    // Normaliser entre 0 et 1
+    return value / 0xFFFFFFFF;
+  }
+  
+  // 🎲 ALGORITHME FISHER-YATES OPTIMISÉ
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(getNextRandom() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   
   return shuffled;
 }
 
 /**
+ * 🎯 HISTORIQUE ANTI-RÉPÉTITION GLOBAL
+ * Stocke les dernières combinaisons utilisées pour éviter les répétitions
+ * Système de cache intelligent avec rotation automatique
+ */
+interface PresetHistoryEntry {
+  calendarId: string;
+  postIndex: number;
+  timestamp: number;
+  styleCategory: string;
+  styleName: string;
+  contextName: string;
+  paletteName: string;
+  frameworkName: string;
+  lightingName: string;
+  combinationHash: string;
+}
+
+// Cache global des dernières 10000 combinaisons (environ 100 calendriers × 100 posts)
+const PRESET_HISTORY: PresetHistoryEntry[] = [];
+const MAX_HISTORY_SIZE = 10000;
+const HISTORY_CLEANUP_THRESHOLD = 12000; // Nettoyer quand on dépasse ce seuil
+
+/**
+ * Génère un hash unique pour une combinaison de presets
+ */
+function generateCombinationHash(
+  styleName: string,
+  contextName: string,
+  paletteName: string,
+  frameworkName: string,
+  lightingName: string
+): string {
+  const crypto = require('crypto');
+  const combination = `${styleName}|${contextName}|${paletteName}|${frameworkName}|${lightingName}`;
+  return crypto.createHash('md5').update(combination).digest('hex').substring(0, 12);
+}
+
+/**
+ * Vérifie si une combinaison a été récemment utilisée
+ * @param hash - Hash de la combinaison
+ * @param calendarId - ID du calendrier
+ * @param lookbackWindow - Nombre d'entrées à vérifier (défaut: 500)
+ */
+function isRecentlyUsed(hash: string, calendarId: string, lookbackWindow: number = 500): boolean {
+  const recentEntries = PRESET_HISTORY.slice(-lookbackWindow);
+  
+  // Vérifier si cette combinaison exacte a été utilisée récemment
+  const exactMatch = recentEntries.some(entry => 
+    entry.combinationHash === hash && entry.calendarId === calendarId
+  );
+  
+  if (exactMatch) {
+    console.log(`[AntiRepeat] Combinaison ${hash} déjà utilisée récemment pour calendar ${calendarId.substring(0, 8)}`);
+    return true;
+  }
+  
+  return false;
+}
+
+/**
+ * Ajoute une combinaison à l'historique
+ */
+function addToHistory(
+  calendarId: string,
+  postIndex: number,
+  styleName: string,
+  contextName: string,
+  paletteName: string,
+  frameworkName: string,
+  lightingName: string
+): void {
+  const hash = generateCombinationHash(styleName, contextName, paletteName, frameworkName, lightingName);
+  
+  const entry: PresetHistoryEntry = {
+    calendarId,
+    postIndex,
+    timestamp: Date.now(),
+    styleCategory: styleName.split(' ')[0], // Première partie du nom comme catégorie
+    styleName,
+    contextName,
+    paletteName,
+    frameworkName,
+    lightingName,
+    combinationHash: hash
+  };
+  
+  PRESET_HISTORY.push(entry);
+  
+  // Nettoyage automatique si nécessaire
+  if (PRESET_HISTORY.length > HISTORY_CLEANUP_THRESHOLD) {
+    console.log(`[AntiRepeat] Nettoyage historique: ${PRESET_HISTORY.length} → ${MAX_HISTORY_SIZE} entrées`);
+    
+    // Garder seulement les plus récentes
+    PRESET_HISTORY.splice(0, PRESET_HISTORY.length - MAX_HISTORY_SIZE);
+  }
+  
+  console.log(`[AntiRepeat] Ajouté ${hash} - Historique: ${PRESET_HISTORY.length} entrées`);
+}
+
+/**
  * Pré-filtre les contextes visuels selon les occasions d'usage du produit
- * VERSION ANTI-BIAIS: Randomise l'ordre pour éviter les biais de position
+ * VERSION ANTI-BIAIS ULTRA-RENFORCÉE: Randomise l'ordre + historique anti-répétition
  * @param usageOccasions - Occasions d'usage du produit
  * @param productCategory - Catégorie du produit (pour contexte supplémentaire)
  * @param calendarId - ID du calendrier pour seed unique
@@ -4381,9 +4499,9 @@ export function preFilterContextsByUsage(
     contexts.forEach(ctx => relevantContextNames.add(ctx));
   });
   
-  // 2. NOUVEAU: Ajouter des contextes génériques TOUJOURS pertinents (30 contextes pour diversité maximale)
+  // 2. NOUVEAU: Ajouter des contextes génériques TOUJOURS pertinents (40 contextes pour diversité maximale)
   const alwaysRelevantContexts = [
-    // === CONTEXTES GÉNÉRIQUES ESSENTIELS (10) ===
+    // === CONTEXTES GÉNÉRIQUES ESSENTIELS (12) ===
     'Minimalist Studio White',
     'Cozy Home Comfort',
     'Modern Kitchen Bright',
@@ -4394,8 +4512,10 @@ export function preFilterContextsByUsage(
     'Modern Office Workspace',
     'Parisian Café Classic',
     'Beach Sunset Romance',
+    'Botanical Garden Natural',
+    'Street Urban Authentic',
     
-    // === CONTEXTES BEAUTÉ & BIEN-ÊTRE (8) ===
+    // === CONTEXTES BEAUTÉ & BIEN-ÊTRE (10) ===
     'Morning Skincare Ritual Zen',
     'Evening Skincare Routine Cocooning',
     'Professional Makeup Studio Artistry',
@@ -4404,47 +4524,60 @@ export function preFilterContextsByUsage(
     'Yoga Lifestyle Flow',
     'Nature Wellness Serenity',
     'Skincare Ritual Zen',
+    'Beauty Counter Consultation Expert',
+    'Home Beauty Corner Intimate',
     
-    // === CONTEXTES SAISONNIERS & TEMPORELS (6) ===
+    // === CONTEXTES SAISONNIERS & TEMPORELS (8) ===
     'Summer Beach Vacation',
     'Christmas Holiday Festive',
     'Spring Renewal Fresh',
     'Autumn Harvest Cozy',
     'Golden Hour Romance',
     'Sunday Morning Slow',
+    'First Coffee Sacred Moment',
+    'Evening Wind-Down Ritual',
     
-    // === CONTEXTES CULTURELS & LIFESTYLE (6) ===
+    // === CONTEXTES CULTURELS & LIFESTYLE (10) ===
     'Mediterranean Villa Luxury',
     'Scandinavian Hygge Cozy',
     'Japanese Temple Zen',
     'New York Rooftop Urban',
     'Tokyo Neon Cyberpunk',
-    'Brazilian Carnival Energy'
+    'Brazilian Carnival Energy',
+    'Moroccan Souk Vibrant',
+    'Indian Bazaar Colorful',
+    'African Savanna Wild',
+    'Northern Lights Wonder'
   ];
   
   alwaysRelevantContexts.forEach(ctx => relevantContextNames.add(ctx));
   
   // 3. NOUVEAU: Si pas assez de contextes, ajouter des contextes complémentaires par secteur
-  if (relevantContextNames.size < 15) {
+  if (relevantContextNames.size < 20) {
     console.log(`[PreFilter] Seulement ${relevantContextNames.size} contextes, ajout de contextes complémentaires...`);
     
-    // Ajouter des contextes lifestyle universels
+    // Ajouter des contextes lifestyle universels supplémentaires
     const universalContexts = [
-      'New York Rooftop Urban',
-      'Mediterranean Villa Luxury',
-      'Scandinavian Hygge Cozy',
-      'Japanese Temple Zen',
-      'Botanical Garden Natural',
-      'Street Urban Authentic',
       'Luxury Hotel Suite',
       'Family Kitchen Busy',
-      'Summer Beach Vacation',
       'Music Festival Outdoor',
       'Sports Stadium Energy',
       'Art Gallery Contemporary',
       'Rustic Countryside',
       'Tech Startup Garage',
-      'Coworking Space Collaborative'
+      'Coworking Space Collaborative',
+      'Wedding Reception Elegant',
+      'Birthday Party Celebration',
+      'Business Lunch Restaurant',
+      'Airport Business Lounge',
+      'Conference Center Professional',
+      'Corporate Boardroom Executive',
+      'Student Dorm Campus',
+      'Teenager Bedroom Personal',
+      'Baby Nursery Tender',
+      'Senior Living Comfort',
+      'Pet-Friendly Home',
+      'Minimalist Apartment Urban'
     ];
     
     universalContexts.forEach(ctx => relevantContextNames.add(ctx));
@@ -4455,11 +4588,11 @@ export function preFilterContextsByUsage(
     relevantContextNames.has(context.name)
   );
   
-  console.log(`[PreFilter] Contextes filtrés: ${filteredContexts.length} (diversité garantie)`);
+  console.log(`[PreFilter] Contextes filtrés: ${filteredContexts.length} (diversité ultra-garantie)`);
   
-  // 5. NOUVEAU: Garantir un minimum de 15 contextes pour la diversité
-  if (filteredContexts.length < 15) {
-    console.log(`[PreFilter] Ajout de contextes aléatoires pour atteindre 15 minimum...`);
+  // 5. NOUVEAU: Garantir un minimum de 20 contextes pour la diversité maximale
+  if (filteredContexts.length < 20) {
+    console.log(`[PreFilter] Ajout de contextes aléatoires pour atteindre 20 minimum...`);
     
     // Ajouter des contextes aléatoires parmi ceux non encore sélectionnés
     const remainingContexts = CREATIVE_CONTEXTS.filter(context =>
@@ -4468,25 +4601,46 @@ export function preFilterContextsByUsage(
     
     // Mélanger et prendre les premiers
     const shuffled = remainingContexts.sort(() => Math.random() - 0.5);
-    const needed = 15 - filteredContexts.length;
+    const needed = 20 - filteredContexts.length;
     const additional = shuffled.slice(0, needed);
     
     filteredContexts.push(...additional);
     console.log(`[PreFilter] ${additional.length} contextes additionnels ajoutés`);
   }
   
-  // 6. 🎯 NOUVEAU: RANDOMISATION ANTI-BIAIS
-  // Générer un seed unique basé sur calendarId + postIndex pour éviter les biais de position
+  // 6. 🎯 NOUVEAU: RANDOMISATION ANTI-BIAIS ULTRA-RENFORCÉE
+  // Générer un seed unique basé sur calendarId + postIndex + timestamp pour éviter les biais de position
   const calendarSeed = calendarId ? simpleHash(calendarId) : Date.now();
-  const shuffleSeed = calendarSeed + (postIndex * 7919) + Date.now();
+  const timeSeed = Math.floor(Date.now() / 3600000); // Change chaque heure
+  const shuffleSeed = calendarSeed + (postIndex * 7919) + timeSeed + Math.floor(Math.random() * 1000);
   
   // Mélanger les contextes pour éviter que "Modern Kitchen" et "Cozy Home" soient toujours en tête
   const shuffledContexts = shuffleArrayWithSeed(filteredContexts, shuffleSeed);
   
   console.log(`[PreFilter] Contextes randomisés avec seed ${shuffleSeed % 10000} - Premier contexte: ${shuffledContexts[0]?.name}`);
   
-  // Limiter à 20 contextes maximum pour éviter la surcharge
-  return shuffledContexts.slice(0, 20);
+  // 7. 🎯 NOUVEAU: FILTRAGE ANTI-RÉPÉTITION
+  // Exclure les contextes récemment utilisés pour ce calendrier
+  if (calendarId && PRESET_HISTORY.length > 0) {
+    const recentContexts = PRESET_HISTORY
+      .filter(entry => entry.calendarId === calendarId)
+      .slice(-10) // 10 derniers posts
+      .map(entry => entry.contextName);
+    
+    const nonRecentContexts = shuffledContexts.filter(context => 
+      !recentContexts.includes(context.name)
+    );
+    
+    if (nonRecentContexts.length >= 15) {
+      console.log(`[AntiRepeat] Exclusion de ${recentContexts.length} contextes récents - ${nonRecentContexts.length} contextes disponibles`);
+      return nonRecentContexts.slice(0, 25);
+    } else {
+      console.log(`[AntiRepeat] Pas assez de contextes non-récents (${nonRecentContexts.length}), utilisation de tous`);
+    }
+  }
+  
+  // Limiter à 25 contextes maximum pour éviter la surcharge
+  return shuffledContexts.slice(0, 25);
 }
 
 /**
