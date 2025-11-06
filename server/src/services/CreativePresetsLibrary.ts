@@ -65,30 +65,30 @@ export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
     technicalSpecs: "Canon EOS R5, 50mm f/1.2 at f/2.8, ISO 400-800, natural light only"
   },
   {
-    name: "Yaourt Grec Protéine Fitness",
+    name: "Cannes Lions High-Protein Nutrition Campaign",
     category: "food",
-    reference: "Yaourt grec high-protein fitness campaigns, post-workout nutrition photography, healthy lifestyle integration, protein-rich breakfast visualization, fitness nutrition aesthetic, clean eating movement, athletic performance fuel",
+    reference: "Cannes Lions high-protein nutrition campaigns, post-workout nutrition photography, healthy lifestyle integration, protein-rich product visualization, fitness nutrition aesthetic, clean eating movement, athletic performance fuel",
     lighting: "Clean bright lighting at 5500K emphasizing freshness and purity, even illumination showing protein-rich texture, fitness-focused brightness, health-conscious lighting, athletic nutrition atmosphere",
-    composition: "Yaourt grec in bowl showing thick creamy texture, fitness equipment subtly visible, post-workout context suggested, protein content emphasized, healthy lifestyle integration, athletic nutrition presentation",
+    composition: "High-protein product in premium presentation showing nutritional density, fitness equipment subtly visible, post-workout context suggested, protein content emphasized, healthy lifestyle integration, athletic nutrition presentation",
     mood: "Fitness nutrition confidence, protein power energy, healthy lifestyle commitment, athletic performance fuel, post-workout satisfaction, clean eating dedication",
     technicalSpecs: "Canon EOS R6, 50mm f/1.2 at f/2.8, ISO 400, bright fitness lighting, protein nutrition aesthetic"
   },
   {
-    name: "Yaourt Artisanal Fermentation",
+    name: "Cannes Lions Artisan Fermentation Craft",
     category: "food",
-    reference: "Artisan yogurt fermentation process, traditional dairy craftsmanship, small-batch production visualization, fermentation culture celebration, authentic dairy making, artisan food production, traditional yogurt methods",
-    lighting: "Natural artisan workshop lighting at 5000K showing traditional process, authentic craft illumination, fermentation process lighting, artisan dairy atmosphere, traditional production ambiance",
-    composition: "Artisan yogurt in traditional containers, fermentation cultures visible, small-batch production elements, craft dairy tools, traditional yogurt making process, authentic artisan presentation",
-    mood: "Artisan craft pride, traditional fermentation respect, small-batch quality celebration, authentic dairy making, fermentation culture appreciation, artisan food dedication",
+    reference: "Cannes Lions artisan fermentation process campaigns, traditional craftsmanship visualization, small-batch production storytelling, fermentation culture celebration, authentic artisan making, traditional craft food production methods",
+    lighting: "Natural artisan workshop lighting at 5000K showing traditional process, authentic craft illumination, fermentation process lighting, artisan production atmosphere, traditional craftsmanship ambiance",
+    composition: "Artisan fermented product in traditional containers, fermentation process visible, small-batch production elements, craft tools and techniques, traditional fermentation artistry, authentic artisan presentation",
+    mood: "Artisan craft pride, traditional fermentation respect, small-batch quality celebration, authentic craftsmanship, fermentation culture appreciation, artisan food dedication",
     technicalSpecs: "Fujifilm X-T4, 35mm f/1.4 at f/2.2, ISO 800, natural workshop lighting, artisan craft aesthetic"
   },
   {
-    name: "Yaourt Bio Écologique",
+    name: "Cannes Lions Organic Ecological Campaign",
     category: "food",
-    reference: "Organic yogurt ecological campaigns, sustainable dairy farming, eco-friendly packaging, environmental responsibility, organic certification visualization, green dairy production, sustainable food choices",
-    lighting: "Natural eco-friendly lighting at 5200K emphasizing organic purity, sustainable production illumination, green packaging visibility, environmental consciousness lighting, organic dairy atmosphere",
-    composition: "Organic yogurt with eco-friendly packaging prominent, sustainable dairy elements visible, organic certification featured, environmental responsibility emphasized, green lifestyle integration",
-    mood: "Environmental responsibility pride, organic purity confidence, sustainable dairy choice, eco-friendly lifestyle, green consumption consciousness, organic quality assurance",
+    reference: "Cannes Lions organic ecological campaigns, sustainable production storytelling, eco-friendly packaging visualization, environmental responsibility messaging, organic certification campaigns, green production methods, sustainable consumption choices",
+    lighting: "Natural eco-friendly lighting at 5200K emphasizing organic purity, sustainable production illumination, green packaging visibility, environmental consciousness lighting, organic product atmosphere",
+    composition: "Organic product with eco-friendly packaging prominent, sustainable production elements visible, organic certification featured, environmental responsibility emphasized, green lifestyle integration",
+    mood: "Environmental responsibility pride, organic purity confidence, sustainable choice validation, eco-friendly lifestyle, green consumption consciousness, organic quality assurance",
     technicalSpecs: "Sony A7III, 50mm f/1.8 at f/2.8, ISO 400, natural eco-lighting, sustainable aesthetic"
   },
   {
@@ -896,12 +896,12 @@ export const PHOTOGRAPHIC_STYLES: PhotographicStyle[] = [
 
   // ========== STUDIO PRODUIT YAOURTS & PRODUITS LAITIERS (14 styles au total) ==========
   {
-    name: "Danone Creamy Spoon Lift",
+    name: "Cannes Lions Creamy Texture Spoon Lift",
     category: "studio",
-    reference: "Danone global yogurt campaigns by Young & Rubicam, 'One Planet One Health' brand positioning, Activia digestive health advertising, Oikos Greek yogurt texture hero shots, yogurt spoon lift revealing creamy consistency, dairy product creaminess visualization, Müller Corner mix-in moment photography, Chobani Greek yogurt lifestyle campaigns",
-    lighting: "Soft overhead diffused lighting at 5200K creating natural dairy freshness, key light slightly forward preventing spoon shadow on yogurt, subtle fill maintaining creamy white texture detail, backlight on lifted yogurt creating appetizing translucency and texture highlight",
-    composition: "Elegant spoon lifting from yogurt cup mid-action frozen in time, thick creamy yogurt texture clinging to spoon showing premium consistency and protein richness, visible smooth texture and natural color, cup slightly tilted showing full yogurt interior, fresh fruit garnish suggesting natural ingredients, clean white background emphasizing purity and dairy freshness",
-    mood: "Creamy satisfaction promise, healthy indulgence without guilt, morning ritual freshness, probiotic wellness benefit visualization",
+    reference: "Cannes Lions creamy product campaigns, texture hero shots revealing premium consistency, spoon lift action showcasing product quality, creamy texture visualization, premium dairy-style product photography, texture-focused product storytelling",
+    lighting: "Soft overhead diffused lighting at 5200K creating natural product freshness, key light slightly forward preventing spoon shadow, subtle fill maintaining creamy texture detail, backlight on lifted product creating appetizing translucency and texture highlight",
+    composition: "Elegant spoon lifting from product container mid-action frozen in time, thick creamy texture clinging to spoon showing premium consistency, visible smooth texture and natural color, container slightly tilted showing full product interior, fresh garnish suggesting natural ingredients, clean background emphasizing purity and freshness",
+    mood: "Creamy satisfaction promise, healthy indulgence without guilt, morning ritual freshness, wellness benefit visualization",
     technicalSpecs: "Canon EOS R5, 100mm f/2.8 macro at f/5.6, ISO 100, 1/500s freezing spoon lift action, large octabox soft overhead light"
   },
   {
