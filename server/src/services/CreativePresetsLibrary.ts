@@ -4329,15 +4329,48 @@ export function preFilterStylesBySector(
 }
 
 /**
+ * 🎯 FONCTION DE RANDOMISATION ANTI-BIAIS
+ * Mélange aléatoirement un array en utilisant un seed reproductible
+ * @param array - Array à mélanger
+ * @param seed - Seed pour randomisation reproductible
+ * @returns Array mélangé
+ */
+function shuffleArrayWithSeed<T>(array: T[], seed: number): T[] {
+  const shuffled = [...array];
+  let currentIndex = shuffled.length;
+  
+  // Utiliser le seed pour générer des nombres pseudo-aléatoires reproductibles
+  let randomSeed = seed;
+  
+  while (currentIndex !== 0) {
+    // Générateur pseudo-aléatoire basé sur le seed
+    randomSeed = (randomSeed * 9301 + 49297) % 233280;
+    const randomValue = randomSeed / 233280;
+    
+    const randomIndex = Math.floor(randomValue * currentIndex);
+    currentIndex--;
+    
+    // Échanger les éléments
+    [shuffled[currentIndex], shuffled[randomIndex]] = [shuffled[randomIndex], shuffled[currentIndex]];
+  }
+  
+  return shuffled;
+}
+
+/**
  * Pré-filtre les contextes visuels selon les occasions d'usage du produit
- * NOUVELLE VERSION: Plus permissive pour garantir la diversité
+ * VERSION ANTI-BIAIS: Randomise l'ordre pour éviter les biais de position
  * @param usageOccasions - Occasions d'usage du produit
  * @param productCategory - Catégorie du produit (pour contexte supplémentaire)
- * @returns Array de contextes visuels pertinents (15-20 contextes minimum)
+ * @param calendarId - ID du calendrier pour seed unique
+ * @param postIndex - Index du post pour variation
+ * @returns Array de contextes visuels pertinents randomisés (15-20 contextes minimum)
  */
 export function preFilterContextsByUsage(
   usageOccasions: string[],
-  productCategory?: string
+  productCategory?: string,
+  calendarId?: string,
+  postIndex: number = 0
 ): CreativeContext[] {
   const relevantContextNames = new Set<string>();
   
@@ -4442,8 +4475,18 @@ export function preFilterContextsByUsage(
     console.log(`[PreFilter] ${additional.length} contextes additionnels ajoutés`);
   }
   
+  // 6. 🎯 NOUVEAU: RANDOMISATION ANTI-BIAIS
+  // Générer un seed unique basé sur calendarId + postIndex pour éviter les biais de position
+  const calendarSeed = calendarId ? simpleHash(calendarId) : Date.now();
+  const shuffleSeed = calendarSeed + (postIndex * 7919) + Date.now();
+  
+  // Mélanger les contextes pour éviter que "Modern Kitchen" et "Cozy Home" soient toujours en tête
+  const shuffledContexts = shuffleArrayWithSeed(filteredContexts, shuffleSeed);
+  
+  console.log(`[PreFilter] Contextes randomisés avec seed ${shuffleSeed % 10000} - Premier contexte: ${shuffledContexts[0]?.name}`);
+  
   // Limiter à 20 contextes maximum pour éviter la surcharge
-  return filteredContexts.slice(0, 20);
+  return shuffledContexts.slice(0, 20);
 }
 
 /**

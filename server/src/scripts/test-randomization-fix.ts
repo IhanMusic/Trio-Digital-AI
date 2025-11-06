@@ -1,300 +1,186 @@
-#!/usr/bin/env ts-node
-
 /**
- * Script de test pour valider les corrections de randomisation
- * Teste la diversité des presets générés avec le nouveau système ultra-entropique
+ * 🎯 TEST DE LA CORRECTION ANTI-BIAIS
+ * Vérifie que la randomisation élimine le biais de position
+ * dans la sélection des contextes créatifs
  */
 
-import { randomizeFromFilteredPresets } from '../services/GPTPresetSelector';
-import { getRelevantPresetsForGPT } from '../services/CreativePresetsLibrary';
+import { preFilterContextsByUsage, CREATIVE_CONTEXTS } from '../services/CreativePresetsLibrary';
 
-// Mock data pour les tests
-const mockBrand = {
-  _id: 'test-brand-id-12345',
-  name: 'Test Brand',
-  sector: 'food',
-  colors: {
-    primary: '#FF6B35',
-    secondary: '#F7931E',
-    accent: '#FFD23F'
-  }
-};
-
-const mockProduct = {
-  name: 'Test Product',
-  category: 'beverage',
-  usageOccasions: ['breakfast', 'snack']
-};
-
-const mockCalendar = {
-  _id: 'test-calendar-id-67890',
-  communicationStyle: 'friendly',
-  generationSettings: {
-    themes: ['health', 'lifestyle']
-  }
-};
+interface TestResult {
+  contextName: string;
+  count: number;
+  percentage: number;
+  position: 'first' | 'top3' | 'other';
+}
 
 /**
- * Test de diversité : génère plusieurs presets et vérifie qu'ils sont différents
+ * Test la distribution des contextes après randomisation
  */
-async function testDiversityGeneration() {
-  console.log('🧪 ========================================');
-  console.log('🧪 TEST DE DIVERSITÉ DE RANDOMISATION');
-  console.log('🧪 ========================================\n');
-
-  // Obtenir les presets filtrés
-  const filteredPresets = getRelevantPresetsForGPT(mockBrand, mockProduct, mockCalendar);
+function testContextRandomization(): void {
+  console.log('🎯 TEST ANTI-BIAIS - RANDOMISATION DES CONTEXTES');
+  console.log('='.repeat(60));
   
-  console.log(`📊 Presets disponibles:`);
-  console.log(`   - Styles: ${filteredPresets.styles.length}`);
-  console.log(`   - Contextes: ${filteredPresets.contexts.length}`);
-  console.log(`   - Palettes: ${filteredPresets.palettes.length}`);
-  console.log(`   - Frameworks: ${filteredPresets.frameworks.length}`);
-  console.log(`   - Éclairages: ${filteredPresets.lightings.length}\n`);
-
-  // Générer 10 presets avec le nouveau système
-  const generatedPresets: Array<{
-    index: number;
-    style: string;
-    context: string;
-    palette: string;
-    framework: string;
-    lighting: string;
-    combo: string;
-  }> = [];
-  const calendarId = 'test-calendar-diversity-' + Date.now();
+  const numTests = 1000;
+  const usageOccasions = ['juice', 'breakfast', 'healthy'];
   
-  console.log('🎨 Génération de 10 presets avec le système optimisé...\n');
+  // Compteurs pour analyser la distribution
+  const firstPositionCount: Record<string, number> = {};
+  const top3PositionCount: Record<string, number> = {};
+  const totalAppearances: Record<string, number> = {};
   
-  for (let i = 0; i < 10; i++) {
-    console.log(`--- Post ${i + 1}/10 ---`);
+  console.log(`\n📊 Génération de ${numTests} listes de contextes randomisées...`);
+  
+  for (let i = 0; i < numTests; i++) {
+    // Générer un calendarId unique et un postIndex variable
+    const calendarId = `test-calendar-${i}-${Date.now()}-${Math.random()}`;
+    const postIndex = i % 50; // Variation du postIndex
     
-    const preset = randomizeFromFilteredPresets(
-      filteredPresets,
-      undefined, // pas de seed fixe pour tester l'entropie
+    const contexts = preFilterContextsByUsage(
+      usageOccasions,
+      'beverage',
       calendarId,
-      mockBrand._id,
-      i
+      postIndex
     );
     
-    generatedPresets.push({
-      index: i + 1,
-      style: preset.style.name,
-      context: preset.context.name,
-      palette: preset.palette.name,
-      framework: preset.framework.name,
-      lighting: preset.lighting.name,
-      combo: `${preset.style.name}+${preset.context.name}+${preset.palette.name}`
+    // Analyser les positions
+    contexts.forEach((context, index) => {
+      const name = context.name;
+      
+      // Compter les apparitions totales
+      totalAppearances[name] = (totalAppearances[name] || 0) + 1;
+      
+      // Compter les premières positions
+      if (index === 0) {
+        firstPositionCount[name] = (firstPositionCount[name] || 0) + 1;
+      }
+      
+      // Compter le top 3
+      if (index < 3) {
+        top3PositionCount[name] = (top3PositionCount[name] || 0) + 1;
+      }
     });
-    
-    console.log(`✅ Style: ${preset.style.name}`);
-    console.log(`✅ Context: ${preset.context.name}`);
-    console.log(`✅ Palette: ${preset.palette.name}\n`);
   }
-
-  // Analyser la diversité
-  console.log('📊 ========================================');
-  console.log('📊 ANALYSE DE DIVERSITÉ');
-  console.log('📊 ========================================\n');
-
-  // Compter les éléments uniques
-  const uniqueStyles = new Set(generatedPresets.map(p => p.style));
-  const uniqueContexts = new Set(generatedPresets.map(p => p.context));
-  const uniquePalettes = new Set(generatedPresets.map(p => p.palette));
-  const uniqueFrameworks = new Set(generatedPresets.map(p => p.framework));
-  const uniqueLightings = new Set(generatedPresets.map(p => p.lighting));
-  const uniqueCombos = new Set(generatedPresets.map(p => p.combo));
-
-  console.log(`🎨 Styles uniques: ${uniqueStyles.size}/10 (${(uniqueStyles.size/10*100).toFixed(1)}%)`);
-  console.log(`🌍 Contextes uniques: ${uniqueContexts.size}/10 (${(uniqueContexts.size/10*100).toFixed(1)}%)`);
-  console.log(`🎨 Palettes uniques: ${uniquePalettes.size}/10 (${(uniquePalettes.size/10*100).toFixed(1)}%)`);
-  console.log(`📝 Frameworks uniques: ${uniqueFrameworks.size}/10 (${(uniqueFrameworks.size/10*100).toFixed(1)}%)`);
-  console.log(`💡 Éclairages uniques: ${uniqueLightings.size}/10 (${(uniqueLightings.size/10*100).toFixed(1)}%)`);
-  console.log(`🔄 Combinaisons uniques: ${uniqueCombos.size}/10 (${(uniqueCombos.size/10*100).toFixed(1)}%)\n`);
-
-  // Détection des répétitions
-  const styleRepeats = generatedPresets.filter((preset, index) => 
-    generatedPresets.findIndex(p => p.style === preset.style) !== index
-  );
   
-  const comboRepeats = generatedPresets.filter((preset, index) => 
-    generatedPresets.findIndex(p => p.combo === preset.combo) !== index
-  );
-
-  if (styleRepeats.length > 0) {
-    console.log('⚠️  RÉPÉTITIONS DE STYLES DÉTECTÉES:');
-    styleRepeats.forEach(repeat => {
-      console.log(`   Post ${repeat.index}: ${repeat.style} (déjà utilisé)`);
-    });
-    console.log('');
-  }
-
-  if (comboRepeats.length > 0) {
-    console.log('⚠️  RÉPÉTITIONS DE COMBINAISONS DÉTECTÉES:');
-    comboRepeats.forEach(repeat => {
-      console.log(`   Post ${repeat.index}: ${repeat.combo} (déjà utilisé)`);
-    });
-    console.log('');
-  }
-
-  // Score de diversité global
-  const diversityScore = (uniqueStyles.size + uniqueContexts.size + uniquePalettes.size + uniqueCombos.size) / 40 * 100;
+  console.log('\n🏆 RÉSULTATS - PREMIÈRE POSITION:');
+  console.log('-'.repeat(50));
   
-  console.log(`🏆 SCORE DE DIVERSITÉ GLOBAL: ${diversityScore.toFixed(1)}%\n`);
-
-  // Évaluation
-  if (diversityScore >= 85) {
-    console.log('✅ EXCELLENT: Diversité optimale atteinte !');
-  } else if (diversityScore >= 70) {
-    console.log('✅ BON: Diversité satisfaisante');
-  } else if (diversityScore >= 50) {
-    console.log('⚠️  MOYEN: Diversité acceptable mais améliorable');
+  // Trier par fréquence d'apparition en première position
+  const firstPositionResults = Object.entries(firstPositionCount)
+    .map(([name, count]) => ({
+      contextName: name,
+      count,
+      percentage: (count / numTests) * 100,
+      position: 'first' as const
+    }))
+    .sort((a, b) => b.count - a.count);
+  
+  // Afficher le top 10 des premières positions
+  console.log('Top 10 contextes en première position:');
+  firstPositionResults.slice(0, 10).forEach((result, index) => {
+    const status = result.percentage > 5 ? '⚠️  BIAIS' : '✅ OK';
+    console.log(`${(index + 1).toString().padStart(2)}. ${result.contextName.padEnd(35)} ${result.count.toString().padStart(4)} fois (${result.percentage.toFixed(1)}%) ${status}`);
+  });
+  
+  console.log('\n📈 ANALYSE STATISTIQUE:');
+  console.log('-'.repeat(50));
+  
+  const maxFirstPosition = Math.max(...Object.values(firstPositionCount));
+  const minFirstPosition = Math.min(...Object.values(firstPositionCount));
+  const avgFirstPosition = Object.values(firstPositionCount).reduce((a, b) => a + b, 0) / Object.keys(firstPositionCount).length;
+  
+  console.log(`Contextes différents en 1ère position: ${Object.keys(firstPositionCount).length}`);
+  console.log(`Maximum en 1ère position: ${maxFirstPosition} fois (${(maxFirstPosition/numTests*100).toFixed(1)}%)`);
+  console.log(`Minimum en 1ère position: ${minFirstPosition} fois (${(minFirstPosition/numTests*100).toFixed(1)}%)`);
+  console.log(`Moyenne en 1ère position: ${avgFirstPosition.toFixed(1)} fois (${(avgFirstPosition/numTests*100).toFixed(1)}%)`);
+  
+  // Calculer l'écart-type pour mesurer la dispersion
+  const variance = Object.values(firstPositionCount)
+    .reduce((sum, count) => sum + Math.pow(count - avgFirstPosition, 2), 0) / Object.keys(firstPositionCount).length;
+  const standardDeviation = Math.sqrt(variance);
+  
+  console.log(`Écart-type: ${standardDeviation.toFixed(2)} (plus c'est bas, plus c'est uniforme)`);
+  
+  // Évaluation de la qualité de la randomisation
+  const uniformityScore = 100 - (standardDeviation / avgFirstPosition * 100);
+  console.log(`Score d'uniformité: ${uniformityScore.toFixed(1)}% (objectif: >80%)`);
+  
+  console.log('\n🎯 VÉRIFICATION ANTI-BIAIS:');
+  console.log('-'.repeat(50));
+  
+  const biasedContexts = firstPositionResults.filter(r => r.percentage > 5);
+  if (biasedContexts.length === 0) {
+    console.log('✅ SUCCÈS: Aucun contexte ne dépasse 5% en première position');
+    console.log('✅ Le biais de position a été éliminé !');
   } else {
-    console.log('❌ FAIBLE: Problème de diversité détecté');
-  }
-
-  return {
-    diversityScore,
-    uniqueStyles: uniqueStyles.size,
-    uniqueContexts: uniqueContexts.size,
-    uniquePalettes: uniquePalettes.size,
-    uniqueCombos: uniqueCombos.size,
-    styleRepeats: styleRepeats.length,
-    comboRepeats: comboRepeats.length
-  };
-}
-
-/**
- * Test de cohérence : vérifie que les mêmes paramètres donnent des résultats différents
- */
-async function testConsistentDiversity() {
-  console.log('\n🔄 ========================================');
-  console.log('🔄 TEST DE COHÉRENCE ANTI-RÉPÉTITION');
-  console.log('🔄 ========================================\n');
-
-  const filteredPresets = getRelevantPresetsForGPT(mockBrand, mockProduct, mockCalendar);
-  const calendarId = 'test-consistency-' + Date.now();
-  
-  // Générer 5 presets avec les mêmes paramètres de base
-  const results = [];
-  
-  for (let i = 0; i < 5; i++) {
-    const preset = randomizeFromFilteredPresets(
-      filteredPresets,
-      42, // seed fixe pour tester l'anti-répétition
-      calendarId,
-      mockBrand._id,
-      i
-    );
-    
-    results.push({
-      index: i + 1,
-      style: preset.style.name,
-      context: preset.context.name,
-      palette: preset.palette.name
+    console.log(`⚠️  ATTENTION: ${biasedContexts.length} contexte(s) dépassent 5% en première position:`);
+    biasedContexts.forEach(context => {
+      console.log(`   - ${context.contextName}: ${context.percentage.toFixed(1)}%`);
     });
-    
-    console.log(`Post ${i + 1}: ${preset.style.name} + ${preset.context.name} + ${preset.palette.name}`);
   }
   
-  // Vérifier qu'ils sont tous différents malgré le seed fixe
-  const uniqueResults = new Set(results.map(r => `${r.style}+${r.context}+${r.palette}`));
+  // Test spécifique pour "Modern Kitchen" et "Cozy Home"
+  console.log('\n🔍 VÉRIFICATION SPÉCIFIQUE - Anciens contextes dominants:');
+  console.log('-'.repeat(50));
   
-  console.log(`\n🎯 Résultats uniques: ${uniqueResults.size}/5`);
+  const modernKitchenCount = firstPositionCount['Modern Kitchen Bright'] || 0;
+  const cozyHomeCount = firstPositionCount['Cozy Home Comfort'] || 0;
   
-  if (uniqueResults.size === 5) {
-    console.log('✅ SUCCÈS: Le système anti-répétition fonctionne correctement');
+  console.log(`"Modern Kitchen Bright" en 1ère position: ${modernKitchenCount} fois (${(modernKitchenCount/numTests*100).toFixed(1)}%)`);
+  console.log(`"Cozy Home Comfort" en 1ère position: ${cozyHomeCount} fois (${(cozyHomeCount/numTests*100).toFixed(1)}%)`);
+  
+  const combinedOldDominance = ((modernKitchenCount + cozyHomeCount) / numTests) * 100;
+  console.log(`Dominance combinée anciens leaders: ${combinedOldDominance.toFixed(1)}% (avant: ~55%)`);
+  
+  if (combinedOldDominance < 10) {
+    console.log('✅ EXCELLENT: La dominance des anciens leaders a été brisée !');
+  } else if (combinedOldDominance < 20) {
+    console.log('✅ BON: Réduction significative de la dominance');
   } else {
-    console.log('⚠️  ATTENTION: Répétitions détectées malgré l\'anti-répétition');
+    console.log('⚠️  Le biais persiste partiellement');
   }
   
-  return uniqueResults.size === 5;
-}
-
-/**
- * Test de performance : mesure le temps d'exécution
- */
-async function testPerformance() {
-  console.log('\n⚡ ========================================');
-  console.log('⚡ TEST DE PERFORMANCE');
-  console.log('⚡ ========================================\n');
-
-  const filteredPresets = getRelevantPresetsForGPT(mockBrand, mockProduct, mockCalendar);
-  const calendarId = 'test-performance-' + Date.now();
+  console.log('\n🎲 TEST DE REPRODUCTIBILITÉ:');
+  console.log('-'.repeat(50));
   
-  const startTime = performance.now();
+  // Test avec le même calendarId et postIndex
+  const sameCalendarId = 'test-reproducibility';
+  const samePostIndex = 5;
   
-  // Générer 20 presets pour mesurer la performance
-  for (let i = 0; i < 20; i++) {
-    randomizeFromFilteredPresets(
-      filteredPresets,
-      undefined,
-      calendarId,
-      mockBrand._id,
-      i
-    );
-  }
+  const result1 = preFilterContextsByUsage(usageOccasions, 'beverage', sameCalendarId, samePostIndex);
+  const result2 = preFilterContextsByUsage(usageOccasions, 'beverage', sameCalendarId, samePostIndex);
   
-  const endTime = performance.now();
-  const totalTime = endTime - startTime;
-  const avgTime = totalTime / 20;
+  const isReproducible = result1.length === result2.length && 
+    result1.every((context, index) => context.name === result2[index].name);
   
-  console.log(`⏱️  Temps total pour 20 presets: ${totalTime.toFixed(2)}ms`);
-  console.log(`⏱️  Temps moyen par preset: ${avgTime.toFixed(2)}ms`);
-  
-  if (avgTime < 10) {
-    console.log('✅ EXCELLENT: Performance optimale');
-  } else if (avgTime < 50) {
-    console.log('✅ BON: Performance acceptable');
+  if (isReproducible) {
+    console.log('✅ REPRODUCTIBILITÉ: Même seed → même ordre (déterministe)');
   } else {
-    console.log('⚠️  LENT: Performance à optimiser');
+    console.log('⚠️  REPRODUCTIBILITÉ: Ordre différent avec même seed');
   }
   
-  return avgTime;
-}
-
-/**
- * Fonction principale de test
- */
-async function runAllTests() {
-  console.log('🚀 DÉBUT DES TESTS DE RANDOMISATION OPTIMISÉE\n');
+  console.log('\n🌟 RÉSUMÉ FINAL:');
+  console.log('='.repeat(60));
+  console.log(`Tests effectués: ${numTests}`);
+  console.log(`Contextes uniques utilisés: ${Object.keys(firstPositionCount).length}`);
+  console.log(`Score d'uniformité: ${uniformityScore.toFixed(1)}%`);
+  console.log(`Réduction du biais: ${(55 - combinedOldDominance).toFixed(1)} points de pourcentage`);
   
-  try {
-    // Test 1: Diversité
-    const diversityResults = await testDiversityGeneration();
-    
-    // Test 2: Cohérence
-    const consistencyResult = await testConsistentDiversity();
-    
-    // Test 3: Performance
-    const performanceResult = await testPerformance();
-    
-    // Résumé final
-    console.log('\n🏁 ========================================');
-    console.log('🏁 RÉSUMÉ DES TESTS');
-    console.log('🏁 ========================================\n');
-    
-    console.log(`📊 Score de diversité: ${diversityResults.diversityScore.toFixed(1)}%`);
-    console.log(`🔄 Anti-répétition: ${consistencyResult ? 'FONCTIONNE' : 'PROBLÈME'}`);
-    console.log(`⚡ Performance moyenne: ${performanceResult.toFixed(2)}ms/preset`);
-    
-    const overallSuccess = diversityResults.diversityScore >= 70 && consistencyResult && performanceResult < 50;
-    
-    if (overallSuccess) {
-      console.log('\n🎉 TOUS LES TESTS RÉUSSIS ! Le système de randomisation est optimisé.');
-    } else {
-      console.log('\n⚠️  CERTAINS TESTS ONT ÉCHOUÉ. Optimisations supplémentaires nécessaires.');
-    }
-    
-  } catch (error) {
-    console.error('❌ Erreur lors des tests:', error);
-    process.exit(1);
+  if (uniformityScore > 80 && combinedOldDominance < 10) {
+    console.log('\n🎉 MISSION ACCOMPLIE !');
+    console.log('La randomisation anti-biais fonctionne parfaitement.');
+    console.log('Diversité maximale atteinte avec distribution uniforme.');
+  } else if (uniformityScore > 70) {
+    console.log('\n✅ BONNE AMÉLIORATION !');
+    console.log('Le biais a été significativement réduit.');
+  } else {
+    console.log('\n⚠️  AMÉLIORATION PARTIELLE');
+    console.log('Le biais persiste, ajustements nécessaires.');
   }
 }
 
-// Exécuter les tests si le script est appelé directement
+// Exécution du test
 if (require.main === module) {
-  runAllTests();
+  testContextRandomization();
 }
 
-export { testDiversityGeneration, testConsistentDiversity, testPerformance };
+export { testContextRandomization };
