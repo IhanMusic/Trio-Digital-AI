@@ -339,16 +339,44 @@ const Results: React.FC = () => {
 
   const handleDownload = async (imageUrl: string, platform: string, postId: string) => {
     try {
-      const response = await fetch(config.getImageUrl(imageUrl));
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
+      const fullImageUrl = config.getImageUrl(imageUrl);
+      const filename = `${platform}-post-${postId}.jpg`;
+      
+      // Utiliser la route proxy pour télécharger l'image
+      const downloadUrl = `${config.apiUrl}/download/image?url=${encodeURIComponent(fullImageUrl)}&filename=${encodeURIComponent(filename)}`;
+      
       const link = document.createElement('a');
-      link.href = url;
-      link.download = `${platform}-post-${postId}.jpg`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      link.href = downloadUrl;
+      link.download = filename;
+      link.target = '_blank';
+      
+      // Ajouter l'en-tête d'autorisation si nécessaire
+      if (token) {
+        // Pour les téléchargements, on utilise une approche différente car on ne peut pas ajouter des headers à un lien
+        // On va faire un fetch pour récupérer le blob et le télécharger
+        const response = await fetch(downloadUrl, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Erreur lors du téléchargement');
+        }
+        
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        link.href = url;
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } else {
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     } catch (error) {
       console.error('Erreur lors du téléchargement:', error);
     }
