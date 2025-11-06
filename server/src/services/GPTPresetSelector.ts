@@ -131,31 +131,73 @@ class AntiRepetitionPresetSelector {
       this.recentPalettes = [];
     }
 
-    // CORRECTION CRITIQUE : Seed vraiment unique par marque/calendrier/post
+    // 🎯 GÉNÉRATION DE SEED ULTRA-ENTROPIQUE pour diversité maximale
     const timestamp = Date.now();
-    const randomSalt = Math.random() * 1000000;
-    const brandSeed = brandId ? brandId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) : 0;
-    const calendarSeed = this.calendarId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const baseSeed = timestamp + randomSalt + brandSeed + calendarSeed + (postIndex || 0) + (seed || 0);
+    const microseconds = performance.now(); // Précision microseconde
+    const randomChaos1 = Math.random() * 999999999;
+    const randomChaos2 = Math.random() * 999999999;
+    const randomChaos3 = Math.random() * 999999999;
+    
+    // Hash complexe des IDs pour éviter les patterns
+    const brandSeed = brandId ? 
+      brandId.split('').reduce((acc, char, index) => acc + char.charCodeAt(0) * (index + 1) * 37, 0) : 
+      Math.floor(Math.random() * 100000);
+    const calendarSeed = this.calendarId.split('').reduce((acc, char, index) => acc + char.charCodeAt(0) * (index + 1) * 41, 0);
+    
+    // Seed composite avec entropie maximale
+    const baseSeed = timestamp + microseconds + randomChaos1 + randomChaos2 + randomChaos3 + 
+                     brandSeed + calendarSeed + (postIndex || 0) * 43 + (seed || 0) * 47;
 
-    console.log(`[AntiRepetition] 🎲 Seed calculé: ${baseSeed} (timestamp: ${timestamp}, brand: ${brandSeed}, calendar: ${calendarSeed}, post: ${postIndex})`);
+    console.log(`[AntiRepetition] 🎲 Seed ultra-entropique: ${baseSeed.toFixed(0)} (timestamp: ${timestamp}, microsec: ${microseconds.toFixed(3)}, brand: ${brandSeed}, calendar: ${calendarSeed}, post: ${postIndex})`);
 
     const stylesToUse = availableStyles.length > 0 ? availableStyles : filteredPresets.styles;
     const contextsToUse = availableContexts.length > 0 ? availableContexts : filteredPresets.contexts;
     const palettesToUse = availablePalettes.length > 0 ? availablePalettes : filteredPresets.palettes;
 
-    // Utiliser des multiplicateurs premiers différents pour éviter les corrélations
-    const styleIndex = Math.floor(Math.abs(Math.sin(baseSeed * 7919) * 10000) % stylesToUse.length);
-    const contextIndex = Math.floor(Math.abs(Math.sin(baseSeed * 8191) * 10000) % contextsToUse.length);
-    const paletteIndex = Math.floor(Math.abs(Math.sin(baseSeed * 8209) * 10000) % palettesToUse.length);
-    const frameworkIndex = Math.floor(Math.abs(Math.sin(baseSeed * 8221) * 10000) % filteredPresets.frameworks.length);
-    const lightingIndex = Math.floor(Math.abs(Math.sin(baseSeed * 8231) * 10000) % filteredPresets.lightings.length);
+    // 🔢 MULTIPLICATEURS PREMIERS OPTIMISÉS pour éviter corrélations
+    // Utilisation de nombres premiers plus grands et espacés pour réduire les patterns
+    const primes = [15485863, 15485867, 15485917, 15485927, 15485933]; // Grands nombres premiers
+    const styleIndex = Math.floor(Math.abs(Math.sin(baseSeed * primes[0]) * 1000000) % stylesToUse.length);
+    const contextIndex = Math.floor(Math.abs(Math.sin(baseSeed * primes[1]) * 1000000) % contextsToUse.length);
+    const paletteIndex = Math.floor(Math.abs(Math.sin(baseSeed * primes[2]) * 1000000) % palettesToUse.length);
+    const frameworkIndex = Math.floor(Math.abs(Math.sin(baseSeed * primes[3]) * 1000000) % filteredPresets.frameworks.length);
+    const lightingIndex = Math.floor(Math.abs(Math.sin(baseSeed * primes[4]) * 1000000) % filteredPresets.lightings.length);
 
-    const selectedStyle = stylesToUse[styleIndex];
-    const selectedContext = contextsToUse[contextIndex];
-    const selectedPalette = palettesToUse[paletteIndex];
 
-    console.log(`[AntiRepetition] 🎯 Indices calculés - Style: ${styleIndex}/${stylesToUse.length-1}, Context: ${contextIndex}/${contextsToUse.length-1}`);
+    console.log(`[AntiRepetition] 🎯 Indices calculés - Style: ${styleIndex}/${stylesToUse.length-1}, Context: ${contextIndex}/${contextsToUse.length-1}, Palette: ${paletteIndex}/${palettesToUse.length-1}`);
+
+    // 🔍 VALIDATION ANTI-RÉPÉTITION RENFORCÉE
+    let selectedStyle = stylesToUse[styleIndex];
+    let selectedContext = contextsToUse[contextIndex];
+    let selectedPalette = palettesToUse[paletteIndex];
+    
+    // Vérifier si cette combinaison exacte a déjà été utilisée récemment
+    const currentCombo = `${selectedStyle.name}+${selectedContext.name}+${selectedPalette.name}`;
+    const recentCombos = this.recentStyles.map((style, i) => 
+      `${style}+${this.recentContexts[i] || 'unknown'}+${this.recentPalettes[i] || 'unknown'}`
+    );
+    
+    if (recentCombos.includes(currentCombo) && stylesToUse.length > 1) {
+      console.log(`[AntiRepetition] ⚠️  Combinaison détectée comme récente: ${currentCombo}`);
+      console.log(`[AntiRepetition] 🔄 Régénération avec seed alternatif...`);
+      
+      // Régénérer avec un seed différent
+      const altSeed = baseSeed + Math.random() * 1000000 + Date.now();
+      const altStyleIndex = Math.floor(Math.abs(Math.sin(altSeed * primes[0]) * 1000000) % stylesToUse.length);
+      const altContextIndex = Math.floor(Math.abs(Math.sin(altSeed * primes[1]) * 1000000) % contextsToUse.length);
+      const altPaletteIndex = Math.floor(Math.abs(Math.sin(altSeed * primes[2]) * 1000000) % palettesToUse.length);
+      
+      const altStyle = stylesToUse[altStyleIndex];
+      const altContext = contextsToUse[altContextIndex];
+      const altPalette = palettesToUse[altPaletteIndex];
+      
+      console.log(`[AntiRepetition] ✅ Nouvelle sélection: "${altStyle.name}" + "${altContext.name}" + "${altPalette.name}"`);
+      
+      // Utiliser la sélection alternative
+      selectedStyle = altStyle;
+      selectedContext = altContext;
+      selectedPalette = altPalette;
+    }
 
     // Ajouter à l'historique
     this.recentStyles.push(selectedStyle.name);
