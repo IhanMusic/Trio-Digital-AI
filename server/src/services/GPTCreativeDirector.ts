@@ -199,7 +199,7 @@ export class GPTCreativeDirector {
       const avoidanceInstructions = antiRepetition.getAvoidanceInstructions();
 
       // 2. Analyser le contexte temporel et géographique
-      const temporalContext = this.analyzeTemporalContext(postContext.scheduledDate);
+      const temporalContext = this.analyzeTemporalContext(postContext.scheduledDate, postContext.postIndex);
       const geographicContext = this.analyzeGeographicContext(calendar.generationSettings?.countries);
 
       // 3. Construire le prompt GPT ultra-sophistiqué
@@ -384,11 +384,20 @@ IMPORTANT: Réponds UNIQUEMENT avec le prompt d'image, sans texte additionnel.`;
   }
 
   /**
-   * Analyse le contexte temporel (saison, événements)
+   * Analyse le contexte temporel avec équilibre saisonnier intelligent (70/30)
+   * 70% des posts sont intemporels, 30% intègrent subtilement la saison
    */
-  private static analyzeTemporalContext(scheduledDate?: string): string {
+  private static analyzeTemporalContext(scheduledDate?: string, postIndex: number = 0): string {
     if (!scheduledDate) {
-      return "Contexte temporel: Période actuelle, s'adapter aux tendances du moment.";
+      return "Contexte temporel: Focus intemporel sur le produit et la marque, sans référence saisonnière.";
+    }
+
+    // 🎯 ALGORITHME D'ÉQUILIBRE SAISONNIER 70/30
+    // Utiliser l'index du post pour déterminer si on inclut la saison
+    const shouldIncludeSeason = this.shouldIncludeSeasonalContext(postIndex);
+    
+    if (!shouldIncludeSeason) {
+      return "Contexte temporel: Focus intemporel sur le produit et la marque. Éviter les références saisonnières, privilégier un style universel et moderne.";
     }
 
     const date = new Date(scheduledDate);
@@ -402,7 +411,7 @@ IMPORTANT: Réponds UNIQUEMENT avec le prompt d'image, sans texte additionnel.`;
     else if (month >= 9 && month <= 11) season = 'Automne';
     else season = 'Hiver';
 
-    // Événements spéciaux
+    // Événements spéciaux (seulement pour les posts saisonniers)
     const events = [];
     if (month === 12 && day >= 20) events.push('Fêtes de fin d\'année');
     if (month === 1 && day <= 7) events.push('Nouvelle année');
@@ -414,13 +423,46 @@ IMPORTANT: Réponds UNIQUEMENT avec le prompt d'image, sans texte additionnel.`;
     if (month === 10 && day === 31) events.push('Halloween');
     if (month === 11 && day >= 20) events.push('Black Friday/Thanksgiving');
 
-    let context = `Contexte temporel: ${season}`;
-    if (events.length > 0) {
-      context += `, période de ${events.join(' et ')}`;
+    // 🎨 INTENSITÉ SAISONNIÈRE VARIABLE
+    const seasonalIntensity = this.getSeasonalIntensity(postIndex);
+    
+    let context = '';
+    if (seasonalIntensity === 'subtle') {
+      context = `Contexte temporel: Intégrer SUBTILEMENT des touches de ${season.toLowerCase()}`;
+      if (events.length > 0) {
+        context += ` et l'esprit ${events[0]}`;
+      }
+      context += '. Le produit reste le focus principal, la saison n\'est qu\'un accent discret en arrière-plan.';
+    } else {
+      context = `Contexte temporel: ${season}`;
+      if (events.length > 0) {
+        context += `, période de ${events.join(' et ')}`;
+      }
+      context += '. Adapter l\'ambiance, les couleurs et l\'éclairage à cette période tout en gardant le produit comme élément central.';
     }
-    context += '. Adapter l\'ambiance, les couleurs et l\'éclairage à cette période.';
 
     return context;
+  }
+
+  /**
+   * Détermine si ce post doit inclure un contexte saisonnier (algorithme 70/30)
+   */
+  private static shouldIncludeSeasonalContext(postIndex: number): boolean {
+    // Algorithme basé sur l'index du post pour créer un pattern 70/30
+    // Posts 0,1,4,5,7,8 = intemporels (70%)
+    // Posts 2,3,6,9 = saisonniers (30%)
+    const seasonalPattern = [false, false, true, true, false, false, true, false, false, true];
+    return seasonalPattern[postIndex % seasonalPattern.length];
+  }
+
+  /**
+   * Détermine l'intensité saisonnière (subtile ou marquée)
+   */
+  private static getSeasonalIntensity(postIndex: number): 'subtle' | 'marked' {
+    // Alternance entre intensité subtile et marquée pour les posts saisonniers
+    // 60% subtile, 40% marquée
+    const intensityPattern = ['subtle', 'subtle', 'marked', 'subtle', 'subtle'];
+    return intensityPattern[postIndex % intensityPattern.length];
   }
 
   /**
