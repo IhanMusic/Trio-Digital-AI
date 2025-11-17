@@ -16,6 +16,7 @@ import { ProductIntegrationWithStabilityService } from './ProductIntegrationWith
 import Veo3Service from './Veo3Service';
 import sharp from 'sharp';
 import { GPTCreativeDirector } from './GPTCreativeDirector';
+import { GPTVideoCreativeDirector } from './GPTVideoCreativeDirector';
 import { CannesLionsImageScorer, ScoredImage } from './CannesLionsImageScorer';
 
 // 🔥 CONFIGURATION GÉNÉRATION VIDÉO
@@ -1342,37 +1343,89 @@ FORMAT DE RÉPONSE:
         
         const parsedReelPost = parsedReelPosts[0];
         
-        // Construire un prompt vidéo ULTRA-DESCRIPTIF pour préserver l'apparence exacte du produit
-        const productDetails = products.length > 0 ? products[0] : null;
+        // 🎬 NOUVEAU SYSTÈME : GPT VIDEO CREATIVE DIRECTOR
+        logger.info('🎬 === NOUVEAU SYSTÈME GPT VIDEO CREATIVE DIRECTOR ===');
+        logger.info(`🎯 Génération script vidéo unique pour ${brand.name} - REEL`);
         
-        let reelPrompt = `Professional 8-second commercial video showcasing the EXACT product from the reference image.
-
-🎯 CRITICAL PRODUCT APPEARANCE REQUIREMENTS (MUST PRESERVE):
-- Product: ${productDetails ? productDetails.name : 'product'}
-- The product MUST maintain its EXACT visual appearance from the reference image
-- All product colors, packaging design, labels, and branding are IDENTICAL to reference
-- Product shape, proportions, and physical characteristics match reference perfectly
-- Any text, logos, or graphics on the product are preserved exactly as shown
-- The product is the HERO element, clearly visible and instantly recognizable
-${productDetails && productDetails.uniqueSellingPoints && productDetails.uniqueSellingPoints.length > 0 ? `- Key features to highlight: ${productDetails.uniqueSellingPoints.join(', ')}` : ''}
-
-📹 VIDEO CONCEPT:
-${parsedReelPost.postContent}
+        // Préparer les données pour GPT Video Creative Director
+        const videoBrandData = {
+          name: brand.name,
+          sector: brand.sector,
+          pricePositioning: brand.pricePositioning,
+          businessType: brand.businessType,
+          colors: brand.colors,
+          description: brand.description,
+          values: brand.values,
+          targetAudience: briefData.targetAudience.geographic?.[0] || calendar.targetCountry
+        };
+        
+        const videoProductData = products.length > 0 ? {
+          name: products[0].name,
+          category: products[0].category,
+          description: products[0].description,
+          uniqueSellingPoints: products[0].uniqueSellingPoints,
+          customerBenefits: products[0].customerBenefits,
+          usageOccasions: products[0].usageOccasions,
+          images: products[0].images
+        } : {
+          name: brand.name,
+          category: 'general',
+          description: brand.description || 'Produit de qualité'
+        };
+        
+        const videoCalendarData = {
+          campaignObjective: calendar.campaignObjective,
+          generationSettings: calendar.generationSettings,
+          communicationStyle: calendar.communicationStyle,
+          targetAudience: briefData.targetAudience.geographic?.[0] || calendar.targetCountry
+        };
+        
+        const videoContext = {
+          postIndex: 0, // Premier et seul REEL
+          totalPosts: 1,
+          scheduledDate: reelDate.toISOString(),
+          platform: reelPlatform,
+          country: calendar.targetCountry,
+          videoType: 'product-showcase' as 'text-to-video' | 'image-to-video' | 'product-showcase' | 'lifestyle',
+          duration: 8 as 4 | 6 | 8,
+          aspectRatio: '9:16' as '16:9' | '9:16'
+        };
+        
+        // Générer le script vidéo avec GPT Video Creative Director
+        let reelPrompt: string;
+        try {
+          logger.info('🤖 Appel à GPT Video Creative Director...');
+          reelPrompt = await GPTVideoCreativeDirector.generateVideoScript(
+            videoBrandData,
+            videoProductData,
+            videoCalendarData,
+            videoContext,
+            String(calendar._id)
+          );
+          
+          logger.info('✅ GPT Video Creative Director a généré le script avec succès');
+          logger.info(`📝 Script généré (premiers 300 chars): ${reelPrompt.substring(0, 300)}...`);
+          
+        } catch (error: any) {
+          logger.error('❌ Erreur GPT Video Creative Director:', error.message);
+          logger.info('⚠️  Utilisation d\'un script de fallback');
+          
+          // Script de fallback simple mais efficace
+          const productDetails = products.length > 0 ? products[0] : null;
+          reelPrompt = `Professional 8-second commercial video showcasing ${productDetails ? productDetails.name : 'product'} for ${brand.name}.
 
 🎬 CINEMATOGRAPHY:
-- Format: 16:9 horizontal video (optimized for product showcase)
+- Format: 9:16 vertical video optimized for Instagram Reel
 - Camera movement: Smooth, dynamic reveal showcasing product from multiple angles
-- The camera orbits or tracks to highlight product details while maintaining reference appearance
-- Lighting: Professional commercial lighting that enhances without altering product appearance
+- Lighting: Professional commercial lighting with cinematic quality
 - Setting: ${productDetails?.category || 'Lifestyle'} context that complements the product
-${brand.colors?.primary ? `- Color palette: ${brand.colors.primary}${brand.colors.secondary ? `, ${brand.colors.secondary}` : ''}${brand.colors.accent ? `, ${brand.colors.accent}` : ''} (brand colors integrated in environment)` : ''}
+${brand.colors?.primary ? `- Color palette: ${brand.colors.primary} brand colors integrated in environment` : ''}
 
 🎯 PRODUCT INTEGRATION:
 - The product occupies 40-60% of frame throughout the video
 - Product is always in sharp focus and well-lit
 - Background and environment enhance the product without competing for attention
 - Natural lifestyle integration showing product in authentic use context
-${productDetails && productDetails.customerBenefits && productDetails.customerBenefits.length > 0 ? `- Visual storytelling conveys: ${productDetails.customerBenefits.join(', ')}` : ''}
 
 ⚡ STYLE & MOOD:
 - Tone: Professional and aspirational
@@ -1380,13 +1433,13 @@ ${productDetails && productDetails.customerBenefits && productDetails.customerBe
 - Mood: ${productDetails?.category === 'food' ? 'Appetizing and fresh' : productDetails?.category === 'cosmetic' ? 'Luxurious and elegant' : 'Modern and premium'}
 - Quality: Cinema-grade, 1080p resolution, professional color grading
 
-🔑 KEY INSTRUCTION:
-The reference image shows the EXACT product appearance that MUST be maintained throughout the entire video. 
-Do not alter, reimagine, or modify the product's visual characteristics in any way.`;
-
-        logger.info('📝 Prompt REEL ultra-descriptif construit');
-        logger.info('Produit:', productDetails?.name || 'N/A');
-        logger.info('Prompt complet:', reelPrompt.substring(0, 300) + '...');
+📹 VIDEO CONCEPT:
+${parsedReelPost.postContent}`;
+        }
+        
+        logger.info('📝 Script REEL final prêt');
+        logger.info('Produit:', videoProductData.name || 'N/A');
+        logger.info('Script complet:', reelPrompt.substring(0, 300) + '...');
         
         // 🎨 PIPELINE EN 2 ÉTAPES : Nano Banana → VEO3
         // Étape 1: Générer une image stylisée avec Nano Banana
@@ -1419,6 +1472,7 @@ Do not alter, reimagine, or modify the product's visual characteristics in any w
         }
         
         // Construire le prompt pour Nano Banana (image statique pour vidéo 9:16)
+        const productDetails = products.length > 0 ? products[0] : null;
         const nanoBananaPrompt = `Professional 9:16 vertical commercial product shot for Instagram Reel.
 ${parsedReelPost.postContent}
 
