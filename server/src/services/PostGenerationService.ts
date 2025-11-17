@@ -15,9 +15,7 @@ import { parseGPTResponse } from '../utils/promptParser';
 import { ProductIntegrationWithStabilityService } from './ProductIntegrationWithStabilityService';
 import Veo3Service from './Veo3Service';
 import sharp from 'sharp';
-import { getRelevantPresetsForGPT, generateColorPalettePrompt } from './CreativePresetsLibrary';
-import { selectPresetWithGPT, randomizeFromFilteredPresets } from './GPTPresetSelector';
-import { CannesLionsImageOptimizer } from './CannesLionsImageOptimizer';
+import { GPTCreativeDirector } from './GPTCreativeDirector';
 import { CannesLionsImageScorer, ScoredImage } from './CannesLionsImageScorer';
 
 // 🔥 CONFIGURATION GÉNÉRATION VIDÉO
@@ -326,126 +324,76 @@ class PostGenerationService {
         const date = dates[i];
         logger.info(`\nGénération du contenu pour ${platform} - Post #${i + 1} (${date.toLocaleDateString()})`);
         
-        // 🎨 SÉLECTIONNER UN PRESET CRÉATIF UNIQUE POUR CE POST AVEC GPT-5
-        // ⚠️ IMPORTANT: Cette sélection est DANS la boucle pour garantir la diversité
-        logger.info('🤖 Pré-filtrage des presets pour GPT-5...');
+        // 🎨 NOUVEAU SYSTÈME : GPT CREATIVE DIRECTOR
+        logger.info('🎨 === NOUVEAU SYSTÈME GPT CREATIVE DIRECTOR ===');
+        logger.info(`🎯 Génération prompt d'image unique pour ${brand.name} - Post #${i + 1}`);
         
-        // Étape 1: Pré-filtrer les presets pertinents (POUR CE POST SPÉCIFIQUE)
-        const filteredPresets = getRelevantPresetsForGPT(
-          brand,
-          products.length > 0 ? products[0] : { category: 'general', usageOccasions: [] },
-          calendar
-        );
+        // Préparer les données pour GPT Creative Director
+        const brandData = {
+          name: brand.name,
+          sector: brand.sector,
+          pricePositioning: brand.pricePositioning,
+          businessType: brand.businessType,
+          colors: brand.colors,
+          description: brand.description,
+          values: brand.values,
+          targetAudience: briefData.targetAudience.geographic?.[0] || calendar.targetCountry
+        };
         
-        logger.info(`✅ Presets pré-filtrés: ${filteredPresets.styles.length} styles, ${filteredPresets.contexts.length} contextes`);
+        const productData = products.length > 0 ? {
+          name: products[0].name,
+          category: products[0].category,
+          description: products[0].description,
+          uniqueSellingPoints: products[0].uniqueSellingPoints,
+          customerBenefits: products[0].customerBenefits,
+          usageOccasions: products[0].usageOccasions,
+          images: products[0].images
+        } : {
+          name: brand.name,
+          category: 'general',
+          description: brand.description || 'Produit de qualité'
+        };
         
-        // Étape 2: Demander à GPT-5 de sélectionner le preset optimal
-        let creativePreset;
+        const calendarData = {
+          campaignObjective: calendar.campaignObjective,
+          generationSettings: calendar.generationSettings,
+          communicationStyle: calendar.communicationStyle,
+          targetAudience: briefData.targetAudience.geographic?.[0] || calendar.targetCountry
+        };
+        
+        const postContext = {
+          postIndex: i,
+          totalPosts: dates.length,
+          scheduledDate: date.toISOString(),
+          platform: platform,
+          country: calendar.targetCountry
+        };
+        
+        // Générer le prompt d'image avec GPT Creative Director
+        let gptImagePrompt: string;
         try {
-          logger.info(`🤖 [Post ${i + 1}/${dates.length}] Appel à GPT-5 pour sélection intelligente du preset...`);
-          logger.info(`📊 Contexte: Marque=${brand.name}, Secteur=${brand.sector}, Calendrier=${calendar._id}`);
-          
-          const gptSelectedPreset = await selectPresetWithGPT(
-            filteredPresets,
-            brand,
-            products.length > 0 ? products[0] : { name: brand.name, category: 'general' },
-            calendar,
-            i, // postIndex dans la plateforme
-            String(calendar._id) // calendarId pour l'historique anti-répétition
+          logger.info('🤖 Appel à GPT Creative Director...');
+          gptImagePrompt = await GPTCreativeDirector.generateImagePrompt(
+            brandData,
+            productData,
+            calendarData,
+            postContext,
+            String(calendar._id)
           );
           
-          if (gptSelectedPreset) {
-            creativePreset = gptSelectedPreset;
-            logger.info('✅ GPT-5 a sélectionné le preset avec succès');
-            logger.info(`🎨 Preset GPT-5: Style="${gptSelectedPreset.style.name}", Context="${gptSelectedPreset.context.name}"`);
-          } else {
-            logger.info('⚠️  GPT-5 n\'a pas pu sélectionner, fallback sur système anti-répétition');
-            logger.info(`🔄 Utilisation du fallback amélioré pour calendrier: ${calendar._id}`);
-            creativePreset = randomizeFromFilteredPresets(
-              filteredPresets,
-              globalPostIndex, // seed basé sur l'index global
-              String(calendar._id), // calendarId pour l'anti-répétition
-              String(brand._id), // brandId pour la diversité
-              i // postIndex dans la plateforme
-            );
-          }
+          logger.info('✅ GPT Creative Director a généré le prompt avec succès');
+          logger.info(`📝 Prompt généré (premiers 200 chars): ${gptImagePrompt.substring(0, 200)}...`);
+          
         } catch (error: any) {
-          logger.error('❌ Erreur lors de la sélection GPT-5:', error.message);
-          logger.error('📋 Détails erreur:', error.stack?.substring(0, 500));
-          logger.info('⚠️  Fallback sur système anti-répétition amélioré');
-          logger.info(`🔄 Paramètres fallback: calendrier=${calendar._id}, marque=${brand._id}, post=${i}`);
-          creativePreset = randomizeFromFilteredPresets(
-            filteredPresets,
-            globalPostIndex, // seed basé sur l'index global
-            String(calendar._id), // calendarId pour l'anti-répétition
-            String(brand._id), // brandId pour la diversité
-            i // postIndex dans la plateforme
-          );
+          logger.error('❌ Erreur GPT Creative Director:', error.message);
+          logger.info('⚠️  Utilisation d\'un prompt de fallback');
+          
+          // Prompt de fallback simple mais efficace
+          gptImagePrompt = `Professional commercial photography of ${productData.name} for ${brandData.name}. 
+High-quality product shot with ${brandData.colors?.primary ? brandData.colors.primary : 'brand'} color palette. 
+Modern, clean composition with perfect lighting. Shot with professional camera, 85mm lens, f/2.8. 
+Square 1:1 format optimized for social media. Premium and aspirational mood.`;
         }
-        
-        logger.info(`🎨 Preset créatif sélectionné:`);
-        logger.info(`   - Style: ${creativePreset.style.name}`);
-        logger.info(`   - Référence: ${creativePreset.reference.substring(0, 80)}...`);
-        logger.info(`   - Palette: ${creativePreset.palette.name}`);
-        logger.info(`   - Framework: ${creativePreset.framework.name}`);
-        logger.info(`   - Contexte: ${creativePreset.context.name}`);
-        logger.info(`   - Éclairage: ${creativePreset.lighting.name}`);
-        
-        // Générer le prompt de palette de couleurs
-        const colorPalettePrompt = generateColorPalettePrompt(
-          creativePreset.palette,
-          {
-            primary: brand.colors?.primary,
-            secondary: brand.colors?.secondary,
-            accent: brand.colors?.accent
-          }
-        );
-        
-        // 🎨 CONSTRUIRE LA SECTION CRÉATIVE ENRICHIE POUR GPT-5
-        const creativeDirectionSection = `
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎨 DIRECTION CRÉATIVE SPÉCIFIQUE POUR CE POST #${i + 1}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-⚠️ IMPÉRATIF: Ce post DOIT suivre cette direction créative unique pour maximiser la diversité du calendrier.
-
-📸 STYLE PHOTOGRAPHIQUE IMPOSÉ: ${creativePreset.style.name}
-Catégorie: ${creativePreset.style.category.toUpperCase()}
-Description: ${creativePreset.style.mood}
-
-🎬 RÉFÉRENCE PHOTOGRAPHIQUE OBLIGATOIRE:
-${creativePreset.reference}
-
-⚠️ Vous DEVEZ reproduire ce style et cette approche photographique dans votre direction artistique.
-
-💡 ÉCLAIRAGE & AMBIANCE:
-- Setup: ${creativePreset.lighting.name} (${creativePreset.lighting.timeOfDay})
-- Caractéristiques: ${creativePreset.lighting.characteristics}
-- Mood cible: ${creativePreset.lighting.mood}
-
-🎨 ${colorPalettePrompt}
-
-🏗️ FRAMEWORK NARRATIF À APPLIQUER: ${creativePreset.framework.name}
-Structure: ${creativePreset.framework.structure}
-Application: ${creativePreset.framework.application}
-
-⚠️ Votre contenu textuel DOIT suivre cette structure narrative précise.
-
-🌍 CONTEXTE/SETTING IMPOSÉ: ${creativePreset.context.name}
-Description: ${creativePreset.context.description}
-
-⚠️ L'image DOIT être dans ce contexte/environnement spécifique.
-
-📐 COMPOSITION & TECHNIQUE:
-- Composition: ${creativePreset.style.composition}
-- Lighting technique: ${creativePreset.style.lighting}
-- Technical specs: ${creativePreset.style.technicalSpecs}
-
-🎯 OBJECTIF CRÉATIF:
-Créer un post visuellement et narrativement UNIQUE qui se distingue radicalement des autres posts du calendrier.
-Chaque post doit avoir sa propre identité créative tout en maintenant la cohérence de marque.
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
         
         // Incrémenter l'index global pour le prochain post
         globalPostIndex++;
@@ -637,7 +585,17 @@ ${briefData.legalConstraints.disclaimers.map((d: string) => `⚠️ ${d}`).join(
 → Inclure les mentions obligatoires si nécessaire
 ` : ''}
 
-${creativeDirectionSection}
+🎨 NOUVEAU SYSTÈME GPT CREATIVE DIRECTOR ACTIVÉ
+
+Le prompt d'image sera généré automatiquement par GPT Creative Director avec:
+- Analyse contextuelle complète (marque, produit, calendrier)
+- Techniques photographiques Cannes Lions
+- Anti-répétition intelligente par calendrier
+- Adaptation géographique et temporelle
+- Intégration des couleurs de marque
+- Diversité créative maximale
+
+Le prompt généré remplacera automatiquement toute direction créative fixe.
 
 📱 EXCELLENCE PAR PLATEFORME - ${platform.toUpperCase()}:
 
@@ -1121,39 +1079,26 @@ DIRECTIVES CRÉATIVES
               logger.info(`   - Support multi-produits: ${referenceImagesBase64.length > 1 ? 'OUI' : 'NON'}`);
             }
             
-            // 🎨 OPTIMISER LE PROMPT AVEC L'OPTIMISEUR PROFESSIONNEL
-            logger.info('🎨 Optimisation du prompt avec CannesLionsImageOptimizer...');
-            const optimizedPrompt = CannesLionsImageOptimizer.optimizeForGemini(
-              rawImagePrompt,
-              creativePreset,
-              {
-                primary: brand.colors?.primary,
-                secondary: brand.colors?.secondary,
-                accent: brand.colors?.accent
-              },
-              hasProductReference,
-              brand.sector
-            );
+            // 🎨 UTILISER LE PROMPT GÉNÉRÉ PAR GPT CREATIVE DIRECTOR
+            logger.info('🎨 Utilisation du prompt GPT Creative Director...');
             
-            logger.info('✅ Prompt optimisé généré');
-            logger.info('📊 Paramètres de génération:', JSON.stringify(optimizedPrompt.generationParams));
-            logger.info('🔍 Prompt principal (premiers 500 chars):');
-            logger.info(optimizedPrompt.mainPrompt.substring(0, 500) + '...');
-            logger.info('🚫 Negative prompt (premiers 200 chars):');
-            logger.info(optimizedPrompt.negativePrompt.substring(0, 200) + '...');
+            // Utiliser directement le prompt généré par GPT Creative Director
+            const finalImagePrompt = gptImagePrompt || rawImagePrompt;
+            
+            logger.info('✅ Prompt final prêt pour génération');
+            logger.info('🔍 Prompt final (premiers 500 chars):');
+            logger.info(finalImagePrompt.substring(0, 500) + '...');
             
             // 🎯 MULTI-GÉNÉRATION : Générer 2 variations et sélectionner la meilleure
-            logger.info(`\n🎯 === MULTI-GÉNÉRATION: ${optimizedPrompt.generationParams.numberOfImages} variations ===`);
+            logger.info(`\n🎯 === MULTI-GÉNÉRATION: 2 variations ===`);
             
             const generatedVariations = [];
             
-            for (let variation = 1; variation <= optimizedPrompt.generationParams.numberOfImages; variation++) {
-              logger.info(`\n📸 Génération variation ${variation}/${optimizedPrompt.generationParams.numberOfImages}...`);
+            for (let variation = 1; variation <= 2; variation++) {
+              logger.info(`\n📸 Génération variation ${variation}/2...`);
               
               // Ajuster légèrement le strength pour chaque variation
-              const adjustedStrength = optimizedPrompt.generationParams.referenceImageStrength
-                ? optimizedPrompt.generationParams.referenceImageStrength + ((variation - 1) * 0.05)
-                : undefined;
+              const adjustedStrength = hasProductReference ? 0.7 + ((variation - 1) * 0.05) : undefined;
               
               if (adjustedStrength) {
                 logger.info(`🎚️  Reference strength pour variation ${variation}: ${adjustedStrength.toFixed(2)}`);
@@ -1167,11 +1112,11 @@ DIRECTIVES CRÉATIVES
                 if (referenceImagesBase64.length > 1) {
                   logger.info(`🎯 Utilisation du mode MULTI-PRODUITS avec ${referenceImagesBase64.length} références`);
                   geminiResults = await GeminiImageService.generateImages(
-                    optimizedPrompt.mainPrompt,
+                    finalImagePrompt,
                     {
                       numberOfImages: 1,
-                      aspectRatio: optimizedPrompt.generationParams.aspectRatio,
-                      imageSize: optimizedPrompt.generationParams.imageSize,
+                      aspectRatio: '1:1',
+                      imageSize: '1K',
                       referenceImages: referenceImagesBase64,
                       referenceImageStrength: adjustedStrength
                     }
@@ -1179,11 +1124,11 @@ DIRECTIVES CRÉATIVES
                 } else if (referenceImageBase64) {
                   logger.info(`🎯 Utilisation du mode PRODUIT UNIQUE avec 1 référence`);
                   geminiResults = await GeminiImageService.generateImages(
-                    optimizedPrompt.mainPrompt,
+                    finalImagePrompt,
                     {
                       numberOfImages: 1,
-                      aspectRatio: optimizedPrompt.generationParams.aspectRatio,
-                      imageSize: optimizedPrompt.generationParams.imageSize,
+                      aspectRatio: '1:1',
+                      imageSize: '1K',
                       referenceImage: referenceImageBase64,
                       referenceImageStrength: adjustedStrength
                     }
@@ -1191,12 +1136,11 @@ DIRECTIVES CRÉATIVES
                 } else {
                   logger.info(`🎯 Génération sans référence produit`);
                   geminiResults = await GeminiImageService.generateImages(
-                    optimizedPrompt.mainPrompt,
+                    finalImagePrompt,
                     {
                       numberOfImages: 1,
-                      aspectRatio: optimizedPrompt.generationParams.aspectRatio,
-                      imageSize: optimizedPrompt.generationParams.imageSize,
-                      referenceImageStrength: adjustedStrength
+                      aspectRatio: '1:1',
+                      imageSize: '1K'
                     }
                   );
                 }
@@ -1223,7 +1167,7 @@ DIRECTIVES CRÉATIVES
               
               // Déterminer si l'image contient probablement des mains
               // (heuristique basée sur le prompt)
-              const promptLower = optimizedPrompt.mainPrompt.toLowerCase();
+              const promptLower = finalImagePrompt.toLowerCase();
               const hasHands = promptLower.includes('hand') || promptLower.includes('holding') || 
                                promptLower.includes('grip') || promptLower.includes('finger');
               
