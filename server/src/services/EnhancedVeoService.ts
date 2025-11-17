@@ -1,5 +1,6 @@
 import Veo3Service from './Veo3Service';
 import VeoCreativeDirector, { VeoCreativeConfig, VeoCreativePrompt } from './VeoCreativeDirector';
+import { GPTVideoCreativeDirector } from './GPTVideoCreativeDirector';
 import { logger } from '../config/logger';
 
 /**
@@ -72,7 +73,7 @@ class EnhancedVeoService {
 
   /**
    * Génère une vidéo intelligente adaptée à la marque et au produit
-   * 🎯 MÉTHODE PRINCIPALE - Remplace generateVideo() statique
+   * 🎯 MÉTHODE PRINCIPALE - Utilise maintenant GPT Video Creative Director
    */
   async generateIntelligentVideo(
     brand: any,
@@ -84,27 +85,82 @@ class EnhancedVeoService {
     try {
       logger.info(`[EnhancedVEO] 🎬 Génération vidéo intelligente pour ${brand.name} - ${product.name}`);
       
-      // 1. Configuration créative
-      const creativeConfig: VeoCreativeConfig = {
-        brand,
-        product,
-        calendar,
+      // 1. Génération du script vidéo avec GPT Video Creative Director
+      logger.info(`[EnhancedVEO] 🎨 Génération script vidéo GPT...`);
+      const calendarId = calendar?._id || 'default-calendar';
+      
+      const videoContext = {
         postIndex,
+        totalPosts: 10, // Valeur par défaut
+        scheduledDate: calendar?.generationSettings?.startDate,
+        platform: 'social media',
         videoType: options.videoType || 'product-showcase',
         duration: options.duration || 8,
         aspectRatio: options.aspectRatio || '16:9'
       };
 
-      // 2. Sélection du preset créatif intelligent
-      logger.info(`[EnhancedVEO] 🎨 Sélection preset créatif...`);
-      const creativePreset = await VeoCreativeDirector.generateCreativePreset(creativeConfig);
-      
-      // 3. Génération du prompt VEO optimisé
-      logger.info(`[EnhancedVEO] ✍️ Génération prompt VEO adaptatif...`);
-      const veoPrompt = VeoCreativeDirector.generateVeoPrompt(creativePreset, creativeConfig);
-      
-      // 4. Prompt final optimisé
-      const finalPrompt = VeoCreativeDirector.generateFinalVeoPrompt(veoPrompt);
+      let finalPrompt: string;
+      let creativeInfo: any;
+
+      try {
+        // Tenter la génération avec GPT Video Creative Director
+        finalPrompt = await GPTVideoCreativeDirector.generateVideoScript(
+          brand,
+          product,
+          calendar,
+          videoContext,
+          calendarId
+        );
+
+        // Obtenir les statistiques de diversité
+        const diversityStats = GPTVideoCreativeDirector.getDiversityStats(calendarId);
+        
+        creativeInfo = {
+          selectedStyle: 'GPT Generated',
+          selectedPalette: 'Brand Adaptive',
+          selectedContext: 'Contextual',
+          selectedLighting: 'Cinematic',
+          brandIntegration: `${brand.name} brand integration`,
+          finalPrompt: finalPrompt,
+          diversityStats: {
+            styles: diversityStats.angles,
+            contexts: diversityStats.concepts,
+            palettes: diversityStats.techniques
+          }
+        };
+
+        logger.info(`[EnhancedVEO] ✅ Script GPT généré avec succès`);
+        
+      } catch (gptError) {
+        logger.info(`[EnhancedVEO] ⚠️ GPT Video Director indisponible, fallback vers preset system`);
+        
+        // Fallback vers l'ancien système de presets
+        const creativeConfig: VeoCreativeConfig = {
+          brand,
+          product,
+          calendar,
+          postIndex,
+          videoType: options.videoType || 'product-showcase',
+          duration: options.duration || 8,
+          aspectRatio: options.aspectRatio || '16:9'
+        };
+
+        const creativePreset = await VeoCreativeDirector.generateCreativePreset(creativeConfig);
+        const veoPrompt = VeoCreativeDirector.generateVeoPrompt(creativePreset, creativeConfig);
+        finalPrompt = VeoCreativeDirector.generateFinalVeoPrompt(veoPrompt);
+        
+        const diversityStats = VeoCreativeDirector.getDiversityStats(calendarId);
+        
+        creativeInfo = {
+          selectedStyle: creativePreset.style.name,
+          selectedPalette: creativePreset.palette.name,
+          selectedContext: creativePreset.context.name,
+          selectedLighting: creativePreset.lighting.name,
+          brandIntegration: veoPrompt.brandIntegration,
+          finalPrompt: finalPrompt,
+          diversityStats
+        };
+      }
       
       logger.info(`[EnhancedVEO] 🎯 Prompt final (${finalPrompt.length} chars):`);
       logger.info(`"${finalPrompt.substring(0, 200)}..."`);
@@ -122,7 +178,6 @@ class EnhancedVeoService {
             duration: options.duration,
             aspectRatio: options.aspectRatio,
             resolution: options.resolution,
-            negativePrompt: veoPrompt.negativePrompt,
             numberOfVideos: options.numberOfVideos
           }
         );
@@ -136,8 +191,7 @@ class EnhancedVeoService {
           {
             duration: options.duration,
             aspectRatio: options.aspectRatio,
-            resolution: options.resolution,
-            negativePrompt: veoPrompt.negativePrompt
+            resolution: options.resolution
           }
         );
       } else if (options.startImage) {
@@ -149,8 +203,7 @@ class EnhancedVeoService {
           {
             duration: options.duration,
             aspectRatio: options.aspectRatio,
-            resolution: options.resolution,
-            negativePrompt: veoPrompt.negativePrompt
+            resolution: options.resolution
           }
         );
       } else if (options.extendVideo) {
@@ -160,8 +213,7 @@ class EnhancedVeoService {
           options.extendVideo,
           finalPrompt,
           {
-            resolution: options.resolution,
-            negativePrompt: veoPrompt.negativePrompt
+            resolution: options.resolution
           }
         );
       } else {
@@ -173,34 +225,21 @@ class EnhancedVeoService {
             duration: options.duration,
             aspectRatio: options.aspectRatio,
             resolution: options.resolution,
-            negativePrompt: veoPrompt.negativePrompt,
             numberOfVideos: options.numberOfVideos
           }
         );
       }
 
-      // 6. Statistiques de diversité
-      const calendarId = calendar?._id || 'default-calendar';
-      const diversityStats = VeoCreativeDirector.getDiversityStats(calendarId);
-
-      // 7. Résultat enrichi avec informations créatives
+      // 6. Résultat enrichi avec informations créatives
       const enhancedResult: EnhancedVideoResult = {
         ...videoResult,
-        creativeInfo: {
-          selectedStyle: creativePreset.style.name,
-          selectedPalette: creativePreset.palette.name,
-          selectedContext: creativePreset.context.name,
-          selectedLighting: creativePreset.lighting.name,
-          brandIntegration: veoPrompt.brandIntegration,
-          finalPrompt: finalPrompt,
-          diversityStats
-        }
+        creativeInfo
       };
 
       logger.info(`[EnhancedVEO] ✅ Vidéo intelligente générée avec succès !`);
-      logger.info(`[EnhancedVEO] 🎨 Style: ${creativePreset.style.name}`);
-      logger.info(`[EnhancedVEO] 🎨 Contexte: ${creativePreset.context.name}`);
-      logger.info(`[EnhancedVEO] 📊 Diversité: ${diversityStats.styles} styles utilisés`);
+      logger.info(`[EnhancedVEO] 🎨 Style: ${creativeInfo.selectedStyle}`);
+      logger.info(`[EnhancedVEO] 🎨 Contexte: ${creativeInfo.selectedContext}`);
+      logger.info(`[EnhancedVEO] 📊 Diversité: ${creativeInfo.diversityStats.styles} styles utilisés`);
       
       return enhancedResult;
 
