@@ -461,7 +461,7 @@ IMPORTANT: Réponds UNIQUEMENT avec le prompt d'image, sans texte additionnel.`;
   private static getSeasonalIntensity(postIndex: number): 'subtle' | 'marked' {
     // Alternance entre intensité subtile et marquée pour les posts saisonniers
     // 60% subtile, 40% marquée
-    const intensityPattern = ['subtle', 'subtle', 'marked', 'subtle', 'subtle'];
+    const intensityPattern: ('subtle' | 'marked')[] = ['subtle', 'subtle', 'marked', 'subtle', 'subtle'];
     return intensityPattern[postIndex % intensityPattern.length];
   }
 
