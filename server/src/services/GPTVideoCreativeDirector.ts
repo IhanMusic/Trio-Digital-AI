@@ -399,20 +399,29 @@ ${avoidanceInstructions}
 9. 🎭 UTILISE un angle créatif pertinent et engageant
 10. 📱 EST OPTIMISÉ pour ${videoContext.aspectRatio || '16:9'} et ${videoContext.platform || 'social media'}
 
-FORMAT DE RÉPONSE:
-Génère UNIQUEMENT le script vidéo final, détaillé et cinématographique, prêt à être envoyé à VEO 3.1.
-Le script doit faire 300-500 mots et inclure:
-- Description narrative de la séquence
-- Technique cinématographique utilisée
-- Mouvements de caméra et transitions
-- Éclairage et ambiance visuelle
-- Intégration des couleurs de marque
-- Rythme et timing (adapté à la durée)
-- Émotion et mood recherchés
-- Éléments sonores suggérés
-- Call-to-action visuel subtil
+FORMAT DE RÉPONSE - STRUCTURE VEO3 OPTIMALE:
+Génère UNIQUEMENT le script vidéo suivant EXACTEMENT cette formule VEO3 réutilisable:
 
-IMPORTANT: Réponds UNIQUEMENT avec le script vidéo, sans texte additionnel.`;
+**STRUCTURE OBLIGATOIRE:**
+[Sujet] + [Action claire] + [Cadre spécifique]
+[Mouvement de caméra] avec [cadrage/composition], tourné avec [objectif/longueur focale]
+[Éclairage] avec [palette de couleurs ${brand.colors?.primary || 'appropriées'}], [mots-clés texture/FX]
+Stylisé comme [réalisateur/époque/médium]
+[Indices de mouvement/rythme], ${videoContext.duration || 8} secondes, ${videoContext.aspectRatio || '16:9'}
+AUCUN TEXTE visible dans la vidéo, espace négatif préservé pour superposition ultérieure
+
+**EXEMPLE DE STRUCTURE:**
+"${product.name} effectue une rotation élégante dans un studio minimaliste. Tracking shot fluide avec cadrage centré, tourné avec objectif 85mm. Éclairage doux avec palette ${brand.colors?.primary || 'moderne'}, textures soyeuses et reflets subtils. Stylisé comme Wes Anderson/esthétique contemporaine. Mouvement hypnotique et rythmé, ${videoContext.duration || 8} secondes, ${videoContext.aspectRatio || '16:9'}. Aucun texte visible, composition épurée pour overlay de texte."
+
+CONTRAINTES ABSOLUES:
+- Suivre EXACTEMENT la structure Sujet+Action+Cadre / Caméra+Composition+Focale / Éclairage+Couleur+Texture / Style / Mouvement+Durée+Format / Pas de texte
+- Spécifier une longueur focale précise (24mm, 35mm, 50mm, 85mm, 135mm)
+- Mentionner un réalisateur ou style cinématographique reconnu
+- INTERDIRE tout texte visible dans la vidéo
+- Préserver l'espace négatif pour superposition de texte ultérieure
+- Faire 150-250 mots maximum, structure concise et technique
+
+IMPORTANT: Réponds UNIQUEMENT avec le script vidéo structuré, sans texte additionnel.`;
   }
 
   /**
