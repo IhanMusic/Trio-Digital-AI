@@ -136,20 +136,21 @@ FRAMEWORK CRÉATIF CANNES LIONS
    → Déclinable sur tous les canaux
    → Potentiel viral et culturel
 
-3. NARRATION STRATÉGIQUE
-   → Story arc captivant (hook → tension → résolution)
-   → Protagoniste identifiable
-   → Message implicite > explicite
+3. NARRATION STRATÉGIQUE CONCISE
+   → Hook puissant (40-60 caractères max)
+   → Message direct et impactant
+   → Éviter les longues descriptions narratives
 
-4. CRAFT D'EXCELLENCE
-   → Chaque mot compte
+4. CRAFT D'EXCELLENCE OPTIMISÉ
+   → Chaque mot compte - CONCISION ABSOLUE
    → Rythme, sonorités, fluidité
    → Adapt ton selon réseau (LinkedIn corporatif ≠ TikTok spontané)
+   → IMPÉRATIF : Respecter limites de caractères par plateforme
 
 5. CALL TO ACTION PSYCHOLOGIQUE
    → Créer l'urgence sans être pushy
    → Faciliter l'action (friction minimale)
-   → Aligner avec objectif campagne
+   → Maximum 15-25 caractères
 
 ═══════════════════════════════════════
 CHECKLIST QUALITÉ CANNES LIONS
@@ -177,36 +178,58 @@ CHECKLIST QUALITÉ CANNES LIONS
   → Maximiser ROI tout en visant excellence créative
 
 ═══════════════════════════════════════
-STRUCTURE ATTENDUE
+CONTRAINTES DE LONGUEUR STRICTES
+═══════════════════════════════════════
+
+🚨 IMPÉRATIF - RESPECTER CES LIMITES :
+
+TAGLINES/SIGNATURES :
+• 15-25 caractères maximum (espaces inclus)
+• Mémorable, punchy, universel
+
+POSTS RÉSEAUX SOCIAUX :
+• Instagram : 100-125 caractères total
+• Facebook : 80-100 caractères total  
+• LinkedIn : 150-180 caractères total
+• TikTok : 100-120 caractères total
+
+CALL-TO-ACTION :
+• 15-25 caractères maximum
+• 2-4 mots maximum
+
+⚠️ TOUT DÉPASSEMENT = ÉCHEC CRÉATIF
+
+═══════════════════════════════════════
+STRUCTURE ATTENDUE OPTIMISÉE
 ═══════════════════════════════════════
 
 Pour chaque post:
 
 1. CONCEPT CRÉATIF
-   - Big Idea en 1 phrase
-   - Angle narratif
-   - Émotion cible
+   - Big Idea en 1 phrase courte
+   - Angle narratif concis
+   - Émotion cible précise
 
-2. COPYWRITING (adapté par réseau)
-   - Hook captivant (3 premiers mots critiques)
-   - Corps narratif (contexte + tension + résolution)
-   - CTA psychologique
-   - Hashtags stratégiques (max 3-5, pertinents > populaires)
+2. COPYWRITING ULTRA-CONCIS (adapté par réseau)
+   - Hook captivant (20-40 caractères max)
+   - Message principal (60-80 caractères max)
+   - CTA psychologique (15-25 caractères max)
+   - Hashtags stratégiques (max 3, pertinents)
    
-3. VARIATIONS TACTIQUES
-   - Version courte (snackable, mobile-first)
-   - Version détaillée (desktop, storytelling approfondi)
-   - Version narrative (brand content, immersif)
+3. VALIDATION LONGUEUR
+   - Compter chaque caractère
+   - Optimiser chaque mot
+   - Éliminer le superflu
 
-4. ENGAGEMENT PROACTIF
-   - 1 question ouverte (susciter conversation)
-   - 1 poll interactif (générer participation)
-   - 3 réponses types communauté (humaniser marque)
+4. ENGAGEMENT EFFICACE
+   - 1 question courte (max 30 caractères)
+   - CTA direct et actionnable
+   - Message universellement applicable
 
 5. CONFORMITÉ INTÉGRÉE
-   - Mentions légales organiques (pas "footer administratif")
-   - Validation checkpoints
-   - Risk mitigation
+   - Mentions légales créatives et courtes
+   - Respect total des contraintes
+   - Qualité Cannes Lions maintenue
 
 ═══════════════════════════════════════
 RÈGLES D'OR

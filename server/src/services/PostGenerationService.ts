@@ -8,7 +8,7 @@ import { Document } from 'mongoose';
 import { OpenAIResponse, OpenAIChoice } from '../types/openai';
 import { GeminiImageService } from './GeminiImageService';
 import { logger } from '../config/logger';
-import { getLanguageName, isDialect, getDialectInfo } from '../utils/languageUtils';
+import { getLanguageName, isDialect, getDialectInfo, getDialectPromptInstructions } from '../utils/languageUtils';
 import Product, { IProduct } from '../models/Product';
 import KeyDateService from './KeyDateService';
 import { parseGPTResponse } from '../utils/promptParser';
@@ -462,19 +462,35 @@ Créer UNE publication qui pourrait remporter l'Or aux Cannes Lions dans la cat�
 🌐 EXPERTISE LINGUISTIQUE:
 Langues: ${calendar.targetLanguages.map(lang => getLanguageName(lang)).join(', ')}
 
-Adaptations culturelles et dialectales:
 ${calendar.targetLanguages.map(lang => {
   if (isDialect(lang)) {
-    const dialectInfo = getDialectInfo(lang);
-    if (dialectInfo) {
-      return `- ${dialectInfo.name}: ${dialectInfo.description}
-  → Adapter les expressions idiomatiques et références culturelles locales
-  → Utiliser le registre de langue approprié (formel/informel selon le dialecte)`;
-    }
+    return getDialectPromptInstructions(lang);
   }
-  return `- ${getLanguageName(lang)}: Langue principale
-  → Respecter les nuances culturelles du marché cible`;
+  return `
+INSTRUCTIONS LANGUE STANDARD - ${getLanguageName(lang).toUpperCase()}:
+• Respecter les nuances culturelles du marché cible
+• Adapter le registre selon le contexte (formel/informel)
+• Utiliser les références culturelles appropriées
+`;
 }).filter(Boolean).join('\n')}
+
+🚨 CONTRAINTES DE LONGUEUR STRICTES (IMPÉRATIF ABSOLU):
+
+TAGLINES/SIGNATURES :
+• 15-25 caractères maximum (espaces inclus)
+• Mémorable, punchy, universel
+
+POSTS RÉSEAUX SOCIAUX :
+• Instagram : 100-125 caractères total
+• Facebook : 80-100 caractères total  
+• LinkedIn : 150-180 caractères total
+• TikTok : 100-120 caractères total
+
+CALL-TO-ACTION :
+• 15-25 caractères maximum
+• 2-4 mots maximum
+
+⚠️ TOUT DÉPASSEMENT = ÉCHEC CRÉATIF TOTAL
 
 🎨 IDENTITÉ DE MARQUE (Brand DNA):
 ${brand.logo ? '✅ Logo: Intégrer subtilement dans la direction artistique' : '⚠️ Logo: Non fourni - créer une identité visuelle cohérente sans logo'}
