@@ -464,6 +464,45 @@ export const getCategoriesBySector = (sector: string): string[] => {
   return PRODUCT_CATEGORIES_BY_SECTOR[sector] || [];
 };
 
+// Classification des secteurs par type (pour compatibilité avec sectorUtils.ts)
+export const SECTOR_CATEGORIES = {
+  PHYSICAL_PRODUCTS: [
+    'Agriculture & Agroalimentaire',
+    'Automobile & Transport',
+    'Textile & Mode',
+    'Électronique & High-Tech',
+    'Cosmétiques & Beauté',
+    'Pharmacie & Santé',
+    'Sport & Fitness',
+    'Mode & Luxe',
+    'Beauté & Bien-être'
+  ],
+  PURE_SERVICES: [
+    'Services Financiers',
+    'Éducation & Formation',
+    'Santé & Médical',
+    'Conseil & Consulting',
+    'Marketing & Communication',
+    'Immobilier',
+    'Juridique & Conseil',
+    'Assurance & Mutuelle',
+    'Télécommunications',
+    'ONG & Associations'
+  ],
+  HYBRID: [
+    'Technologie & Logiciels',
+    'E-commerce & Retail',
+    'Tourisme & Hôtellerie',
+    'Énergie & Environnement',
+    'BTP & Construction',
+    'Médias & Divertissement',
+    'Restauration & Food Service',
+    'Logistique & Transport',
+    'Divertissement & Culture',
+    'Retail & Distribution'
+  ]
+};
+
 export interface SocialNetwork {
   name: string;
   features: string[];
