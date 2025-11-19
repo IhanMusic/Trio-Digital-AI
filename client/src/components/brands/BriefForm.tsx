@@ -36,10 +36,11 @@ const PRICE_POSITIONING = [
 export const BriefForm: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
-  const { token, isAuthenticated } = useAuthContext();
+  const { token, isAuthenticated, user } = useAuthContext();
   const [loading, setLoading] = useState(!!id);
   const [error, setError] = useState('');
   const [isEditMode] = useState(!!id);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   
   const [formData, setFormData] = useState<BriefData>({
     companyName: '',
@@ -58,6 +59,77 @@ export const BriefForm: React.FC = () => {
     values: [],
     mission: ''
   });
+
+  // Clé localStorage unique par utilisateur
+  const getDraftKey = () => `brand-form-draft-${user?.id || 'anonymous'}`;
+
+  // Sauvegarder automatiquement dans localStorage
+  const saveDraft = React.useCallback(() => {
+    if (!isEditMode) { // Ne pas sauvegarder en mode édition
+      try {
+        const draftData = {
+          ...formData,
+          logo: null, // Ne pas sauvegarder le fichier logo
+          timestamp: Date.now()
+        };
+        localStorage.setItem(getDraftKey(), JSON.stringify(draftData));
+        setSaveStatus('saved');
+        setTimeout(() => setSaveStatus('idle'), 2000);
+      } catch (error) {
+        console.error('Erreur sauvegarde localStorage:', error);
+      }
+    }
+  }, [formData, isEditMode, user]);
+
+  // Restaurer depuis localStorage
+  const restoreDraft = React.useCallback(() => {
+    if (!isEditMode) {
+      try {
+        const savedDraft = localStorage.getItem(getDraftKey());
+        if (savedDraft) {
+          const draftData = JSON.parse(savedDraft);
+          // Vérifier que le brouillon n'est pas trop ancien (24h)
+          const isRecent = Date.now() - draftData.timestamp < 24 * 60 * 60 * 1000;
+          if (isRecent) {
+            setFormData(prev => ({ ...prev, ...draftData, logo: null }));
+            setSaveStatus('saved');
+            setTimeout(() => setSaveStatus('idle'), 2000);
+          } else {
+            // Supprimer le brouillon trop ancien
+            localStorage.removeItem(getDraftKey());
+          }
+        }
+      } catch (error) {
+        console.error('Erreur restauration localStorage:', error);
+      }
+    }
+  }, [isEditMode, user]);
+
+  // Nettoyer localStorage après sauvegarde réussie
+  const clearDraft = () => {
+    try {
+      localStorage.removeItem(getDraftKey());
+    } catch (error) {
+      console.error('Erreur nettoyage localStorage:', error);
+    }
+  };
+
+  // Auto-save avec debounce
+  React.useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (formData.companyName || formData.sector || formData.companyDescription) {
+        setSaveStatus('saving');
+        saveDraft();
+      }
+    }, 2000); // Sauvegarder 2 secondes après la dernière modification
+
+    return () => clearTimeout(timeoutId);
+  }, [formData, saveDraft]);
+
+  // Restaurer au chargement
+  React.useEffect(() => {
+    restoreDraft();
+  }, [restoreDraft]);
 
   // Charger les données de la marque si on est en mode édition
   useEffect(() => {
@@ -204,10 +276,31 @@ export const BriefForm: React.FC = () => {
         }
       }
 
+      // Nettoyer le brouillon après sauvegarde réussie
+      clearDraft();
       alert(`Marque ${isEditMode ? 'mise à jour' : 'créée'} avec succès !`);
       navigate('/brands');
     } catch (error) {
-      alert('Erreur lors de la sauvegarde : ' + (error instanceof Error ? error.message : 'Erreur inconnue'));
+      // Améliorer la gestion d'erreur avec plus de détails
+      let errorMessage = 'Erreur inconnue';
+      
+      if (error instanceof Error) {
+        if (error.message.includes('401')) {
+          errorMessage = 'Session expirée. Veuillez vous reconnecter.';
+        } else if (error.message.includes('400')) {
+          errorMessage = 'Données invalides. Vérifiez que tous les champs obligatoires sont remplis correctement.';
+        } else if (error.message.includes('500')) {
+          errorMessage = 'Erreur serveur. Veuillez réessayer dans quelques instants.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      // Préserver les données en cas d'erreur
+      setError(errorMessage);
+      
+      // Scroll vers le haut pour voir l'erreur
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -226,6 +319,26 @@ export const BriefForm: React.FC = () => {
       {error && (
         <div className="glass-panel border-red-500/30 px-6 py-4 rounded-xl mb-8">
           <p className="text-red-400">{error}</p>
+        </div>
+      )}
+      
+      {/* Indicateur de sauvegarde automatique */}
+      {!isEditMode && (
+        <div className="fixed top-4 right-4 z-50">
+          {saveStatus === 'saving' && (
+            <div className="flex items-center space-x-2 bg-blue-500/20 border border-blue-500/30 px-4 py-2 rounded-lg backdrop-blur-sm">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-400"></div>
+              <span className="text-sm text-blue-300">Sauvegarde...</span>
+            </div>
+          )}
+          {saveStatus === 'saved' && (
+            <div className="flex items-center space-x-2 bg-green-500/20 border border-green-500/30 px-4 py-2 rounded-lg backdrop-blur-sm">
+              <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span className="text-sm text-green-300">Brouillon sauvegardé</span>
+            </div>
+          )}
         </div>
       )}
       

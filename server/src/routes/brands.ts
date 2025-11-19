@@ -134,9 +134,38 @@ router.post('/', authenticate, upload.single('logo'), async (req: express.Reques
       data: brand
     });
   } catch (error) {
-    res.status(400).json({
+    console.error('Erreur création marque:', error);
+    
+    let statusCode = 400;
+    let message = 'Erreur lors de la création de la marque';
+    let details = '';
+    
+    if (error instanceof Error) {
+      // Erreurs de validation Mongoose
+      if (error.name === 'ValidationError') {
+        message = 'Données invalides';
+        details = Object.values((error as any).errors).map((err: any) => err.message).join(', ');
+      }
+      // Erreurs de duplication
+      else if (error.message.includes('duplicate key')) {
+        message = 'Une marque avec ce nom existe déjà';
+        statusCode = 409;
+      }
+      // Erreurs de token/auth
+      else if (error.message.includes('jwt') || error.message.includes('token')) {
+        message = 'Session expirée, veuillez vous reconnecter';
+        statusCode = 401;
+      }
+      // Autres erreurs
+      else {
+        details = error.message;
+      }
+    }
+    
+    res.status(statusCode).json({
       success: false,
-      message: 'Erreur lors de la création de la marque',
+      message,
+      details,
       error: error instanceof Error ? error.message : 'Erreur inconnue'
     });
   }
