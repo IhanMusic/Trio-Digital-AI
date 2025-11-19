@@ -39,20 +39,21 @@ export interface ICalendar extends Document {
   // Heures de publication préférées par réseau (simplifié)
   contentPlan: {
     frequency: {
-      facebook?: number;
-      instagram?: number;
-      linkedin?: number;
+      facebook: number;
+      instagram: number;
+      linkedin: number;
     };
     preferredTimes: {
-      facebook?: string[];
-      instagram?: string[];
-      linkedin?: string[];
+      facebook: string[];
+      instagram: string[];
+      linkedin: string[];
     };
-    contentMix: Array<{
+    contentMix: {
       type: 'image' | 'text';
       percentage: number;
-    }>;
+    }[];
   };
+  contentTypes: string[]; // Types de contenu sélectionnés (Photos de produits, Infographies, Carrousels, Stories)
   
   // Configuration créative
   generationSettings: {

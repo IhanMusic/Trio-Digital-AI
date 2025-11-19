@@ -177,6 +177,43 @@ const SocialNetworksSection: React.FC<{
   );
 };
 
+const ContentTypesSection: React.FC<{
+  selectedTypes: string[];
+  onChange: (types: string[]) => void;
+}> = ({ selectedTypes, onChange }) => {
+  const handleTypeChange = (type: string) => {
+    if (selectedTypes.includes(type)) {
+      onChange(selectedTypes.filter(t => t !== type));
+    } else {
+      onChange([...selectedTypes, type]);
+    }
+  };
+
+  return (
+    <div className="space-y-2 glass-panel p-4">
+      <h4 className="text-white mb-3">Types de contenu à générer</h4>
+      {CONTENT_TYPES.map((category) => (
+        <div key={category.category} className="mb-4">
+          <h5 className="text-white/80 text-sm font-medium mb-2">{category.category}</h5>
+          <div className="grid grid-cols-2 gap-3">
+            {category.types.map((type) => (
+              <label key={type} className="flex items-center space-x-3">
+                <input
+                  type="checkbox"
+                  className="form-checkbox h-5 w-5 text-[#53dfb2] rounded focus:ring-[#53dfb2]"
+                  checked={selectedTypes.includes(type)}
+                  onChange={() => handleTypeChange(type)}
+                />
+                <span className="text-white">{type}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 
 const ProductsSection: React.FC<{
   selectedProducts: string[];
@@ -924,6 +961,16 @@ const Calendars: React.FC = () => {
                     <SocialNetworksSection
                       selectedNetworks={formData.socialNetworks}
                       onChange={(networks) => setFormData({ ...formData, socialNetworks: networks })}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-white/80 mb-2">
+                      Types de contenu
+                    </label>
+                    <ContentTypesSection
+                      selectedTypes={formData.contentTypes}
+                      onChange={(types) => setFormData({ ...formData, contentTypes: types })}
                     />
                   </div>
 

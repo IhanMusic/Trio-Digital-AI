@@ -123,10 +123,12 @@ export interface ContentType {
 
 export const CONTENT_TYPES: ContentType[] = [
   {
-    category: "Contenu",
+    category: "Visuels",
     types: [
-      "Posts avec images",
-      "Stories Instagram"
+      "Photos de produits",
+      "Infographies",
+      "Carrousels",
+      "Stories"
     ]
   }
 ];
