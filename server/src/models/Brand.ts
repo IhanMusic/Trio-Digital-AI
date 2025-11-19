@@ -71,6 +71,7 @@ const BrandSchema: Schema = new Schema({
   },
   description: {
     type: String,
+    required: [true, 'La description de l\'entreprise est requise'],
     trim: true
   },
   userId: {
