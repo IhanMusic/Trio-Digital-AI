@@ -55,7 +55,6 @@ interface CalendarFormData {
   endDate: string;
   country: string;
   languages: string[];  // Changé de language à languages
-  targetAudience: string;
   brandId: string;
   selectedProducts: string[]; // IDs des produits sélectionnés
   goals: string[];
@@ -262,7 +261,6 @@ const Calendars: React.FC = () => {
     endDate: '',
     country: '',
     languages: [],  // Initialisé comme un tableau vide
-    targetAudience: '',
     brandId: '',
     selectedProducts: [], // Initialisé comme un tableau vide
     goals: [],
@@ -904,19 +902,6 @@ const Calendars: React.FC = () => {
                     </div>
                   )}
 
-                  <div>
-                    <label htmlFor="targetAudience" className="block text-sm font-medium text-white/80 mb-2">
-                      Audience cible
-                    </label>
-                    <textarea
-                      id="targetAudience"
-                      name="targetAudience"
-                      value={formData.targetAudience}
-                      onChange={(e) => setFormData({ ...formData, targetAudience: e.target.value })}
-                      className="glass-input mt-1"
-                      rows={3}
-                    />
-                  </div>
 
                   {availableProducts.length > 0 && (
                     <div>
@@ -929,28 +914,6 @@ const Calendars: React.FC = () => {
                         availableProducts={availableProducts}
                       />
                       
-                      {formData.selectedProducts.length > 0 && (
-                        <div className="mt-4 glass-panel p-4">
-                          <label className="flex items-center space-x-3">
-                            <input
-                              type="checkbox"
-                              className="form-checkbox h-5 w-5 text-[#53dfb2] rounded focus:ring-[#53dfb2]"
-                              checked={formData.generationSettings.integrateProductImages}
-                              onChange={(e) => setFormData({
-                                ...formData,
-                                generationSettings: {
-                                  ...formData.generationSettings,
-                                  integrateProductImages: e.target.checked
-                                }
-                              })}
-                            />
-                            <span className="text-white">Intégrer automatiquement les photos de produit dans les créatives générées</span>
-                          </label>
-                          <p className="text-white/60 text-sm mt-2 ml-8">
-                            Cette option utilise les API avancées de Stability AI pour intégrer vos photos de produit dans les images générées, avec un éclairage et une perspective réalistes.
-                          </p>
-                        </div>
-                      )}
                     </div>
                   )}
 
