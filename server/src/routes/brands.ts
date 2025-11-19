@@ -1,9 +1,26 @@
 import express from 'express';
+import multer from 'multer';
 import { authenticate } from '../middleware/auth';
 import Brand from '../models/Brand';
 import Post from '../models/Post';
+import { CloudinaryService } from '../services/CloudinaryService';
 
 const router = express.Router();
+
+// Configuration multer pour l'upload de fichiers
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB max
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Seuls les fichiers image sont autorisés'));
+    }
+  }
+});
 
 /**
  * @route GET /api/brands/stats
@@ -79,13 +96,34 @@ router.get('/', authenticate, async (req: express.Request, res: express.Response
 
 /**
  * @route POST /api/brands
- * @desc Créer une nouvelle marque
+ * @desc Créer une nouvelle marque avec logo optionnel
  * @access Private
  */
-router.post('/', authenticate, async (req: express.Request, res: express.Response) => {
+router.post('/', authenticate, upload.single('logo'), async (req: express.Request, res: express.Response) => {
   try {
+    let brandData;
+    
+    // Si on a des données FormData avec logo
+    if (req.file) {
+      brandData = JSON.parse(req.body.brandData);
+      
+      // Upload et redimensionnement du logo
+      const logoUrl = await CloudinaryService.uploadImage(req.file.buffer, {
+        folder: 'brands/logos',
+        transformation: [
+          { width: 1080, height: 1080, crop: 'fill', gravity: 'center' },
+          { quality: 'auto', format: 'auto' }
+        ]
+      });
+      
+      brandData.logo = logoUrl;
+    } else {
+      // Données JSON classiques
+      brandData = req.body;
+    }
+
     const brand = new Brand({
-      ...req.body,
+      ...brandData,
       userId: req.user?._id
     });
 
@@ -138,17 +176,38 @@ router.get('/:id', authenticate, async (req: express.Request, res: express.Respo
 
 /**
  * @route PUT /api/brands/:id
- * @desc Mettre à jour une marque
+ * @desc Mettre à jour une marque avec logo optionnel
  * @access Private
  */
-router.put('/:id', authenticate, async (req: express.Request, res: express.Response) => {
+router.put('/:id', authenticate, upload.single('logo'), async (req: express.Request, res: express.Response) => {
   try {
+    let brandData;
+    
+    // Si on a des données FormData avec logo
+    if (req.file) {
+      brandData = JSON.parse(req.body.brandData);
+      
+      // Upload et redimensionnement du logo
+      const logoUrl = await CloudinaryService.uploadImage(req.file.buffer, {
+        folder: 'brands/logos',
+        transformation: [
+          { width: 1080, height: 1080, crop: 'fill', gravity: 'center' },
+          { quality: 'auto', format: 'auto' }
+        ]
+      });
+      
+      brandData.logo = logoUrl;
+    } else {
+      // Données JSON classiques
+      brandData = req.body;
+    }
+
     const brand = await Brand.findOneAndUpdate(
       {
         _id: req.params.id,
         userId: req.user?._id
       },
-      req.body,
+      brandData,
       { new: true }
     );
 

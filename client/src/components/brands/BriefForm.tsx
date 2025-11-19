@@ -114,25 +114,6 @@ export const BriefForm: React.FC = () => {
     }
 
     try {
-      const brandData = {
-        name: formData.companyName,
-        sector: formData.sector,
-        description: formData.companyDescription,
-        colors: formData.colors,
-        businessType: formData.businessType,
-        companyStage: formData.companyStage,
-        pricePositioning: formData.pricePositioning,
-        competitors: formData.competitors.split(',').map(c => c.trim()).filter(Boolean),
-        competitiveAnalysis: formData.competitiveAnalysis,
-        previousCampaigns: formData.previousCampaigns,
-        legalConstraints: formData.legalConstraints,
-        values: formData.values,
-        mission: formData.mission,
-        lastGenerationDate: new Date(),
-        contentGenerated: 0,
-        team: []
-      };
-
       if (!isAuthenticated || !token) {
         throw new Error('Vous devez être connecté pour effectuer cette action');
       }
@@ -143,19 +124,84 @@ export const BriefForm: React.FC = () => {
       
       const method = isEditMode ? 'PUT' : 'POST';
 
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(brandData)
-      });
+      // Si on a un logo à uploader, utiliser FormData
+      if (formData.logo && typeof formData.logo !== 'string') {
+        const formDataToSend = new FormData();
+        
+        // Ajouter les données de la marque
+        const brandData = {
+          name: formData.companyName,
+          sector: formData.sector,
+          description: formData.companyDescription,
+          colors: formData.colors,
+          businessType: formData.businessType,
+          companyStage: formData.companyStage,
+          pricePositioning: formData.pricePositioning,
+          competitors: formData.competitors.split(',').map(c => c.trim()).filter(Boolean),
+          competitiveAnalysis: formData.competitiveAnalysis,
+          previousCampaigns: formData.previousCampaigns,
+          legalConstraints: formData.legalConstraints,
+          values: formData.values,
+          mission: formData.mission,
+          lastGenerationDate: new Date(),
+          contentGenerated: 0,
+          team: []
+        };
 
-      if (response.status === 401) {
-        throw new Error('Session expirée. Veuillez vous reconnecter.');
-      } else if (!response.ok) {
-        throw new Error(`Erreur lors de la ${isEditMode ? 'mise à jour' : 'création'} de la marque`);
+        // Ajouter les données JSON
+        formDataToSend.append('brandData', JSON.stringify(brandData));
+        
+        // Ajouter le logo
+        formDataToSend.append('logo', formData.logo);
+
+        const response = await fetch(url, {
+          method,
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formDataToSend
+        });
+
+        if (response.status === 401) {
+          throw new Error('Session expirée. Veuillez vous reconnecter.');
+        } else if (!response.ok) {
+          throw new Error(`Erreur lors de la ${isEditMode ? 'mise à jour' : 'création'} de la marque`);
+        }
+      } else {
+        // Pas de logo, envoyer en JSON classique
+        const brandData = {
+          name: formData.companyName,
+          sector: formData.sector,
+          description: formData.companyDescription,
+          colors: formData.colors,
+          businessType: formData.businessType,
+          companyStage: formData.companyStage,
+          pricePositioning: formData.pricePositioning,
+          competitors: formData.competitors.split(',').map(c => c.trim()).filter(Boolean),
+          competitiveAnalysis: formData.competitiveAnalysis,
+          previousCampaigns: formData.previousCampaigns,
+          legalConstraints: formData.legalConstraints,
+          values: formData.values,
+          mission: formData.mission,
+          lastGenerationDate: new Date(),
+          contentGenerated: 0,
+          team: []
+        };
+
+        const response = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(brandData)
+        });
+
+        if (response.status === 401) {
+          throw new Error('Session expirée. Veuillez vous reconnecter.');
+        } else if (!response.ok) {
+          throw new Error(`Erreur lors de la ${isEditMode ? 'mise à jour' : 'création'} de la marque`);
+        }
       }
 
       alert(`Marque ${isEditMode ? 'mise à jour' : 'créée'} avec succès !`);
@@ -244,8 +290,59 @@ export const BriefForm: React.FC = () => {
           <h3 className="text-xl font-semibold text-white border-b border-white/20 pb-4">Identité Visuelle</h3>
           
           <p className="text-sm text-white/60 mb-4">
-            Définissez les couleurs principales de votre marque. Ces couleurs seront utilisées dans toutes les créations visuelles générées.
+            Définissez les couleurs principales de votre marque et uploadez votre logo. Ces éléments seront utilisés dans toutes les créations visuelles générées.
           </p>
+          
+          {/* Upload de logo */}
+          <div className="mb-6">
+            <label htmlFor="logo" className="block text-sm font-medium text-white mb-2">
+              Logo de la marque (format carré recommandé)
+            </label>
+            <div className="flex items-center space-x-4">
+              {formData.logo && (
+                <div className="w-20 h-20 bg-white/10 rounded-lg overflow-hidden border-2 border-white/20">
+                  <img
+                    src={typeof formData.logo === 'string' ? formData.logo : URL.createObjectURL(formData.logo)}
+                    alt="Logo de la marque"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <label className="flex-1 flex items-center justify-center px-4 py-3 bg-white/10 border-2 border-white/20 rounded-lg cursor-pointer hover:bg-white/20 transition-all duration-200">
+                <svg
+                  className="mr-2 h-5 w-5 text-white/60"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                  />
+                </svg>
+                <span className="text-sm text-white/80">
+                  {formData.logo ? 'Changer le logo' : 'Choisir un logo'}
+                </span>
+                <input
+                  type="file"
+                  id="logo"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setFormData(prev => ({ ...prev, logo: file }));
+                    }
+                  }}
+                />
+              </label>
+            </div>
+            <p className="text-xs text-white/50 mt-2">
+              Formats acceptés : JPG, PNG, WebP. Le logo sera automatiquement redimensionné en 1080x1080px.
+            </p>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>

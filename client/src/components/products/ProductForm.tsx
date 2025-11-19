@@ -3,20 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { config } from '../../config/env';
 import { ProductData } from '../../types/brief';
-
-// Catégories de produits
-const PRODUCT_CATEGORIES = [
-  'Alimentaire',
-  'Boisson',
-  'Cosmétique',
-  'Hygiène',
-  'Entretien',
-  'Textile',
-  'Électronique',
-  'Mobilier',
-  'Décoration',
-  'Autre'
-];
+import { PRODUCT_CATEGORIES_BY_SECTOR, getCategoriesBySector } from '../../constants/formOptions';
 
 // Target audience pour les produits
 const TARGET_AUDIENCE_OPTIONS = {
@@ -478,7 +465,8 @@ const ProductForm: React.FC = () => {
                 onChange={handleInputChange}
               >
                 <option value="">Sélectionnez une catégorie</option>
-                {PRODUCT_CATEGORIES.map((category) => (
+                {/* Afficher toutes les catégories de tous les secteurs */}
+                {Object.values(PRODUCT_CATEGORIES_BY_SECTOR).flat().map((category: string) => (
                   <option key={category} value={category}>
                     {category}
                   </option>
