@@ -36,24 +36,20 @@ export interface ICalendar extends Document {
     videoPercentage: number;
   };
   
-  // Heures de publication préférées par réseau
+  // Heures de publication préférées par réseau (simplifié)
   contentPlan: {
     frequency: {
       facebook?: number;
       instagram?: number;
-      twitter?: number;
       linkedin?: number;
-      tiktok?: number;
     };
     preferredTimes: {
       facebook?: string[];
       instagram?: string[];
-      twitter?: string[];
       linkedin?: string[];
-      tiktok?: string[];
     };
     contentMix: Array<{
-      type: 'image' | 'video' | 'text';
+      type: 'image' | 'text';
       percentage: number;
     }>;
   };
@@ -187,21 +183,17 @@ const CalendarSchema: Schema = new Schema({
     }
   },
   
-  // Heures de publication (conservé pour compatibilité)
+  // Heures de publication (simplifié)
   contentPlan: {
     frequency: {
       facebook: Number,
       instagram: Number,
-      twitter: Number,
-      linkedin: Number,
-      tiktok: Number
+      linkedin: Number
     },
     preferredTimes: {
       facebook: [String],
       instagram: [String],
-      twitter: [String],
-      linkedin: [String],
-      tiktok: [String]
+      linkedin: [String]
     },
     contentMix: [{
       type: {

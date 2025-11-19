@@ -8,11 +8,11 @@ export interface IPost extends Document {
   calendarId: ICalendar['_id'];
   brandId: IBrand['_id'];
   createdBy: IUser['_id'];
-  platform: 'facebook' | 'instagram' | 'twitter' | 'linkedin' | 'tiktok';
+  platform: 'facebook' | 'instagram' | 'linkedin';
   scheduledDate: Date;
   content: {
     text: string;
-    mediaType: 'image' | 'video' | 'text'; // Type de média principal
+    mediaType: 'image' | 'text'; // Type de média principal
     // Champs image
     imageUrl?: string;
     imagePublicId?: string; // ID public Cloudinary
@@ -79,7 +79,7 @@ const PostSchema: Schema = new Schema({
   },
   platform: {
     type: String,
-    enum: ['facebook', 'instagram', 'twitter', 'linkedin', 'tiktok'],
+    enum: ['facebook', 'instagram', 'linkedin'],
     required: true
   },
   scheduledDate: {
@@ -93,7 +93,7 @@ const PostSchema: Schema = new Schema({
     },
     mediaType: {
       type: String,
-      enum: ['image', 'video', 'text'],
+      enum: ['image', 'text'],
       default: 'image'
     },
     // Champs image

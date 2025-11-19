@@ -1588,7 +1588,7 @@ The product should be the focal point (40-60% of frame), clearly visible, well-l
     logger.info(`\n=== Fin de la génération ===`);
     logger.info(`${savedPosts.length} posts générés au total`);
     logger.info(`Images: ${savedPosts.filter(p => p.content.mediaType === 'image').length}`);
-    logger.info(`Vidéos: ${savedPosts.filter(p => p.content.mediaType === 'video').length}`);
+    logger.info(`Textes: ${savedPosts.filter(p => p.content.mediaType === 'text').length}`);
     return savedPosts;
   }
 

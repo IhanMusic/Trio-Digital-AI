@@ -60,27 +60,15 @@ export interface SocialNetwork {
 export const SOCIAL_NETWORKS: SocialNetwork[] = [
   {
     name: "Facebook",
-    features: ["Posts", "Stories", "Reels", "Groupes", "Événements"]
+    features: ["Posts", "Images"]
   },
   {
     name: "Instagram",
-    features: ["Posts", "Stories", "Reels", "IGTV", "Guides"]
+    features: ["Posts", "Images", "Stories"]
   },
   {
     name: "LinkedIn",
-    features: ["Posts", "Articles", "Stories", "Événements", "Newsletters"]
-  },
-  {
-    name: "Twitter",
-    features: ["Tweets", "Threads", "Spaces", "Lists"]
-  },
-  {
-    name: "TikTok",
-    features: ["Vidéos", "Lives", "Stories", "Duos"]
-  },
-  {
-    name: "YouTube",
-    features: ["Vidéos", "Shorts", "Lives", "Community"]
+    features: ["Posts", "Images"]
   }
 ];
 
@@ -135,43 +123,10 @@ export interface ContentType {
 
 export const CONTENT_TYPES: ContentType[] = [
   {
-    category: "Visuels",
+    category: "Contenu",
     types: [
-      "Photos de produits",
-      "Infographies",
-      "Carrousels",
-      "Stories",
-      "Reels/Shorts"
-    ]
-  },
-  {
-    category: "Vidéos",
-    types: [
-      "Tutoriels",
-      "Témoignages",
-      "Behind the scenes",
-      "Lives",
-      "Animations"
-    ]
-  },
-  {
-    category: "Textuels",
-    types: [
-      "Articles de blog",
-      "Posts informatifs",
-      "Newsletters",
-      "Études de cas",
-      "Interviews"
-    ]
-  },
-  {
-    category: "Interactifs",
-    types: [
-      "Sondages",
-      "Quiz",
-      "Concours",
-      "Questions/Réponses",
-      "Challenges"
+      "Posts avec images",
+      "Stories Instagram"
     ]
   }
 ];
