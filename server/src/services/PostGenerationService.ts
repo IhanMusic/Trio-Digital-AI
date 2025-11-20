@@ -899,7 +899,7 @@ DIRECTIVES CRÉATIVES
         const keyDatesData = relevantKeyDates.length > 0 ? 
           relevantKeyDates.map(kd => ({ 
             name: kd.name, 
-            importance: kd.importance 
+            importance: String(kd.importance) 
           })) : 
           undefined;
         
@@ -1068,8 +1068,25 @@ DIRECTIVES CRÉATIVES
               scheduledDate: date.toISOString(),
               platform: platform,
               country: calendar.targetCountry,
-              // NOUVEAU : Ajouter le contenu textuel généré pour cohérence
-              generatedText: parsedPost.postContent
+              // 🎯 BRIEF CRÉATIF COMPLET CANNES LIONS
+              // COHÉRENCE : Texte généré pour alignement parfait
+              generatedText: parsedPost.postContent,
+              // QUALITÉ : Éléments créatifs GPT-5 pour richesse maximale
+              originalImagePrompt: parsedPost.imagePrompt,
+              hashtags: parsedPost.hashtags,
+              callToAction: parsedPost.callToAction,
+              imageStyle: parsedPost.imageStyle,
+              audienceTargeting: parsedPost.audienceTargeting,
+              competitiveEdge: parsedPost.competitiveEdge,
+              legalCompliance: parsedPost.legalCompliance,
+              culturalRelevance: parsedPost.culturalRelevance,
+              // CONTEXTE : Données enrichies
+              keyDates: keyDatesData,
+              selectedProducts: selectedProducts.map(p => ({
+                name: p.name,
+                category: p.category,
+                description: p.description
+              }))
             };
             
             // Générer le prompt d'image avec GPT Creative Director APRÈS avoir le texte

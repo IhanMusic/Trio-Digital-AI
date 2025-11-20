@@ -71,6 +71,21 @@ interface PostContext {
   scheduledDate?: string;
   platform?: string;
   country?: string;
+  // 🎯 BRIEF CRÉATIF COMPLET CANNES LIONS
+  // COHÉRENCE : Texte généré pour alignement parfait
+  generatedText?: string;
+  // QUALITÉ : Éléments créatifs GPT-5 pour richesse maximale
+  originalImagePrompt?: string;
+  hashtags?: string[];
+  callToAction?: string;
+  imageStyle?: string;
+  audienceTargeting?: string;
+  competitiveEdge?: string;
+  legalCompliance?: string;
+  culturalRelevance?: string;
+  // CONTEXTE : Données enrichies
+  keyDates?: Array<{ name: string; importance: string }>;
+  selectedProducts?: Array<{ name: string; category: string; description: string }>;
 }
 
 /**
