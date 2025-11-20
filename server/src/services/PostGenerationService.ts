@@ -325,77 +325,6 @@ class PostGenerationService {
         const date = dates[i];
         logger.info(`\nGénération du contenu pour ${platform} - Post #${i + 1} (${date.toLocaleDateString()})`);
         
-        // 🎨 NOUVEAU SYSTÈME : GPT CREATIVE DIRECTOR
-        logger.info('🎨 === NOUVEAU SYSTÈME GPT CREATIVE DIRECTOR ===');
-        logger.info(`🎯 Génération prompt d'image unique pour ${brand.name} - Post #${i + 1}`);
-        
-        // Préparer les données pour GPT Creative Director
-        const brandData = {
-          name: brand.name,
-          sector: brand.sector,
-          pricePositioning: brand.pricePositioning,
-          businessType: brand.businessType,
-          colors: brand.colors,
-          description: brand.description,
-          values: brand.values,
-          targetAudience: briefData.targetAudience.geographic?.[0] || calendar.targetCountry
-        };
-        
-        const productData = products.length > 0 ? {
-          name: products[0].name,
-          category: products[0].category,
-          description: products[0].description,
-          uniqueSellingPoints: products[0].uniqueSellingPoints,
-          customerBenefits: products[0].customerBenefits,
-          usageOccasions: products[0].usageOccasions,
-          images: products[0].images
-        } : {
-          name: brand.name,
-          category: 'general',
-          description: brand.description || 'Produit de qualité'
-        };
-        
-        const calendarData = {
-          campaignObjective: calendar.campaignObjective,
-          generationSettings: calendar.generationSettings,
-          communicationStyle: calendar.communicationStyle,
-          targetAudience: briefData.targetAudience.geographic?.[0] || calendar.targetCountry
-        };
-        
-        const postContext = {
-          postIndex: i,
-          totalPosts: dates.length,
-          scheduledDate: date.toISOString(),
-          platform: platform,
-          country: calendar.targetCountry
-        };
-        
-        // Générer le prompt d'image avec GPT Creative Director
-        let gptImagePrompt: string;
-        try {
-          logger.info('🤖 Appel à GPT Creative Director...');
-          gptImagePrompt = await GPTCreativeDirector.generateImagePrompt(
-            brandData,
-            productData,
-            calendarData,
-            postContext,
-            String(calendar._id)
-          );
-          
-          logger.info('✅ GPT Creative Director a généré le prompt avec succès');
-          logger.info(`📝 Prompt généré (premiers 200 chars): ${gptImagePrompt.substring(0, 200)}...`);
-          
-        } catch (error: any) {
-          logger.error('❌ Erreur GPT Creative Director:', error.message);
-          logger.info('⚠️  Utilisation d\'un prompt de fallback');
-          
-          // Prompt de fallback simple mais efficace
-          gptImagePrompt = `Professional commercial photography of ${productData.name} for ${brandData.name}. 
-High-quality product shot with ${brandData.colors?.primary ? brandData.colors.primary : 'brand'} color palette. 
-Modern, clean composition with perfect lighting. Shot with professional camera, 85mm lens, f/2.8. 
-Square 1:1 format optimized for social media. Premium and aspirational mood.`;
-        }
-        
         // Incrémenter l'index global pour le prochain post
         globalPostIndex++;
         
@@ -1096,11 +1025,78 @@ DIRECTIVES CRÉATIVES
               logger.info(`   - Support multi-produits: ${referenceImagesBase64.length > 1 ? 'OUI' : 'NON'}`);
             }
             
-            // 🎨 UTILISER LE PROMPT GÉNÉRÉ PAR GPT CREATIVE DIRECTOR
-            logger.info('🎨 Utilisation du prompt GPT Creative Director...');
+            // 🎨 NOUVEAU SYSTÈME : GPT CREATIVE DIRECTOR APRÈS GÉNÉRATION DU TEXTE
+            logger.info('🎨 === GPT CREATIVE DIRECTOR POST-GÉNÉRATION ===');
+            logger.info(`🎯 Génération prompt d'image cohérent avec le texte généré`);
             
-            // Utiliser directement le prompt généré par GPT Creative Director
-            const finalImagePrompt = gptImagePrompt || rawImagePrompt;
+            // Préparer les données pour GPT Creative Director
+            const brandData = {
+              name: brand.name,
+              sector: brand.sector,
+              pricePositioning: brand.pricePositioning,
+              businessType: brand.businessType,
+              colors: brand.colors,
+              description: brand.description,
+              values: brand.values,
+              targetAudience: briefData.targetAudience.geographic?.[0] || calendar.targetCountry
+            };
+            
+            const productData = products.length > 0 ? {
+              name: products[0].name,
+              category: products[0].category,
+              description: products[0].description,
+              uniqueSellingPoints: products[0].uniqueSellingPoints,
+              customerBenefits: products[0].customerBenefits,
+              usageOccasions: products[0].usageOccasions,
+              images: products[0].images
+            } : {
+              name: brand.name,
+              category: 'general',
+              description: brand.description || 'Produit de qualité'
+            };
+            
+            const calendarData = {
+              campaignObjective: calendar.campaignObjective,
+              generationSettings: calendar.generationSettings,
+              communicationStyle: calendar.communicationStyle,
+              targetAudience: briefData.targetAudience.geographic?.[0] || calendar.targetCountry
+            };
+            
+            const postContext = {
+              postIndex: i,
+              totalPosts: dates.length,
+              scheduledDate: date.toISOString(),
+              platform: platform,
+              country: calendar.targetCountry,
+              // NOUVEAU : Ajouter le contenu textuel généré pour cohérence
+              generatedText: parsedPost.postContent
+            };
+            
+            // Générer le prompt d'image avec GPT Creative Director APRÈS avoir le texte
+            let gptImagePrompt: string;
+            try {
+              logger.info('🤖 Appel à GPT Creative Director avec contexte textuel...');
+              gptImagePrompt = await GPTCreativeDirector.generateImagePrompt(
+                brandData,
+                productData,
+                calendarData,
+                postContext,
+                String(calendar._id)
+              );
+              
+              logger.info('✅ GPT Creative Director a généré le prompt cohérent avec le texte');
+              logger.info(`📝 Prompt généré (premiers 200 chars): ${gptImagePrompt.substring(0, 200)}...`);
+              
+            } catch (error: any) {
+              logger.error('❌ Erreur GPT Creative Director:', error.message);
+              logger.info('⚠️  Utilisation du prompt GPT-5 original');
+              
+              // Fallback : utiliser le prompt généré par GPT-5
+              gptImagePrompt = rawImagePrompt;
+            }
+            
+            // Utiliser le prompt généré par GPT Creative Director (cohérent avec le texte)
+            const finalImagePrompt = gptImagePrompt;
             
             logger.info('✅ Prompt final prêt pour génération');
             logger.info('🔍 Prompt final (premiers 500 chars):');
