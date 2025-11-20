@@ -25,6 +25,61 @@ const GENERATE_VIDEO = true; // ✅ ACTIVÉ - Génère UNE vidéo REEL par calen
 const VIDEOS_PER_CALENDAR = 1; // Nombre de vidéos à générer par calendrier (pour test)
 
 /**
+ * Parse la sélection de produits GPT-5 et retourne les produits correspondants
+ * @param productsSelected - String de sélection GPT-5 (ex: "1,3" ou "2")
+ * @param products - Liste des produits disponibles
+ * @param postIndex - Index du post actuel (pour diversité)
+ * @param totalPosts - Nombre total de posts (pour diversité)
+ * @returns Array des produits sélectionnés
+ */
+function parseGPTProductSelection(
+  productsSelected: string | undefined,
+  products: IProduct[],
+  postIndex: number,
+  totalPosts: number
+): IProduct[] {
+  // Si aucun produit disponible, retourner tableau vide
+  if (products.length === 0) {
+    return [];
+  }
+
+  // Si GPT-5 a fourni une sélection, l'utiliser
+  if (productsSelected && productsSelected.trim()) {
+    try {
+      // Parser les indices des produits sélectionnés (ex: "1,3" ou "1,2,3")
+      const indices = productsSelected.split(',').map(s => parseInt(s.trim()) - 1); // -1 car GPT utilise 1-based indexing
+      const validIndices = indices.filter(i => i >= 0 && i < products.length);
+      const selectedProducts = validIndices.map(i => products[i]);
+      
+      if (selectedProducts.length > 0) {
+        logger.info(`✅ GPT-5 sélection parsée: ${selectedProducts.map(p => p.name).join(', ')}`);
+        return selectedProducts;
+      }
+    } catch (error: any) {
+      logger.error('❌ Erreur parsing sélection produits GPT-5:', error.message);
+    }
+  }
+
+  // Fallback intelligent : diversifier automatiquement selon l'index du post
+  logger.info('⚠️  Aucune sélection GPT-5 valide, utilisation de la diversification automatique');
+  
+  // Stratégie de diversification : alterner les produits selon l'index
+  if (products.length === 1) {
+    return [products[0]];
+  } else if (products.length === 2) {
+    // Alterner entre les 2 produits
+    const selectedIndex = postIndex % 2;
+    logger.info(`🔄 Diversification 2 produits: Post ${postIndex + 1} → Produit ${selectedIndex + 1} (${products[selectedIndex].name})`);
+    return [products[selectedIndex]];
+  } else {
+    // Pour 3+ produits, utiliser une rotation plus complexe
+    const selectedIndex = postIndex % products.length;
+    logger.info(`🔄 Diversification ${products.length} produits: Post ${postIndex + 1} → Produit ${selectedIndex + 1} (${products[selectedIndex].name})`);
+    return [products[selectedIndex]];
+  }
+}
+
+/**
  * Transforme une image (Buffer) en format carré en ajoutant du padding blanc
  */
 async function makeImageSquareFromBuffer(imageBuffer: Buffer): Promise<Buffer> {
@@ -802,10 +857,16 @@ Vous devez choisir intelligemment le(s) produit(s) optimal(aux) selon le context
 - 2-3 PRODUITS : Pour montrer une gamme, créer une comparaison, démontrer la variété
 - TOUTE LA GAMME : Pour une vision d'ensemble de la marque, campagne de lancement
 
+🎯 DIVERSITÉ OBLIGATOIRE (Post ${i + 1}/${dates.length}):
+- VARIER les produits entre chaque post pour éviter la répétition
+- Post ${i + 1} : Choisir un produit DIFFÉRENT des posts précédents si possible
+- Créer de la variété dans la sélection pour maintenir l'intérêt de l'audience
+- Alterner entre les produits disponibles pour maximiser l'exposition de la gamme
+
 ⚠️ OBLIGATION : Dans votre réponse, vous DEVEZ inclure une section :
 ---PRODUITS SÉLECTIONNÉS---
 [Numéros des produits choisis : ex. "1,3" ou "1,2,3" ou "1"]
-[Justification de votre choix en 1-2 phrases]
+[Justification de votre choix en 1-2 phrases, en tenant compte de la diversité]
 
 Cette sélection déterminera quelles images de référence seront utilisées pour la génération visuelle.
 ` : ''}
@@ -869,31 +930,15 @@ DIRECTIVES CRÉATIVES
         const parsedPost = parsedPosts[0];
         
         // 🎯 EXTRAIRE LA SÉLECTION DE PRODUITS DE GPT-5
-        let selectedProductIndices: number[] = [];
         let selectedProducts: IProduct[] = [];
         
-        // Chercher la section "PRODUITS SÉLECTIONNÉS" dans la réponse GPT-5
-        if (parsedPost.productsSelected) {
-          try {
-            // Parser les indices des produits sélectionnés (ex: "1,3" ou "1,2,3")
-            const indices = parsedPost.productsSelected.split(',').map(s => parseInt(s.trim()) - 1); // -1 car GPT utilise 1-based indexing
-            selectedProductIndices = indices.filter(i => i >= 0 && i < products.length);
-            selectedProducts = selectedProductIndices.map(i => products[i]);
-            
-            logger.info(`🎯 GPT-5 a sélectionné ${selectedProducts.length} produit(s):`);
-            selectedProducts.forEach((product, index) => {
-              logger.info(`   ${index + 1}. ${product.name}`);
-            });
-          } catch (error: any) {
-            logger.error('❌ Erreur parsing sélection produits GPT-5:', error.message);
-            logger.info('⚠️  Fallback: utilisation du premier produit');
-            selectedProducts = products.length > 0 ? [products[0]] : [];
-          }
-        } else {
-          // Fallback si GPT-5 n'a pas fourni de sélection
-          logger.info('⚠️  Aucune sélection produits détectée, utilisation du premier produit');
-          selectedProducts = products.length > 0 ? [products[0]] : [];
-        }
+        // Utiliser la nouvelle fonction parseGPTProductSelection
+        selectedProducts = parseGPTProductSelection(parsedPost.productsSelected, products, i, dates.length);
+        
+        logger.info(`🎯 GPT-5 a sélectionné ${selectedProducts.length} produit(s) pour le post ${i + 1}:`);
+        selectedProducts.forEach((product, index) => {
+          logger.info(`   ${index + 1}. ${product.name}`);
+        });
         
         // Ajouter les dates clés associées au post
         const keyDatesData = relevantKeyDates.length > 0 ? 
@@ -1041,7 +1086,16 @@ DIRECTIVES CRÉATIVES
               targetAudience: briefData.targetAudience.geographic?.[0] || calendar.targetCountry
             };
             
-            const productData = products.length > 0 ? {
+            // 🎯 CORRECTION CRITIQUE : Utiliser les produits SÉLECTIONNÉS par GPT-5
+            const productData = selectedProducts.length > 0 ? {
+              name: selectedProducts[0].name,
+              category: selectedProducts[0].category,
+              description: selectedProducts[0].description,
+              uniqueSellingPoints: selectedProducts[0].uniqueSellingPoints,
+              customerBenefits: selectedProducts[0].customerBenefits,
+              usageOccasions: selectedProducts[0].usageOccasions,
+              images: selectedProducts[0].images
+            } : products.length > 0 ? {
               name: products[0].name,
               category: products[0].category,
               description: products[0].description,

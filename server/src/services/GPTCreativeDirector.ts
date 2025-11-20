@@ -318,6 +318,14 @@ Points forts: ${product.uniqueSellingPoints?.join(', ') || 'Non spécifié'}
 Bénéfices clients: ${product.customerBenefits?.join(', ') || 'Non spécifié'}
 Occasions d'usage: ${product.usageOccasions?.join(', ') || 'Non spécifié'}
 
+${postContext.selectedProducts && postContext.selectedProducts.length > 0 ? `
+🎯 PRODUITS SÉLECTIONNÉS POUR CE POST:
+${postContext.selectedProducts.map(p => `- ${p.name} (${p.category}): ${p.description}`).join('\n')}
+
+⚠️ IMPÉRATIF CRITIQUE: L'image DOIT montrer UNIQUEMENT ces produits sélectionnés.
+Ne pas inclure d'autres produits dans l'image. La cohérence texte-image est OBLIGATOIRE.
+` : ''}
+
 📅 CONTEXTE CAMPAGNE:
 Objectif: ${calendar.campaignObjective || 'Non spécifié'}
 Thématiques: ${calendar.generationSettings?.themes?.join(', ') || 'Non spécifié'}
