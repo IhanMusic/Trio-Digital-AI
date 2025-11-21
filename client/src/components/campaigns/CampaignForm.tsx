@@ -110,19 +110,44 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ onSubmit, onCancel, isLoadi
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        const response = await apiClient.get('/api/brands');
-        if (response.data.success) {
-          setBrands(response.data.data);
+        setLoadingBrands(true);
+        console.log('🔄 Tentative de chargement des marques...');
+        console.log('👤 Utilisateur connecté:', !!user);
+        
+        if (!user) {
+          console.warn('⚠️ Utilisateur non connecté, impossible de charger les marques');
+          setLoadingBrands(false);
+          return;
         }
-      } catch (error) {
-        console.error('Erreur lors du chargement des marques:', error);
+
+        const response = await apiClient.get('/api/brands');
+        console.log('📡 Réponse API brands:', response.data);
+        
+        if (response.data.success) {
+          setBrands(response.data.data || []);
+          console.log('✅ Marques chargées:', response.data.data?.length || 0);
+        } else {
+          console.warn('⚠️ API response not successful:', response.data);
+        }
+      } catch (error: any) {
+        console.error('❌ Erreur lors du chargement des marques:', error);
+        
+        if (error.response?.status === 401) {
+          console.error('🔐 Erreur d\'authentification - token invalide ou expiré');
+        } else if (error.response?.status === 403) {
+          console.error('🚫 Accès refusé');
+        } else if (error.response?.status === 404) {
+          console.log('📭 Endpoint brands non trouvé');
+        } else {
+          console.error('🔥 Erreur serveur:', error.message);
+        }
       } finally {
         setLoadingBrands(false);
       }
     };
 
     fetchBrands();
-  }, []);
+  }, [user]);
 
   // Charger les produits quand une marque est sélectionnée
   useEffect(() => {
