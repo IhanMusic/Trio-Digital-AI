@@ -38,6 +38,7 @@ import productsRouter from './routes/products';
 import productIntegrationWithStabilityRouter from './routes/productIntegrationWithStability';
 import veo3Router from './routes/veo3';
 import downloadRouter from './routes/download';
+import campaignsRouter from './routes/campaigns';
 
 // Scripts
 import { initFolders } from './scripts/initFolders';
@@ -141,6 +142,7 @@ app.use('/api/results', resultsRouter);
 app.use('/api/calendars', calendarsRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/products', productsRouter);
+app.use('/api/campaigns', campaignsRouter);
 app.use('/api/product-integration-stability', productIntegrationWithStabilityRouter);
 app.use('/api/veo3', veo3Router);
 app.use('/api/download', downloadRouter);
