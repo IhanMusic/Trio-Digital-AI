@@ -21,15 +21,29 @@ const CampaignsList: React.FC<CampaignsListProps> = ({ onCreateNew, onViewCampai
   const fetchCampaigns = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
+      console.log('Tentative de chargement des campagnes...');
       const response = await apiClient.get('/api/campaigns');
+      console.log('Réponse API campaigns:', response.data);
+      
       if (response.data.success) {
-        setCampaigns(response.data.data);
+        setCampaigns(response.data.data || []);
       } else {
+        console.warn('API response not successful:', response.data);
         setError('Erreur lors du chargement des campagnes');
       }
     } catch (error: any) {
-      console.error('Erreur:', error);
-      setError(error.response?.data?.message || 'Erreur lors du chargement des campagnes');
+      console.error('Erreur lors du chargement des campagnes:', error);
+      
+      // Si c'est une erreur 404 ou que l'endpoint n'existe pas encore, on affiche un état vide
+      if (error.response?.status === 404) {
+        console.log('Endpoint campaigns non trouvé, affichage état vide');
+        setCampaigns([]);
+        setError(null);
+      } else {
+        setError(error.response?.data?.message || `Erreur de connexion: ${error.message}`);
+      }
     } finally {
       setLoading(false);
     }
