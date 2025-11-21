@@ -21,6 +21,7 @@ const Profile = React.lazy(() => import('./components/profile/Profile'));
 const Billing = React.lazy(() => import('./components/billing/Billing'));
 const Team = React.lazy(() => import('./components/team/Team'));
 const Calendars = React.lazy(() => import('./components/calendars/Calendars'));
+const Campaigns = React.lazy(() => import('./components/campaigns/Campaigns'));
 const Results = React.lazy(() => import('./components/results/Results'));
 
 // Composant de chargement
@@ -122,6 +123,17 @@ const App: React.FC = () => {
               <PrivateRoute>
                 <MainLayout>
                   <Calendars />
+                </MainLayout>
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/campaigns"
+            element={
+              <PrivateRoute>
+                <MainLayout>
+                  <Campaigns />
                 </MainLayout>
               </PrivateRoute>
             }

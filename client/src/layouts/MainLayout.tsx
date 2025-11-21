@@ -92,6 +92,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                   Calendriers
                 </Link>
                 <Link
+                  to="/campaigns"
+                  className={`${
+                    isActive('/campaigns')
+                      ? 'nav-link-active'
+                      : 'nav-link text-white/80 hover:text-white'
+                  } inline-flex items-center text-sm font-medium`}
+                >
+                  Campagnes
+                </Link>
+                <Link
                   to="/team"
                   className={`${
                     isActive('/team')
