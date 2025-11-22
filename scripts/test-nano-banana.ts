@@ -5,15 +5,15 @@ import * as path from 'path';
 // Configuration
 const API_KEY = 'AIzaSyAY3uGbXdF4j6n4R8Tj1ssYms7AJj6Qnk4';
 
-async function testNanoBanana() {
+async function testGemini3Pro() {
   try {
-    console.log('🍌 Test de Nano Banana - Démarrage...\n');
+    console.log('🚀 Test de Gemini 3 Pro Image Preview - Démarrage...\n');
     
     // Initialiser l'API Google Generative AI
     const genAI = new GoogleGenerativeAI(API_KEY);
     
-    // Utiliser le modèle Nano Banana (génération d'images)
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-image' });
+    // Utiliser le nouveau modèle Gemini 3 Pro Image Preview
+    const model = genAI.getGenerativeModel({ model: 'gemini-3-pro-image-preview' });
     
     // Prompt de test pour générer une image
     const prompt = 'Une banane jaune souriante portant des lunettes de soleil sur une plage tropicale au coucher du soleil';
@@ -75,4 +75,4 @@ async function testNanoBanana() {
 }
 
 // Exécuter le test
-testNanoBanana();
+testGemini3Pro();

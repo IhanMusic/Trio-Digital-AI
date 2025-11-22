@@ -5,10 +5,10 @@ import { FileStorageService } from './FileStorageService';
 
 interface GeminiGenerationOptions {
   numberOfImages?: number;
-  imageSize?: '1K' | '2K';
-  aspectRatio?: '1:1' | '3:4' | '4:3' | '9:16' | '16:9';
+  imageSize?: '1K' | '2K' | '4K';
+  aspectRatio?: '1:1' | '2:3' | '3:2' | '3:4' | '4:3' | '4:5' | '5:4' | '9:16' | '16:9' | '21:9';
   referenceImage?: string; // Base64 encoded image (legacy - single product)
-  referenceImages?: string[]; // Base64 encoded images (multi-products support)
+  referenceImages?: string[]; // Base64 encoded images (multi-products support - up to 14 images)
   referenceImageStrength?: number;
 }
 
@@ -127,10 +127,13 @@ export class GeminiImageService {
         console.log(`🎯 Prompt final construit avec ${finalReferenceImages.length} référence(s) produit(s)`);
       }
 
-      // Générer l'image avec Gemini en utilisant generateContent (méthode correcte)
+      // Générer l'image avec Gemini 3 Pro en utilisant la nouvelle syntaxe
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
+        model: 'gemini-3-pro-image-preview',
         contents: promptContent,
+        config: {
+          responseModalities: ['TEXT', 'IMAGE'],
+        },
       });
 
       // Vérifier que des candidats existent
