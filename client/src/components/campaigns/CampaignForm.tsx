@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { apiClient } from '../../utils/apiClient';
+import { getWithAuth } from '../../utils/apiUtils';
+import { config } from '../../config/env';
 
 interface Brand {
   _id: string;
@@ -127,16 +128,16 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ onSubmit, onCancel, isLoadi
           return;
         }
 
-        console.log('📡 Appel API avec apiClient...');
-        const response = await apiClient.get('/api/brands');
-        console.log('📡 Réponse API brands:', response);
+        console.log('📡 Appel API avec getWithAuth...');
+        const brandsResult = await getWithAuth(`${config.apiUrl}/brands`);
+        console.log('📡 Réponse API brands:', brandsResult);
         
-        if (response.success) {
-          setBrands(response.data || []);
-          console.log('✅ Marques chargées:', response.data?.length || 0);
-        } else {
-          console.warn('⚠️ API response not successful:', response);
+        if (!brandsResult.success) {
+          throw new Error(brandsResult.message || 'Erreur lors de la récupération des marques');
         }
+        
+        setBrands(brandsResult.data || []);
+        console.log('✅ Marques chargées:', brandsResult.data?.length || 0);
       } catch (error: any) {
         console.error('❌ Erreur lors du chargement des marques:', error);
         
@@ -167,12 +168,18 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ onSubmit, onCancel, isLoadi
 
       setLoadingProducts(true);
       try {
-        const response = await apiClient.get(`/api/products?brandId=${formData.brandId}`);
-        if (response.data.success) {
-          setProducts(response.data.data);
+        console.log('Chargement des produits pour la marque:', formData.brandId);
+        
+        // Utiliser la même approche que les calendriers
+        const result = await getWithAuth(`${config.apiUrl}/products/brand/${formData.brandId}`);
+        
+        if (result.success) {
+          console.log('Produits chargés:', result.data.length);
+          setProducts(result.data);
         }
       } catch (error) {
         console.error('Erreur lors du chargement des produits:', error);
+        setProducts([]);
       } finally {
         setLoadingProducts(false);
       }
