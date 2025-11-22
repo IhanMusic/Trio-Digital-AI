@@ -113,6 +113,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ onSubmit, onCancel, isLoadi
         setLoadingBrands(true);
         console.log('🔄 Tentative de chargement des marques...');
         console.log('👤 Utilisateur connecté:', !!user);
+        console.log('🔑 Token disponible:', !!token);
         
         if (!user) {
           console.warn('⚠️ Utilisateur non connecté, impossible de charger les marques');
@@ -120,47 +121,30 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ onSubmit, onCancel, isLoadi
           return;
         }
 
-        // Utiliser le token du contexte directement pour éviter les problèmes de synchronisation
         if (!token) {
           console.warn('⚠️ Token non disponible dans le contexte');
           setLoadingBrands(false);
           return;
         }
 
-        console.log('🔑 Token récupéré du contexte:', token ? 'Présent' : 'Absent');
-
-        // Appel direct avec le token du contexte
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/brands`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        console.log('📡 Statut de la réponse:', response.status);
-
-        if (!response.ok) {
-          throw new Error(`Erreur HTTP: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('📡 Réponse API brands:', data);
+        console.log('📡 Appel API avec apiClient...');
+        const response = await apiClient.get('/api/brands');
+        console.log('📡 Réponse API brands:', response);
         
-        if (data.success) {
-          setBrands(data.data || []);
-          console.log('✅ Marques chargées:', data.data?.length || 0);
+        if (response.success) {
+          setBrands(response.data || []);
+          console.log('✅ Marques chargées:', response.data?.length || 0);
         } else {
-          console.warn('⚠️ API response not successful:', data);
+          console.warn('⚠️ API response not successful:', response);
         }
       } catch (error: any) {
         console.error('❌ Erreur lors du chargement des marques:', error);
         
-        if (error.message.includes('401')) {
+        if (error.response?.status === 401) {
           console.error('🔐 Erreur d\'authentification - token invalide ou expiré');
-        } else if (error.message.includes('403')) {
+        } else if (error.response?.status === 403) {
           console.error('🚫 Accès refusé');
-        } else if (error.message.includes('404')) {
+        } else if (error.response?.status === 404) {
           console.log('📭 Endpoint brands non trouvé');
         } else {
           console.error('🔥 Erreur serveur:', error.message);
