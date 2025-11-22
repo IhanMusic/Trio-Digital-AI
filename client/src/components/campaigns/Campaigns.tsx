@@ -3,7 +3,8 @@ import CampaignsList from './CampaignsList';
 import CampaignForm from './CampaignForm';
 import CampaignDashboard from './CampaignDashboard';
 import { ICampaign } from '../../types/campaign';
-import { apiClient } from '../../utils/apiClient';
+import { postWithAuth } from '../../utils/apiUtils';
+import { config } from '../../config/env';
 
 type ViewMode = 'list' | 'create' | 'view';
 
@@ -30,18 +31,24 @@ const Campaigns: React.FC = () => {
   const handleSubmitCampaign = async (campaignData: any) => {
     try {
       setIsLoading(true);
-      const response = await apiClient.post('/api/campaigns', campaignData);
+      console.log('🚀 Création de campagne avec postWithAuth...');
       
-      if (response.data.success) {
+      // Utiliser la même approche que les calendriers
+      const response = await postWithAuth(`${config.apiUrl}/campaigns`, campaignData);
+      console.log('📡 Réponse API campaigns:', response);
+      
+      if (response.success) {
         // Rediriger vers le dashboard de la campagne créée
-        setSelectedCampaign(response.data.data);
+        setSelectedCampaign(response.data);
         setViewMode('view');
+        console.log('✅ Campagne créée avec succès:', response.data);
       } else {
-        alert('Erreur lors de la création de la campagne');
+        console.error('❌ Échec de création:', response);
+        alert('Erreur lors de la création de la campagne: ' + (response.message || 'Erreur inconnue'));
       }
     } catch (error: any) {
-      console.error('Erreur:', error);
-      alert(error.response?.data?.message || 'Erreur lors de la création de la campagne');
+      console.error('❌ Erreur lors de la création de la campagne:', error);
+      alert(error.message || 'Erreur lors de la création de la campagne');
     } finally {
       setIsLoading(false);
     }
