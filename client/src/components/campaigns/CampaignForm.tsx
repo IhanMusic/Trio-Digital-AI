@@ -66,7 +66,7 @@ interface CampaignFormProps {
 }
 
 const CampaignForm: React.FC<CampaignFormProps> = ({ onSubmit, onCancel, isLoading = false }) => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [brands, setBrands] = useState<Brand[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loadingBrands, setLoadingBrands] = useState(true);
@@ -120,23 +120,47 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ onSubmit, onCancel, isLoadi
           return;
         }
 
-        const response = await apiClient.get('/api/brands');
-        console.log('📡 Réponse API brands:', response.data);
+        // Utiliser le token du contexte directement pour éviter les problèmes de synchronisation
+        if (!token) {
+          console.warn('⚠️ Token non disponible dans le contexte');
+          setLoadingBrands(false);
+          return;
+        }
+
+        console.log('🔑 Token récupéré du contexte:', token ? 'Présent' : 'Absent');
+
+        // Appel direct avec le token du contexte
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}/api/brands`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        console.log('📡 Statut de la réponse:', response.status);
+
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('📡 Réponse API brands:', data);
         
-        if (response.data.success) {
-          setBrands(response.data.data || []);
-          console.log('✅ Marques chargées:', response.data.data?.length || 0);
+        if (data.success) {
+          setBrands(data.data || []);
+          console.log('✅ Marques chargées:', data.data?.length || 0);
         } else {
-          console.warn('⚠️ API response not successful:', response.data);
+          console.warn('⚠️ API response not successful:', data);
         }
       } catch (error: any) {
         console.error('❌ Erreur lors du chargement des marques:', error);
         
-        if (error.response?.status === 401) {
+        if (error.message.includes('401')) {
           console.error('🔐 Erreur d\'authentification - token invalide ou expiré');
-        } else if (error.response?.status === 403) {
+        } else if (error.message.includes('403')) {
           console.error('🚫 Accès refusé');
-        } else if (error.response?.status === 404) {
+        } else if (error.message.includes('404')) {
           console.log('📭 Endpoint brands non trouvé');
         } else {
           console.error('🔥 Erreur serveur:', error.message);
@@ -147,7 +171,7 @@ const CampaignForm: React.FC<CampaignFormProps> = ({ onSubmit, onCancel, isLoadi
     };
 
     fetchBrands();
-  }, [user]);
+  }, [user, token]);
 
   // Charger les produits quand une marque est sélectionnée
   useEffect(() => {
