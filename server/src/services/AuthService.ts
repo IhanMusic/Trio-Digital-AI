@@ -17,7 +17,7 @@ class AuthService {
   private static readonly ACCESS_TOKEN_SECRET = process.env.JWT_ACCESS_SECRET || 'access_secret';
   private static readonly REFRESH_TOKEN_SECRET = process.env.JWT_REFRESH_SECRET || 'refresh_secret';
   private static readonly RESET_TOKEN_SECRET = process.env.JWT_RESET_SECRET || 'reset_secret';
-  private static readonly ACCESS_TOKEN_EXPIRY = '15m';
+  private static readonly ACCESS_TOKEN_EXPIRY = '24h';
   private static readonly REFRESH_TOKEN_EXPIRY = '7d';
   private static readonly RESET_TOKEN_EXPIRY = '1h';
 
