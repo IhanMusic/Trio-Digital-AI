@@ -126,26 +126,30 @@ const CampaignsList: React.FC<CampaignsListProps> = ({ onCreateNew, onViewCampai
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="glass-panel p-8 rounded-full">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#53dfb2]"></div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-md p-4">
-        <div className="flex">
-          <div className="ml-3">
-            <h3 className="text-sm font-medium text-red-800">Erreur</h3>
-            <div className="mt-2 text-sm text-red-700">{error}</div>
-            <div className="mt-4">
-              <button
-                onClick={fetchCampaigns}
-                className="bg-red-100 px-3 py-2 rounded-md text-sm font-medium text-red-800 hover:bg-red-200"
-              >
-                Réessayer
-              </button>
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="glass-panel border-red-500/30 px-6 py-4 rounded-xl">
+          <div className="flex">
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-400">Erreur</h3>
+              <div className="mt-2 text-sm text-red-300">{error}</div>
+              <div className="mt-4">
+                <button
+                  onClick={fetchCampaigns}
+                  className="glass-button bg-red-500/20 hover:bg-red-500/30 px-3 py-2 text-sm"
+                >
+                  Réessayer
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -154,18 +158,20 @@ const CampaignsList: React.FC<CampaignsListProps> = ({ onCreateNew, onViewCampai
   }
 
   return (
-    <div className="space-y-6">
+    <div className="container mx-auto px-4 py-8">
       {/* En-tête */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mb-10">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Campagnes Marketing</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-[#53dfb2] bg-clip-text text-transparent">
+            Campagnes Marketing
+          </h1>
+          <p className="text-white/60 mt-1">
             Gérez vos campagnes générées automatiquement avec GPT-5
           </p>
         </div>
         <button
           onClick={onCreateNew}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+          className="glass-button inline-flex items-center"
         >
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -175,7 +181,7 @@ const CampaignsList: React.FC<CampaignsListProps> = ({ onCreateNew, onViewCampai
       </div>
 
       {/* Filtres et recherche */}
-      <div className="bg-white p-4 rounded-lg shadow-sm border">
+      <div className="glass-panel p-6 rounded-xl mb-8">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <input
@@ -183,14 +189,14 @@ const CampaignsList: React.FC<CampaignsListProps> = ({ onCreateNew, onViewCampai
               placeholder="Rechercher par nom de campagne ou marque..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="glass-input"
             />
           </div>
           <div>
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="glass-input"
             >
               <option value="all">Tous les types</option>
               <optgroup label="Par statut">
@@ -212,39 +218,39 @@ const CampaignsList: React.FC<CampaignsListProps> = ({ onCreateNew, onViewCampai
       </div>
 
       {/* Statistiques rapides */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg shadow-sm border">
-          <div className="text-2xl font-bold text-blue-600">{campaigns.length}</div>
-          <div className="text-sm text-gray-600">Total campagnes</div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="glass-panel p-6 rounded-xl hover:scale-[1.02] transition-all duration-300">
+          <div className="text-2xl font-bold text-[#53dfb2]">{campaigns.length}</div>
+          <div className="text-sm text-white/60">Total campagnes</div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border">
-          <div className="text-2xl font-bold text-green-600">
+        <div className="glass-panel p-6 rounded-xl hover:scale-[1.02] transition-all duration-300">
+          <div className="text-2xl font-bold text-green-400">
             {campaigns.filter(c => c.status === 'active').length}
           </div>
-          <div className="text-sm text-gray-600">Actives</div>
+          <div className="text-sm text-white/60">Actives</div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border">
-          <div className="text-2xl font-bold text-yellow-600">
+        <div className="glass-panel p-6 rounded-xl hover:scale-[1.02] transition-all duration-300">
+          <div className="text-2xl font-bold text-yellow-400">
             {campaigns.filter(c => c.status === 'draft').length}
           </div>
-          <div className="text-sm text-gray-600">Brouillons</div>
+          <div className="text-sm text-white/60">Brouillons</div>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border">
-          <div className="text-2xl font-bold text-purple-600">
+        <div className="glass-panel p-6 rounded-xl hover:scale-[1.02] transition-all duration-300">
+          <div className="text-2xl font-bold text-purple-400">
             {campaigns.filter(c => c.budget?.total).reduce((sum, c) => sum + (c.budget?.total || 0), 0).toLocaleString()}€
           </div>
-          <div className="text-sm text-gray-600">Budget total</div>
+          <div className="text-sm text-white/60">Budget total</div>
         </div>
       </div>
 
       {/* Liste des campagnes */}
       {filteredCampaigns.length === 0 ? (
         <div className="text-center py-12">
-          <div className="text-gray-400 text-6xl mb-4">📋</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <div className="text-white/40 text-6xl mb-4">📋</div>
+          <h3 className="text-lg font-medium text-white mb-2">
             {campaigns.length === 0 ? 'Aucune campagne créée' : 'Aucune campagne trouvée'}
           </h3>
-          <p className="text-gray-600 mb-6">
+          <p className="text-white/60 mb-6">
             {campaigns.length === 0 
               ? 'Créez votre première campagne marketing automatisée avec GPT-5'
               : 'Essayez de modifier vos filtres de recherche'
@@ -253,14 +259,14 @@ const CampaignsList: React.FC<CampaignsListProps> = ({ onCreateNew, onViewCampai
           {campaigns.length === 0 && (
             <button
               onClick={onCreateNew}
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+              className="glass-button"
             >
               Créer ma première campagne
             </button>
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
           {filteredCampaigns.map((campaign) => {
             const daysRemaining = getDaysRemaining(campaign.endDate);
             const isExpired = daysRemaining < 0;
@@ -269,7 +275,7 @@ const CampaignsList: React.FC<CampaignsListProps> = ({ onCreateNew, onViewCampai
             return (
               <div
                 key={campaign._id}
-                className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow"
+                className="glass-panel overflow-hidden hover:scale-[1.02] transition-all duration-300"
               >
                 <div className="p-6">
                   {/* En-tête de la carte */}
@@ -279,15 +285,20 @@ const CampaignsList: React.FC<CampaignsListProps> = ({ onCreateNew, onViewCampai
                         {getCampaignTypeIcon(campaign.campaignType)}
                       </div>
                       <div>
-                        <h3 className="font-semibold text-gray-900 text-lg">
+                        <h3 className="font-semibold text-white text-lg">
                           {campaign.name}
                         </h3>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-white/60">
                           {campaign.brandId.name} • {campaign.brandId.sector}
                         </p>
                       </div>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCampaignStatusColor(campaign.status)}`}>
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      campaign.status === 'active' ? 'bg-[#53dfb2]/20 text-[#53dfb2]' :
+                      campaign.status === 'draft' ? 'bg-yellow-500/20 text-yellow-400' :
+                      campaign.status === 'paused' ? 'bg-orange-500/20 text-orange-400' :
+                      'bg-white/10 text-white/60'
+                    }`}>
                       {getCampaignStatusLabel(campaign.status)}
                     </span>
                   </div>
@@ -295,35 +306,35 @@ const CampaignsList: React.FC<CampaignsListProps> = ({ onCreateNew, onViewCampai
                   {/* Informations de la campagne */}
                   <div className="space-y-3 mb-4">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Type:</span>
-                      <span className="font-medium">{getCampaignTypeLabel(campaign.campaignType)}</span>
+                      <span className="text-white/60">Type:</span>
+                      <span className="font-medium text-white/80">{getCampaignTypeLabel(campaign.campaignType)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Objectif:</span>
-                      <span className="font-medium">{getPrimaryObjectiveLabel(campaign.primaryObjective)}</span>
+                      <span className="text-white/60">Objectif:</span>
+                      <span className="font-medium text-white/80">{getPrimaryObjectiveLabel(campaign.primaryObjective)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Période:</span>
-                      <span className="font-medium">
+                      <span className="text-white/60">Période:</span>
+                      <span className="font-medium text-white/80">
                         {formatDate(campaign.startDate)} - {formatDate(campaign.endDate)}
                       </span>
                     </div>
                     {campaign.budget && (
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Budget:</span>
-                        <span className="font-medium">{campaign.budget.total.toLocaleString()}€</span>
+                        <span className="text-white/60">Budget:</span>
+                        <span className="font-medium text-[#53dfb2]">{campaign.budget.total.toLocaleString()}€</span>
                       </div>
                     )}
                   </div>
 
                   {/* Indicateur de temps restant */}
                   {campaign.status === 'active' && (
-                    <div className={`text-sm mb-4 p-2 rounded ${
+                    <div className={`text-sm mb-4 p-3 rounded-lg ${
                       isExpired 
-                        ? 'bg-red-50 text-red-700' 
+                        ? 'bg-red-500/20 text-red-400 border border-red-500/30' 
                         : isExpiringSoon 
-                          ? 'bg-yellow-50 text-yellow-700'
-                          : 'bg-green-50 text-green-700'
+                          ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                          : 'bg-green-500/20 text-green-400 border border-green-500/30'
                     }`}>
                       {isExpired 
                         ? `Expirée depuis ${Math.abs(daysRemaining)} jour(s)`
@@ -336,32 +347,32 @@ const CampaignsList: React.FC<CampaignsListProps> = ({ onCreateNew, onViewCampai
 
                   {/* Métriques rapides */}
                   {campaign.influencerStrategy?.recommendedProfiles && (
-                    <div className="grid grid-cols-3 gap-2 mb-4 text-center">
-                      <div className="bg-gray-50 p-2 rounded">
-                        <div className="text-sm font-medium">
+                    <div className="grid grid-cols-3 gap-3 mb-4 text-center">
+                      <div className="bg-white/5 p-3 rounded-lg border border-white/10">
+                        <div className="text-sm font-medium text-white">
                           {(campaign.influencerStrategy.recommendedProfiles.microInfluencers?.length || 0) +
                            (campaign.influencerStrategy.recommendedProfiles.midTierInfluencers?.length || 0) +
                            (campaign.influencerStrategy.recommendedProfiles.macroInfluencers?.length || 0)}
                         </div>
-                        <div className="text-xs text-gray-600">Influenceurs</div>
+                        <div className="text-xs text-white/60">Influenceurs</div>
                       </div>
-                      <div className="bg-gray-50 p-2 rounded">
-                        <div className="text-sm font-medium">
+                      <div className="bg-white/5 p-3 rounded-lg border border-white/10">
+                        <div className="text-sm font-medium text-white">
                           {campaign.campaignPackage?.organicContent?.posts || 0}
                         </div>
-                        <div className="text-xs text-gray-600">Posts</div>
+                        <div className="text-xs text-white/60">Posts</div>
                       </div>
-                      <div className="bg-gray-50 p-2 rounded">
-                        <div className="text-sm font-medium">
+                      <div className="bg-white/5 p-3 rounded-lg border border-white/10">
+                        <div className="text-sm font-medium text-white">
                           {campaign.selectedProducts?.length || 0}
                         </div>
-                        <div className="text-xs text-gray-600">Produits</div>
+                        <div className="text-xs text-white/60">Produits</div>
                       </div>
                     </div>
                   )}
 
                   {/* Description */}
-                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                  <p className="text-sm text-white/70 mb-4 line-clamp-2">
                     {campaign.description}
                   </p>
 
@@ -369,23 +380,27 @@ const CampaignsList: React.FC<CampaignsListProps> = ({ onCreateNew, onViewCampai
                   <div className="flex space-x-2">
                     <button
                       onClick={() => onViewCampaign(campaign)}
-                      className="flex-1 bg-blue-600 text-white px-3 py-2 rounded text-sm hover:bg-blue-700 transition-colors"
+                      className="flex-1 glass-button text-xs py-2"
                     >
                       Voir détails
                     </button>
                     <button
                       onClick={() => handleRegenerateStrategy(campaign._id)}
-                      className="px-3 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors"
+                      className="p-1.5 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-300 backdrop-blur-sm"
                       title="Régénérer la stratégie"
                     >
-                      🔄
+                      <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                      </svg>
                     </button>
                     <button
                       onClick={() => handleDeleteCampaign(campaign._id)}
-                      className="px-3 py-2 border border-red-300 text-red-600 rounded text-sm hover:bg-red-50 transition-colors"
+                      className="p-1.5 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-all duration-300 backdrop-blur-sm"
                       title="Supprimer"
                     >
-                      🗑️
+                      <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
                     </button>
                   </div>
                 </div>
