@@ -41,7 +41,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     initializeAuth();
   }, []);
 
-  // Token refresh automatique toutes les 10 minutes
+  // Token refresh automatique désactivé - Les tokens durent maintenant 24h
+  // Le rafraîchissement se fait automatiquement via apiUtils.ts en cas de besoin (erreur 401)
+  /*
   useEffect(() => {
     if (!auth.isAuthenticated || !auth.token) return;
 
@@ -49,7 +51,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       try {
         console.log('🔄 Refresh automatique du token...');
         
-        const response = await fetch('/api/auth/refresh', {
+        const response = await fetch('/api/auth/refresh-token', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${auth.token}`,
@@ -72,8 +74,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     return () => clearInterval(refreshInterval);
   }, [auth.isAuthenticated, auth.token]);
+  */
 
-  // Warning avant expiration de session (2 minutes avant)
+  // Warning avant expiration de session désactivé - Les tokens durent 24h
+  // Le système de rafraîchissement automatique via apiUtils.ts gère l'expiration
+  /*
   useEffect(() => {
     if (!auth.isAuthenticated || !auth.token) return;
 
@@ -92,10 +97,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         
         auth.logout();
       }
-    }, 28 * 60 * 1000); // 28 minutes (2 minutes avant expiration)
+    }, 22 * 60 * 60 * 1000); // 22 heures (2 heures avant expiration de 24h)
 
     return () => clearTimeout(warningTimeout);
   }, [auth.isAuthenticated, auth.token]);
+  */
 
   // Mettre à jour isAuthLoading quand l'état d'authentification change
   useEffect(() => {
