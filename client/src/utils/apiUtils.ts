@@ -17,7 +17,7 @@ export const fetchWithAuth = async (
   }
 
   // Ajouter le token d'authentification aux en-têtes
-  const headers = {
+  const authHeaders = {
     ...options.headers,
     'Authorization': `Bearer ${token}`
   };
@@ -25,7 +25,7 @@ export const fetchWithAuth = async (
   // Effectuer la requête
   let response = await fetch(url, {
     ...options,
-    headers
+    headers: authHeaders
   });
 
   // Si la réponse est 401 (Unauthorized), tenter de rafraîchir le token
@@ -51,14 +51,14 @@ export const fetchWithAuth = async (
         
         // Réessayer la requête originale avec le nouveau token
         console.log('Token rafraîchi, nouvelle tentative de requête...');
-        const newHeaders = {
+        const refreshedHeaders = {
           ...options.headers,
           'Authorization': `Bearer ${newToken}`
         };
         
         response = await fetch(url, {
           ...options,
-          headers: newHeaders
+          headers: refreshedHeaders
         });
       } else {
         console.error('Échec du rafraîchissement du token');

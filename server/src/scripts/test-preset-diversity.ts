@@ -15,7 +15,7 @@ import {
 const testBrand = {
   name: 'Test Brand',
   sector: 'food',
-  colors: { primary: '#FF6B35' }
+  colors: ['#FF6B35']
 };
 
 const testProduct = {
