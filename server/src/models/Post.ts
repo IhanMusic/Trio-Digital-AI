@@ -12,7 +12,7 @@ export interface IPost extends Document {
   scheduledDate: Date;
   content: {
     text: string;
-    mediaType: 'image' | 'text'; // Type de média principal
+    mediaType: 'image' | 'video' | 'text'; // Type de média principal
     // Champs image
     imageUrl?: string;
     imageUrls?: string[]; // URLs multiples pour les carrousels
@@ -96,7 +96,7 @@ const PostSchema: Schema = new Schema({
     },
     mediaType: {
       type: String,
-      enum: ['image', 'text'],
+      enum: ['image', 'video', 'text'],
       default: 'image'
     },
     // Champs image

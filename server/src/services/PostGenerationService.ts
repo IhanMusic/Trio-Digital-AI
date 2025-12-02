@@ -383,6 +383,58 @@ class PostGenerationService {
         // Incrémenter l'index global pour le prochain post
         globalPostIndex++;
         
+        // 🎯 NOUVEAU : Analyser les types de contenu sélectionnés par l'utilisateur
+        const userContentTypes = calendar.contentTypes || [];
+        const hasCarousels = userContentTypes.includes('Carrousels');
+        const hasStories = userContentTypes.includes('Stories');
+        const hasInfographics = userContentTypes.includes('Infographies');
+        const hasProductPhotos = userContentTypes.includes('Photos de produits');
+        
+        logger.info(`Types de contenu sélectionnés: ${userContentTypes.join(', ')}`);
+        
+        // Déterminer le type de contenu pour ce post spécifique
+        let contentTypeForThisPost: 'single' | 'carousel' | 'stories' = 'single';
+        let aspectRatioForThisPost: string = '1:1'; // par défaut
+        let promptModification = '';
+        
+        // Logique de répartition intelligente basée sur les sélections utilisateur
+        if (userContentTypes.length > 0) {
+          // Répartir les types selon l'index du post
+          const typeIndex = i % userContentTypes.length;
+          const selectedType = userContentTypes[typeIndex];
+          
+          switch (selectedType) {
+            case 'Carrousels':
+              contentTypeForThisPost = 'carousel';
+              aspectRatioForThisPost = platform === 'linkedin' ? '16:9' : '1:1';
+              promptModification = 'Create a cohesive carousel series with 4 related images that tell a story. Each image should be visually connected but standalone. ';
+              logger.info(`🎠 Post ${i + 1} sera un CARROUSEL (${aspectRatioForThisPost})`);
+              break;
+              
+            case 'Stories':
+              contentTypeForThisPost = 'stories';
+              aspectRatioForThisPost = '9:16';
+              promptModification = 'Create a vertical story format image optimized for mobile viewing. Use bold, readable text and centered composition. ';
+              logger.info(`📱 Post ${i + 1} sera une STORY (9:16)`);
+              break;
+              
+            case 'Infographies':
+              contentTypeForThisPost = 'single';
+              aspectRatioForThisPost = platform === 'linkedin' ? '16:9' : '3:4';
+              promptModification = 'Create an infographic with clear data visualization, charts, icons, or step-by-step information. Use professional layout with hierarchy. ';
+              logger.info(`📊 Post ${i + 1} sera une INFOGRAPHIE (${aspectRatioForThisPost})`);
+              break;
+              
+            case 'Photos de produits':
+            default:
+              contentTypeForThisPost = 'single';
+              aspectRatioForThisPost = platform === 'instagram' ? '3:4' : platform === 'linkedin' ? '16:9' : '1:1';
+              promptModification = 'Create a professional product photography shot with clean composition and optimal lighting. ';
+              logger.info(`📷 Post ${i + 1} sera une PHOTO PRODUIT (${aspectRatioForThisPost})`);
+              break;
+          }
+        }
+        
         // Vérifier si cette date correspond à une date clé
       const relevantKeyDates = KeyDateService.isKeyDate(date, keyDates);
       
@@ -958,9 +1010,11 @@ DIRECTIVES CRÉATIVES
             text: parsedPost.postContent,
             mediaType: 'image' as 'image' | 'video' | 'text',
             imageUrl: '',
+            imageUrls: [] as string[],
             imagePublicId: '',
             imagePrompt: parsedPost.imagePrompt,
-            imageStyle: parsedPost.imageStyle
+            imageStyle: parsedPost.imageStyle,
+            contentType: 'single' as 'single' | 'carousel' | 'stories'
           },
           status: 'pending_validation',
           tags: calendar.generationSettings?.themes || [],
@@ -1173,164 +1227,207 @@ DIRECTIVES CRÉATIVES
             logger.info('🔍 Prompt final (premiers 500 chars):');
             logger.info(finalImagePrompt.substring(0, 500) + '...');
             
-            // 🎯 MULTI-GÉNÉRATION : Générer 2 variations et sélectionner la meilleure
-            logger.info(`\n🎯 === MULTI-GÉNÉRATION: 2 variations ===`);
+            // 🎯 GÉNÉRATION SELON LE TYPE DE CONTENU SÉLECTIONNÉ
+            logger.info(`\n🎯 === GÉNÉRATION ${contentTypeForThisPost.toUpperCase()} ===`);
             
-            const generatedVariations = [];
-            
-            for (let variation = 1; variation <= 2; variation++) {
-              logger.info(`\n📸 Génération variation ${variation}/2...`);
-              
-              // Ajuster légèrement le strength pour chaque variation
-              const adjustedStrength = hasProductReference ? 0.7 + ((variation - 1) * 0.05) : undefined;
-              
-              if (adjustedStrength) {
-                logger.info(`🎚️  Reference strength pour variation ${variation}: ${adjustedStrength.toFixed(2)}`);
-              }
+            if (contentTypeForThisPost === 'carousel') {
+              // 🎠 GÉNÉRATION DE CARROUSEL (4 images)
+              logger.info('🎠 Génération d\'un carrousel avec 4 images...');
               
               try {
-                // 🎯 UTILISER LE SUPPORT MULTI-PRODUITS DE GEMINI
-                let geminiResults;
-
-                // Choisir entre référence unique ou multiple selon le nombre de produits
-                if (referenceImagesBase64.length > 1) {
-                  logger.info(`🎯 Utilisation du mode MULTI-PRODUITS avec ${referenceImagesBase64.length} références`);
-                  geminiResults = await GeminiImageService.generateImages(
-                    finalImagePrompt,
-                    {
-                      numberOfImages: 1,
-                      aspectRatio: '1:1',
-                      imageSize: '1K',
-                      referenceImages: referenceImagesBase64,
-                      referenceImageStrength: adjustedStrength
-                    }
-                  );
-                } else if (referenceImageBase64) {
-                  logger.info(`🎯 Utilisation du mode PRODUIT UNIQUE avec 1 référence`);
-                  geminiResults = await GeminiImageService.generateImages(
-                    finalImagePrompt,
-                    {
-                      numberOfImages: 1,
-                      aspectRatio: '1:1',
-                      imageSize: '1K',
-                      referenceImage: referenceImageBase64,
-                      referenceImageStrength: adjustedStrength
-                    }
-                  );
-                } else {
-                  logger.info(`🎯 Génération sans référence produit`);
-                  geminiResults = await GeminiImageService.generateImages(
-                    finalImagePrompt,
-                    {
-                      numberOfImages: 1,
-                      aspectRatio: '1:1',
-                      imageSize: '1K'
-                    }
-                  );
-                }
+                const carouselResults = await GeminiImageService.generateCarouselImages(
+                  finalImagePrompt,
+                  4, // 4 images par carrousel
+                  {
+                    aspectRatio: aspectRatioForThisPost as any,
+                    imageSize: '2K',
+                    referenceImages: referenceImagesBase64.length > 0 ? referenceImagesBase64 : undefined,
+                    referenceImage: referenceImageBase64,
+                    referenceImageStrength: hasProductReference ? 0.7 : undefined
+                  }
+                );
                 
-                if (geminiResults.length > 0) {
-                  generatedVariations.push({
-                    url: geminiResults[0].url,
-                    width: geminiResults[0].width,
-                    height: geminiResults[0].height,
-                    variation
+                if (carouselResults.length > 0) {
+                  // Configurer le post comme carrousel
+                  postData.content.contentType = 'carousel';
+                  postData.content.imageUrls = carouselResults.map(r => r.url);
+                  postData.content.imageUrl = carouselResults[0].url; // Première image comme preview
+                  
+                  logger.info(`✅ Carrousel généré avec ${carouselResults.length} images`);
+                  carouselResults.forEach((result, index) => {
+                    logger.info(`   Image ${index + 1}: ${result.url}`);
                   });
-                  logger.info(`✅ Variation ${variation} générée: ${geminiResults[0].url}`);
                 } else {
-                  logger.error(`❌ Variation ${variation}: Aucune image retournée`);
+                  logger.error('❌ Aucune image générée pour le carrousel, fallback vers image simple');
+                  contentTypeForThisPost = 'single';
                 }
-              } catch (variationError: any) {
-                logger.error(`❌ Erreur variation ${variation}:`, variationError.message);
+              } catch (carouselError: any) {
+                logger.error('❌ Erreur génération carrousel:', carouselError.message);
+                logger.info('⚠️  Fallback vers génération d\'image simple');
+                contentTypeForThisPost = 'single';
               }
             }
             
-            // 🏆 SCORING AUTOMATIQUE AVEC GEMINI VISION
-            if (generatedVariations.length > 0) {
-              logger.info(`\n🏆 === SCORING AUTOMATIQUE GEMINI VISION ===`);
+            // Si ce n'est pas un carrousel OU si le carrousel a échoué, générer une image simple
+            if (contentTypeForThisPost !== 'carousel') {
+              logger.info(`📸 Génération d'image simple (${contentTypeForThisPost}) avec format ${aspectRatioForThisPost}...`);
               
-              // Déterminer si l'image contient probablement des mains
-              // (heuristique basée sur le prompt)
-              const promptLower = finalImagePrompt.toLowerCase();
-              const hasHands = promptLower.includes('hand') || promptLower.includes('holding') || 
-                               promptLower.includes('grip') || promptLower.includes('finger');
+              const generatedVariations = [];
               
-              logger.info(`Présence mains détectée: ${hasHands ? 'OUI' : 'NON'}`);
-              
-              // Scorer chaque variation
-              const scoredVariations: ScoredImage[] = [];
-              
-              for (const variation of generatedVariations) {
+              for (let variation = 1; variation <= 2; variation++) {
+                logger.info(`\n📸 Génération variation ${variation}/2...`);
+                
+                // Ajuster légèrement le strength pour chaque variation
+                const adjustedStrength = hasProductReference ? 0.7 + ((variation - 1) * 0.05) : undefined;
+                
+                if (adjustedStrength) {
+                  logger.info(`🎚️  Reference strength pour variation ${variation}: ${adjustedStrength.toFixed(2)}`);
+                }
+                
                 try {
-                  logger.info(`\n📊 Scoring de la variation ${variation.variation}...`);
+                  // 🎯 UTILISER LE SUPPORT MULTI-PRODUITS DE GEMINI
+                  let geminiResults;
+
+                  // Choisir entre référence unique ou multiple selon le nombre de produits
+                  if (referenceImagesBase64.length > 1) {
+                    logger.info(`🎯 Utilisation du mode MULTI-PRODUITS avec ${referenceImagesBase64.length} références`);
+                    geminiResults = await GeminiImageService.generateImages(
+                      finalImagePrompt,
+                      {
+                        numberOfImages: 1,
+                        aspectRatio: aspectRatioForThisPost as any,
+                        imageSize: '2K',
+                        referenceImages: referenceImagesBase64,
+                        referenceImageStrength: adjustedStrength
+                      }
+                    );
+                  } else if (referenceImageBase64) {
+                    logger.info(`🎯 Utilisation du mode PRODUIT UNIQUE avec 1 référence`);
+                    geminiResults = await GeminiImageService.generateImages(
+                      finalImagePrompt,
+                      {
+                        numberOfImages: 1,
+                        aspectRatio: aspectRatioForThisPost as any,
+                        imageSize: '2K',
+                        referenceImage: referenceImageBase64,
+                        referenceImageStrength: adjustedStrength
+                      }
+                    );
+                  } else {
+                    logger.info(`🎯 Génération sans référence produit`);
+                    geminiResults = await GeminiImageService.generateImages(
+                      finalImagePrompt,
+                      {
+                        numberOfImages: 1,
+                        aspectRatio: aspectRatioForThisPost as any,
+                        imageSize: '2K'
+                      }
+                    );
+                  }
                   
-                  const score = await CannesLionsImageScorer.scoreImage(
-                    variation.url,
-                    variation.variation,
-                    hasHands
-                  );
-                  
-                  scoredVariations.push({
-                    ...variation,
-                    score
-                  });
-                  
-                } catch (scoringError: any) {
-                  logger.error(`❌ Erreur scoring variation ${variation.variation}:`, scoringError.message);
-                  logger.info('⚠️  Utilisation de scores par défaut pour cette variation');
-                  
-                  // Utiliser des scores par défaut en cas d'erreur
-                  scoredVariations.push({
-                    ...variation,
-                    score: {
-                      overall: 75,
-                      anatomicalAccuracy: 75,
-                      compositionExcellence: 75,
-                      lightingMastery: 75,
-                      productFidelity: 75,
-                      technicalSharpness: 75,
-                      colorAccuracy: 75,
-                      realismAuthenticity: 75,
-                      emotionalImpact: 75,
-                      brandIntegration: 75,
-                      detailRichness: 75,
-                      handQuality: 75,
-                      backgroundQuality: 75,
-                      professionalism: 75,
-                      creativeExcellence: 75,
-                      cannesLionsPotential: 75,
-                      criticalIssues: [],
-                      minorImprovements: [],
-                      recommendations: [],
-                      regenerationRequired: false
-                    }
-                  });
+                  if (geminiResults.length > 0) {
+                    generatedVariations.push({
+                      url: geminiResults[0].url,
+                      width: geminiResults[0].width,
+                      height: geminiResults[0].height,
+                      variation
+                    });
+                    logger.info(`✅ Variation ${variation} générée: ${geminiResults[0].url}`);
+                  } else {
+                    logger.error(`❌ Variation ${variation}: Aucune image retournée`);
+                  }
+                } catch (variationError: any) {
+                  logger.error(`❌ Erreur variation ${variation}:`, variationError.message);
                 }
               }
               
-              // Sélectionner la meilleure image
-              logger.info(`\n🎯 Sélection de la meilleure parmi ${scoredVariations.length} variations scorées...`);
-              
-              const bestImage = CannesLionsImageScorer.selectBestImage(scoredVariations);
-              
-              postData.content.imageUrl = bestImage.url;
-              
-              logger.info(`\n✅ === GÉNÉRATION RÉUSSIE ===`);
-              logger.info(`🏆 Image gagnante: Variation ${bestImage.variation}`);
-              logger.info(`📊 Score global: ${bestImage.score.overall}/100`);
-              logger.info(`   - Anatomie: ${bestImage.score.anatomicalAccuracy}/100`);
-              logger.info(`   - Composition: ${bestImage.score.compositionExcellence}/100`);
-              logger.info(`   - Produit: ${bestImage.score.productFidelity}/100`);
-              logger.info(`   - Cannes Lions: ${bestImage.score.cannesLionsPotential}/100`);
-              logger.info(`📐 Dimensions: ${bestImage.width}x${bestImage.height}`);
-              logger.info(`🔗 URL: ${bestImage.url}`);
-              
-              if (bestImage.score.recommendations.length > 0) {
-                logger.info(`💡 Recommandations: ${bestImage.score.recommendations.slice(0, 2).join(', ')}`);
+              // 🏆 SCORING AUTOMATIQUE AVEC GEMINI VISION
+              if (generatedVariations.length > 0) {
+                logger.info(`\n🏆 === SCORING AUTOMATIQUE GEMINI VISION ===`);
+                
+                // Déterminer si l'image contient probablement des mains
+                // (heuristique basée sur le prompt)
+                const promptLower = finalImagePrompt.toLowerCase();
+                const hasHands = promptLower.includes('hand') || promptLower.includes('holding') || 
+                                 promptLower.includes('grip') || promptLower.includes('finger');
+                
+                logger.info(`Présence mains détectée: ${hasHands ? 'OUI' : 'NON'}`);
+                
+                // Scorer chaque variation
+                const scoredVariations: ScoredImage[] = [];
+                
+                for (const variation of generatedVariations) {
+                  try {
+                    logger.info(`\n📊 Scoring de la variation ${variation.variation}...`);
+                    
+                    const score = await CannesLionsImageScorer.scoreImage(
+                      variation.url,
+                      variation.variation,
+                      hasHands
+                    );
+                    
+                    scoredVariations.push({
+                      ...variation,
+                      score
+                    });
+                    
+                  } catch (scoringError: any) {
+                    logger.error(`❌ Erreur scoring variation ${variation.variation}:`, scoringError.message);
+                    logger.info('⚠️  Utilisation de scores par défaut pour cette variation');
+                    
+                    // Utiliser des scores par défaut en cas d'erreur
+                    scoredVariations.push({
+                      ...variation,
+                      score: {
+                        overall: 75,
+                        anatomicalAccuracy: 75,
+                        compositionExcellence: 75,
+                        lightingMastery: 75,
+                        productFidelity: 75,
+                        technicalSharpness: 75,
+                        colorAccuracy: 75,
+                        realismAuthenticity: 75,
+                        emotionalImpact: 75,
+                        brandIntegration: 75,
+                        detailRichness: 75,
+                        handQuality: 75,
+                        backgroundQuality: 75,
+                        professionalism: 75,
+                        creativeExcellence: 75,
+                        cannesLionsPotential: 75,
+                        criticalIssues: [],
+                        minorImprovements: [],
+                        recommendations: [],
+                        regenerationRequired: false
+                      }
+                    });
+                  }
+                }
+                
+                // Sélectionner la meilleure image
+                logger.info(`\n🎯 Sélection de la meilleure parmi ${scoredVariations.length} variations scorées...`);
+                
+                const bestImage = CannesLionsImageScorer.selectBestImage(scoredVariations);
+                
+                postData.content.imageUrl = bestImage.url;
+                
+                logger.info(`\n✅ === GÉNÉRATION RÉUSSIE ===`);
+                logger.info(`🏆 Image gagnante: Variation ${bestImage.variation}`);
+                logger.info(`📊 Score global: ${bestImage.score.overall}/100`);
+                logger.info(`   - Anatomie: ${bestImage.score.anatomicalAccuracy}/100`);
+                logger.info(`   - Composition: ${bestImage.score.compositionExcellence}/100`);
+                logger.info(`   - Produit: ${bestImage.score.productFidelity}/100`);
+                logger.info(`   - Cannes Lions: ${bestImage.score.cannesLionsPotential}/100`);
+                logger.info(`📐 Dimensions: ${bestImage.width}x${bestImage.height}`);
+                logger.info(`🔗 URL: ${bestImage.url}`);
+                
+                if (bestImage.score.recommendations.length > 0) {
+                  logger.info(`💡 Recommandations: ${bestImage.score.recommendations.slice(0, 2).join(', ')}`);
+                }
+                
+              } else {
+                logger.error('❌ Aucune variation n\'a été générée avec succès');
               }
-              
-            } else {
-              logger.error('❌ Aucune variation n\'a été générée avec succès');
             }
             
           } catch (error: any) {

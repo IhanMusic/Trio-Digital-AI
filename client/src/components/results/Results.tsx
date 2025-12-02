@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { config } from '../../config/env';
 import { useAuthContext } from '../../contexts/AuthContext';
+import CarouselViewer from './CarouselViewer';
 
 // Fonction de debounce personnalisée
 function useDebounce<T extends (...args: any[]) => any>(
@@ -38,9 +39,11 @@ interface Post {
   content: {
     text: string;
     imageUrl?: string;
+    imageUrls?: string[]; // Support des carrousels
     imageWidth?: number;
     imageHeight?: number;
     mediaType?: 'image' | 'video';
+    contentType?: 'single' | 'carousel' | 'stories'; // Type de contenu
     videoUrl?: string;
     videoPublicId?: string;
     videoFormat?: string;
@@ -382,6 +385,49 @@ const Results: React.FC = () => {
     }
   };
 
+  const handleDownloadCarousel = async (imageUrls: string[], platform: string, postId: string) => {
+    try {
+      for (let i = 0; i < imageUrls.length; i++) {
+        const imageUrl = imageUrls[i];
+        const fullImageUrl = config.getImageUrl(imageUrl);
+        const filename = `${platform}-carrousel-${postId}-${i + 1}.jpg`;
+        
+        const downloadUrl = `${config.apiUrl}/download/image?url=${encodeURIComponent(fullImageUrl)}&filename=${encodeURIComponent(filename)}`;
+        
+        if (token) {
+          const response = await fetch(downloadUrl, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          
+          if (!response.ok) {
+            throw new Error(`Erreur lors du téléchargement de l'image ${i + 1}`);
+          }
+          
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = filename;
+          
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+          
+          // Délai entre les téléchargements pour éviter de surcharger le navigateur
+          if (i < imageUrls.length - 1) {
+            await new Promise(resolve => setTimeout(resolve, 500));
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors du téléchargement du carrousel:', error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -451,7 +497,7 @@ const Results: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {platformPosts.map(post => (
               <div key={post._id} className="glass-panel overflow-hidden hover:scale-[1.02] transition-all duration-300">
-                {/* Affichage conditionnel : Vidéo OU Image */}
+                {/* Affichage conditionnel : Vidéo, Carrousel OU Image */}
                 {(() => {
                   // CAS 1: Post VIDÉO
                   if (post.content.mediaType === 'video' && post.content.videoUrl) {
@@ -480,11 +526,57 @@ const Results: React.FC = () => {
                     );
                   }
                   
-                  // CAS 2: Post IMAGE
+                  // CAS 2: CARROUSEL (plusieurs images)
+                  if (post.content.contentType === 'carousel' && post.content.imageUrls && post.content.imageUrls.length > 0) {
+                    const carouselImages = post.content.imageUrls.map(url => config.getImageUrl(url));
+                    return (
+                      <div className="relative">
+                        {/* Badge carrousel */}
+                        <div className="absolute top-2 left-2 z-20">
+                          <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-lg">
+                            🎠 Carrousel ({post.content.imageUrls.length} images)
+                          </span>
+                        </div>
+                        {/* Badge format */}
+                        <div className="absolute top-2 right-12 z-20">
+                          <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs font-medium shadow-lg">
+                            {post.platform === 'instagram' ? '3:4' : post.platform === 'linkedin' ? '16:9' : '1:1'}
+                          </span>
+                        </div>
+                        {/* Bouton téléchargement carrousel */}
+                        <div className="absolute top-2 right-2 z-20">
+                          <button 
+                            onClick={() => handleDownloadCarousel(post.content.imageUrls!, post.platform, post._id)}
+                            className="bg-black/50 hover:bg-black/70 p-2 rounded-full transition-all duration-200"
+                            title="Télécharger toutes les images du carrousel"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                          </button>
+                        </div>
+                        <CarouselViewer 
+                          images={carouselImages} 
+                          alt={`Carrousel ${post.platform}`}
+                          className="rounded-t-xl"
+                        />
+                      </div>
+                    );
+                  }
+                  
+                  // CAS 3: Post IMAGE SIMPLE
                   if (post.content.imageUrl) {
                     return (
                       <div style={getImageStyle(post)} className="relative">
-                        <div className="absolute top-0 right-0 p-2 z-10">
+                        {/* Badge format optimisé */}
+                        <div className="absolute top-2 left-2 z-10">
+                          <span className="bg-green-500 text-white px-2 py-1 rounded text-xs font-medium shadow-lg">
+                            {post.platform === 'instagram' ? '3:4' : 
+                             post.platform === 'linkedin' ? '16:9' : 
+                             post.content.contentType === 'stories' ? '9:16' : '1:1'}
+                          </span>
+                        </div>
+                        <div className="absolute top-2 right-2 p-2 z-10">
                           <button 
                             onClick={() => handleDownload(post.content.imageUrl!, post.platform, post._id)}
                             className="bg-black/50 hover:bg-black/70 p-2 rounded-full transition-all duration-200"
@@ -504,10 +596,15 @@ const Results: React.FC = () => {
                     );
                   }
                   
-                  // CAS 3: Pas de média
+                  // CAS 4: Pas de média
                   return (
                     <div className="bg-white/5 p-8 rounded text-white/60 text-center">
-                      Aucun média disponible
+                      <div className="mb-2">⏳ Génération en cours...</div>
+                      <div className="text-xs">
+                        Format cible: {post.platform === 'instagram' ? '3:4 (Instagram)' : 
+                                      post.platform === 'linkedin' ? '16:9 (LinkedIn)' : 
+                                      '1:1 (Universel)'}
+                      </div>
                     </div>
                   );
                 })()}
