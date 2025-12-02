@@ -4715,91 +4715,240 @@ function simpleHash(str: string): number {
 }
 
 /**
- * Génère un nombre pseudo-aléatoire basé sur un seed et un offset
- * Permet une randomisation reproductible mais unique
+ * 🚀 SYSTÈME ANTI-RÉPÉTITION GLOBAL RÉVOLUTIONNAIRE
+ * Garantit qu'aucun style ne se répète avant que TOUS les styles aient été utilisés
+ * Système global partagé par TOUTE l'application (tous calendriers confondus)
  */
-function seededRandom(seed: number, offset: number): number {
-  const x = Math.sin(seed + offset) * 10000;
-  return Math.floor((x - Math.floor(x)) * 1000000);
+class GlobalStyleTracker {
+  private static usedStyles: Set<string> = new Set();
+  private static usedContexts: Set<string> = new Set();
+  private static usedPalettes: Set<string> = new Set();
+  private static usedFrameworks: Set<string> = new Set();
+  private static usedLightings: Set<string> = new Set();
+  
+  private static totalGenerations: number = 0;
+  private static cycleNumber: number = 1;
+
+  /**
+   * 🎯 SÉLECTION STYLE GLOBAL - Aucune répétition avant épuisement complet
+   */
+  static getNextUniqueStyle(): PhotographicStyle {
+    // Si tous les styles ont été utilisés, reset du cycle
+    if (this.usedStyles.size >= PHOTOGRAPHIC_STYLES.length) {
+      this.usedStyles.clear();
+      this.cycleNumber++;
+      console.log(`🔄 [GlobalTracker] RESET CYCLE ${this.cycleNumber} - Tous les ${PHOTOGRAPHIC_STYLES.length} styles épuisés, nouveau cycle commencé`);
+    }
+
+    // Filtrer les styles non utilisés dans ce cycle
+    const unusedStyles = PHOTOGRAPHIC_STYLES.filter(
+      style => !this.usedStyles.has(style.name)
+    );
+
+    console.log(`📊 [GlobalTracker] Styles disponibles: ${unusedStyles.length}/${PHOTOGRAPHIC_STYLES.length} (Cycle ${this.cycleNumber})`);
+
+    // Sélection cryptographique anti-biais
+    const selectedStyle = this.cryptographicSelection(unusedStyles);
+    this.usedStyles.add(selectedStyle.name);
+    this.totalGenerations++;
+
+    console.log(`✅ [GlobalTracker] Style sélectionné: "${selectedStyle.name}" (${selectedStyle.category}) - Génération #${this.totalGenerations}`);
+    
+    return selectedStyle;
+  }
+
+  /**
+   * 🎯 SÉLECTION CONTEXTE GLOBAL - Rotation équitable
+   */
+  static getNextUniqueContext(availableContexts: CreativeContext[]): CreativeContext {
+    // Si tous les contextes disponibles ont été utilisés, reset partiel
+    const availableNames = availableContexts.map(c => c.name);
+    const unusedInAvailable = availableContexts.filter(
+      context => !this.usedContexts.has(context.name)
+    );
+
+    // Si plus de contextes disponibles dans cette sélection, reset pour cette sélection
+    if (unusedInAvailable.length === 0) {
+      // Reset seulement pour les contextes de cette sélection
+      availableNames.forEach(name => this.usedContexts.delete(name));
+      console.log(`🔄 [GlobalTracker] Reset contextes pour cette sélection (${availableNames.length} contextes)`);
+      return this.cryptographicSelection(availableContexts);
+    }
+
+    const selectedContext = this.cryptographicSelection(unusedInAvailable);
+    this.usedContexts.add(selectedContext.name);
+
+    console.log(`✅ [GlobalTracker] Contexte sélectionné: "${selectedContext.name}" - Restants: ${unusedInAvailable.length - 1}`);
+    
+    return selectedContext;
+  }
+
+  /**
+   * 🎯 SÉLECTION PALETTE GLOBALE
+   */
+  static getNextUniquePalette(): ColorPalette {
+    if (this.usedPalettes.size >= COLOR_PALETTES.length) {
+      this.usedPalettes.clear();
+      console.log(`🔄 [GlobalTracker] Reset palettes - ${COLOR_PALETTES.length} palettes épuisées`);
+    }
+
+    const unusedPalettes = COLOR_PALETTES.filter(
+      palette => !this.usedPalettes.has(palette.name)
+    );
+
+    const selectedPalette = this.cryptographicSelection(unusedPalettes);
+    this.usedPalettes.add(selectedPalette.name);
+
+    return selectedPalette;
+  }
+
+  /**
+   * 🎯 SÉLECTION FRAMEWORK GLOBAL
+   */
+  static getNextUniqueFramework(): CreativeFramework {
+    if (this.usedFrameworks.size >= CREATIVE_FRAMEWORKS.length) {
+      this.usedFrameworks.clear();
+      console.log(`🔄 [GlobalTracker] Reset frameworks - ${CREATIVE_FRAMEWORKS.length} frameworks épuisés`);
+    }
+
+    const unusedFrameworks = CREATIVE_FRAMEWORKS.filter(
+      framework => !this.usedFrameworks.has(framework.name)
+    );
+
+    const selectedFramework = this.cryptographicSelection(unusedFrameworks);
+    this.usedFrameworks.add(selectedFramework.name);
+
+    return selectedFramework;
+  }
+
+  /**
+   * 🎯 SÉLECTION ÉCLAIRAGE GLOBAL
+   */
+  static getNextUniqueLighting(): LightingSetup {
+    if (this.usedLightings.size >= LIGHTING_SETUPS.length) {
+      this.usedLightings.clear();
+      console.log(`🔄 [GlobalTracker] Reset éclairages - ${LIGHTING_SETUPS.length} éclairages épuisés`);
+    }
+
+    const unusedLightings = LIGHTING_SETUPS.filter(
+      lighting => !this.usedLightings.has(lighting.name)
+    );
+
+    const selectedLighting = this.cryptographicSelection(unusedLightings);
+    this.usedLightings.add(selectedLighting.name);
+
+    return selectedLighting;
+  }
+
+  /**
+   * 🔐 SÉLECTION CRYPTOGRAPHIQUE ANTI-BIAIS
+   * Utilise SHA-256 pour une distribution parfaitement uniforme
+   */
+  private static cryptographicSelection<T>(items: T[]): T {
+    if (items.length === 0) {
+      throw new Error('[GlobalTracker] Aucun élément disponible pour la sélection');
+    }
+    if (items.length === 1) {
+      return items[0];
+    }
+
+    // Générateur cryptographique avec multiple sources d'entropie
+    const crypto = require('crypto');
+    const timestamp = Date.now();
+    const microseconds = performance.now() * 1000;
+    const randomSalt = Math.random() * 999999999;
+    
+    // Créer un seed ultra-unique
+    const seedString = `${timestamp}-${microseconds}-${randomSalt}-${this.totalGenerations}`;
+    const hash = crypto.createHash('sha256').update(seedString).digest();
+    
+    // Convertir en index avec distribution uniforme
+    const hashValue = hash.readUInt32BE(0);
+    const index = hashValue % items.length;
+    
+    return items[index];
+  }
+
+  /**
+   * 📊 STATISTIQUES GLOBALES
+   */
+  static getGlobalStats(): {
+    totalGenerations: number;
+    currentCycle: number;
+    stylesUsedInCycle: number;
+    contextsUsed: number;
+    palettesUsed: number;
+    frameworksUsed: number;
+    lightingsUsed: number;
+  } {
+    return {
+      totalGenerations: this.totalGenerations,
+      currentCycle: this.cycleNumber,
+      stylesUsedInCycle: this.usedStyles.size,
+      contextsUsed: this.usedContexts.size,
+      palettesUsed: this.usedPalettes.size,
+      frameworksUsed: this.usedFrameworks.size,
+      lightingsUsed: this.usedLightings.size
+    };
+  }
+
+  /**
+   * 🔄 RESET COMPLET (pour tests ou maintenance)
+   */
+  static resetAll(): void {
+    this.usedStyles.clear();
+    this.usedContexts.clear();
+    this.usedPalettes.clear();
+    this.usedFrameworks.clear();
+    this.usedLightings.clear();
+    this.totalGenerations = 0;
+    this.cycleNumber = 1;
+    console.log('🔄 [GlobalTracker] RESET COMPLET - Tous les compteurs remis à zéro');
+  }
 }
 
 /**
- * 🎯 NOUVELLE RANDOMISATION ULTRA-DIVERSIFIÉE
- * Garantit une diversité maximale même sur 1000+ calendriers
- * Utilise un système de rotation intelligente + chaos contrôlé
- * 
- * @param postIndex - Index du post dans le calendrier
- * @param totalPosts - Nombre total de posts dans le calendrier
- * @param sector - Secteur d'activité (pour filtrage futur)
- * @param brandColors - Couleurs de la marque
- * @param calendarId - ID du calendrier pour seed unique
+ * 🎯 SÉLECTION CRÉATIVE PRESET AVEC SYSTÈME GLOBAL
+ * Utilise le nouveau système anti-répétition global
  */
 export function selectCreativePreset(
   postIndex: number,
   totalPosts: number,
-  sector: string = 'general',
-  brandColors?: { primary?: string; secondary?: string; accent?: string },
+  sector: string,
+  usageOccasions?: string[],
   calendarId?: string
 ): CreativePreset {
-  // 🎲 SYSTÈME DE RANDOMISATION RÉVOLUTIONNAIRE
-  // Combine plusieurs sources d'entropie pour garantir l'unicité absolue
-  
-  // 1. Sources d'entropie multiples
-  const timestamp = Date.now();
-  const microseconds = performance.now() * 1000; // Précision microseconde
-  const randomChaos = Math.random() * 999999999; // Chaos pur
-  const calendarEntropy = calendarId ? simpleHash(calendarId) * 7919 : Math.random() * 999999;
-  const postEntropy = postIndex * 7927 + (postIndex * postIndex * 7933); // Progression non-linéaire
-  
-  // 2. Générateur de nombres premiers pour éviter les patterns
-  const primes = [7919, 7927, 7933, 7937, 7949, 7951, 7963, 7993, 8009, 8011];
-  
-  // 3. Fonction de hash cryptographique simplifiée
-  function advancedHash(input: number, salt: number): number {
-    let hash = input;
-    hash = ((hash << 5) - hash + salt) & 0xffffffff;
-    hash = ((hash << 3) ^ hash) & 0xffffffff;
-    hash = ((hash >>> 16) ^ hash) & 0xffffffff;
-    return Math.abs(hash);
+  // 1. Obtenir les contextes pré-filtrés
+  const filteredContexts = preFilterContextsByUsage(
+    usageOccasions || ['default'],
+    sector,
+    calendarId,
+    postIndex
+  );
+
+  // 2. Sélectionner avec le système global anti-répétition
+  const style = GlobalStyleTracker.getNextUniqueStyle();
+  const context = GlobalStyleTracker.getNextUniqueContext(filteredContexts);
+  const palette = GlobalStyleTracker.getNextUniquePalette();
+  const framework = GlobalStyleTracker.getNextUniqueFramework();
+  const lighting = GlobalStyleTracker.getNextUniqueLighting();
+
+  // 3. Créer la référence combinée
+  const reference = `${style.reference} + ${context.description} + ${palette.description} + ${framework.structure} + ${lighting.characteristics}`;
+
+  // 4. Enregistrer dans l'historique si calendarId fourni
+  if (calendarId) {
+    addToHistory(
+      calendarId,
+      postIndex,
+      style.name,
+      context.name,
+      palette.name,
+      framework.name,
+      lighting.name
+    );
   }
-  
-  // 4. Génération de seeds ultra-uniques pour chaque composant
-  const masterSeed = advancedHash(timestamp + microseconds + randomChaos, calendarEntropy + postEntropy);
-  
-  // 5. Seeds indépendants avec rotation temporelle
-  const timeRotation = Math.floor(timestamp / 3600000); // Change chaque heure
-  const styleEntropy = advancedHash(masterSeed * primes[0], timeRotation * primes[1] + postIndex);
-  const paletteEntropy = advancedHash(masterSeed * primes[2], timeRotation * primes[3] + postIndex * 2);
-  const frameworkEntropy = advancedHash(masterSeed * primes[4], timeRotation * primes[5] + postIndex * 3);
-  const contextEntropy = advancedHash(masterSeed * primes[6], timeRotation * primes[7] + postIndex * 4);
-  const lightingEntropy = advancedHash(masterSeed * primes[8], timeRotation * primes[9] + postIndex * 5);
-  
-  // 6. Sélection avec distribution uniforme garantie
-  const styleIndex = styleEntropy % PHOTOGRAPHIC_STYLES.length;
-  const paletteIndex = paletteEntropy % COLOR_PALETTES.length;
-  const frameworkIndex = frameworkEntropy % CREATIVE_FRAMEWORKS.length;
-  const contextIndex = contextEntropy % CREATIVE_CONTEXTS.length;
-  const lightingIndex = lightingEntropy % LIGHTING_SETUPS.length;
-  
-  // 7. Sélection des éléments
-  const style = PHOTOGRAPHIC_STYLES[styleIndex];
-  const palette = COLOR_PALETTES[paletteIndex];
-  const framework = CREATIVE_FRAMEWORKS[frameworkIndex];
-  const context = CREATIVE_CONTEXTS[contextIndex];
-  const lighting = LIGHTING_SETUPS[lightingIndex];
-  
-  // 8. Log détaillé pour analyse de diversité
-  console.log(`[CreativePreset] Calendar: ${calendarId?.substring(0, 8)}... Post ${postIndex}/${totalPosts}`);
-  console.log(`  → Style: ${style.name} (${style.category})`);
-  console.log(`  → Context: ${context.name}`);
-  console.log(`  → Palette: ${palette.name} (${palette.brandIntegration}% brand)`);
-  console.log(`  → Framework: ${framework.name}`);
-  console.log(`  → Lighting: ${lighting.name}`);
-  console.log(`  → Entropy: S${styleEntropy % 1000} P${paletteEntropy % 1000} C${contextEntropy % 1000}`);
-  
-  // 9. Construire la référence complète
-  const reference = style.reference;
-  
+
   return {
     style,
     palette,
@@ -4830,11 +4979,14 @@ export function testPresetDiversity(
   
   console.log(`[DiversityTest] Testing ${numCalendars} calendars × ${postsPerCalendar} posts = ${numCalendars * postsPerCalendar} total presets`);
   
+  // Reset le système global pour le test
+  GlobalStyleTracker.resetAll();
+  
   for (let calendarIndex = 0; calendarIndex < numCalendars; calendarIndex++) {
     const calendarId = `test-calendar-${calendarIndex}-${Date.now()}`;
     
     for (let postIndex = 0; postIndex < postsPerCalendar; postIndex++) {
-      const preset = selectCreativePreset(postIndex, postsPerCalendar, 'test', undefined, calendarId);
+      const preset = selectCreativePreset(postIndex, postsPerCalendar, 'food', ['breakfast', 'healthy'], calendarId);
       
       // Créer une signature unique de la combinaison
       const signature = `${preset.style.name}|${preset.context.name}|${preset.palette.name}|${preset.framework.name}|${preset.lighting.name}`;
@@ -4856,6 +5008,10 @@ export function testPresetDiversity(
   console.log(`  → Diversity score: ${diversityScore.toFixed(2)}%`);
   console.log(`  → Styles used: ${Object.keys(styleCount).length}/${PHOTOGRAPHIC_STYLES.length}`);
   console.log(`  → Contexts used: ${Object.keys(contextCount).length}/${CREATIVE_CONTEXTS.length}`);
+  
+  // Afficher les statistiques globales
+  const globalStats = GlobalStyleTracker.getGlobalStats();
+  console.log(`[GlobalTracker] Stats: Cycle ${globalStats.currentCycle}, ${globalStats.totalGenerations} générations`);
   
   return {
     totalCombinations,
