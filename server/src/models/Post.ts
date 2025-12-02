@@ -15,9 +15,12 @@ export interface IPost extends Document {
     mediaType: 'image' | 'text'; // Type de média principal
     // Champs image
     imageUrl?: string;
+    imageUrls?: string[]; // URLs multiples pour les carrousels
     imagePublicId?: string; // ID public Cloudinary
+    imagePublicIds?: string[]; // IDs publics multiples pour les carrousels
     imageStyle?: string; // Style visuel de l'image
     imagePrompt?: string; // Prompt utilisé pour générer l'image
+    contentType?: 'single' | 'carousel' | 'stories'; // Type de contenu
     // Champs vidéo
     videoUrl?: string;
     videoPublicId?: string; // ID public Cloudinary pour la vidéo
@@ -98,9 +101,16 @@ const PostSchema: Schema = new Schema({
     },
     // Champs image
     imageUrl: String,
+    imageUrls: [String], // URLs multiples pour les carrousels
     imagePublicId: String,
+    imagePublicIds: [String], // IDs publics multiples pour les carrousels
     imageStyle: String,
     imagePrompt: String,
+    contentType: {
+      type: String,
+      enum: ['single', 'carousel', 'stories'],
+      default: 'single'
+    },
     // Champs vidéo
     videoUrl: String,
     videoPublicId: String,

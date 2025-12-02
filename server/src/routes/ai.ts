@@ -68,6 +68,7 @@ import { checkGenerationQuota } from '../middleware/quotas';
 import { StabilityEditService } from '../services/StabilityEditService';
 import { MaskGenerationService } from '../services/MaskGenerationService';
 import { GeminiImageService } from '../services/GeminiImageService';
+import { PlatformFormatService } from '../services/PlatformFormatService';
 
 // Système de throttling pour Gemini (max 2 requêtes par minute pour la génération d'images)
 let lastGeminiCallTime = 0;
@@ -713,7 +714,121 @@ router.post('/stability/integrate-product', authenticate, checkGenerationQuota, 
   }
 });
 
-// Route pour Gemini Image Generation (Nano Banana)
+// Route pour Gemini Image Generation Optimisée (avec formats par plateforme)
+router.options('/gemini/generate-optimized', cors());
+
+router.post('/gemini/generate-optimized', authenticate, checkGenerationQuota, upload.fields([
+  { name: 'reference_image', maxCount: 1 }
+]), async (req: Request, res: Response) => {
+  try {
+    console.log('Début de la génération optimisée avec Gemini');
+    
+    const prompt = req.body.prompt;
+    const platforms = req.body.platforms ? JSON.parse(req.body.platforms) : ['Instagram']; // Plateformes sélectionnées
+    const contentType = req.body.contentType || 'Posts'; // Type de contenu
+    const reference_image_base64 = req.body.reference_image;
+    
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    
+    console.log('Paramètres Gemini optimisés:', {
+      prompt: prompt?.substring(0, 100) + '...',
+      platforms,
+      contentType,
+      hasReferenceImageFile: !!files?.reference_image?.[0],
+      hasReferenceImageBase64: !!reference_image_base64
+    });
+    
+    if (!prompt || typeof prompt !== 'string' || prompt.trim().length === 0) {
+      return res.status(400).json({
+        error: {
+          code: 'INVALID_PROMPT',
+          message: 'Le prompt est invalide ou vide',
+          service: 'gemini'
+        }
+      });
+    }
+    
+    // Préparer l'image de référence si fournie
+    let referenceImageBase64: string | undefined;
+    
+    if (reference_image_base64 && typeof reference_image_base64 === 'string') {
+      referenceImageBase64 = reference_image_base64;
+      console.log('Image de référence chargée depuis le body (base64)');
+    } else if (files?.reference_image?.[0]) {
+      referenceImageBase64 = await GeminiImageService.fileToBase64(files.reference_image[0].path);
+      console.log('Image de référence chargée depuis un fichier');
+    }
+    
+    // Attendre pour respecter le rate limit de Gemini
+    await waitForGeminiRateLimit();
+    
+    // Générer les images avec les formats optimisés
+    const results = await GeminiImageService.generateOptimizedImages(
+      prompt,
+      platforms,
+      contentType,
+      {
+        referenceImage: referenceImageBase64
+      }
+    );
+    
+    // Nettoyer les fichiers temporaires si présents
+    if (files?.reference_image?.[0]) {
+      try {
+        await fs.promises.unlink(files.reference_image[0].path);
+      } catch (error) {
+        console.warn('Erreur lors du nettoyage des fichiers temporaires:', error);
+      }
+    }
+    
+    // Obtenir les informations de format pour la réponse
+    const formatInfo = PlatformFormatService.getFormatInfo(platforms, contentType);
+    
+    const score = 95;
+    
+    res.json({
+      data: results,
+      score,
+      service: 'gemini',
+      model: 'gemini-3-pro-image-preview',
+      formatInfo: {
+        aspectRatio: formatInfo.aspectRatio,
+        imageSize: formatInfo.imageSize,
+        dimensions: `${formatInfo.width}x${formatInfo.height}`,
+        description: formatInfo.description,
+        contentType: formatInfo.contentInfo
+      }
+    });
+    
+  } catch (error: any) {
+    console.error('Erreur lors de la génération Gemini optimisée:', error);
+    
+    let statusCode = 500;
+    let errorCode = 'GEMINI_GENERATION_ERROR';
+    
+    if (error.message?.includes('quota') || error.message?.includes('rate limit')) {
+      statusCode = 429;
+      errorCode = 'RATE_LIMIT_ERROR';
+    } else if (error.message?.includes('authentication') || error.message?.includes('API key')) {
+      statusCode = 401;
+      errorCode = 'AUTHENTICATION_ERROR';
+    } else if (error.message?.includes('invalid') || error.message?.includes('Invalid')) {
+      statusCode = 400;
+      errorCode = 'INVALID_REQUEST';
+    }
+    
+    res.status(statusCode).json({
+      error: {
+        code: errorCode,
+        message: error.message || 'Erreur lors de la génération optimisée avec Gemini',
+        service: 'gemini',
+        details: error.toString()
+      }
+    });
+  }
+});
+
+// Route pour Gemini Image Generation (Nano Banana) - Version legacy
 router.options('/gemini/generate', cors());
 
 router.post('/gemini/generate', authenticate, checkGenerationQuota, upload.fields([
