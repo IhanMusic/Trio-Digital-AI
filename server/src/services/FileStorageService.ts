@@ -48,6 +48,12 @@ export class FileStorageService {
       // Liste des signatures de fichiers d'image courants
       const validSignatures = {
         'ffd8ffe0': 'jpeg',
+        'ffd8ffe1': 'jpeg', // EXIF
+        'ffd8ffe2': 'jpeg', // Canon
+        'ffd8ffe3': 'jpeg', // Samsung
+        'ffd8ffe8': 'jpeg', // SPIFF
+        'ffd8ffed': 'jpeg', // Photoshop
+        'ffd8ffee': 'jpeg', // Adobe
         '89504e47': 'png',
         '52494646': 'webp', // RIFF
         '49492a00': 'tiff',
@@ -55,7 +61,17 @@ export class FileStorageService {
       };
 
       if (!Object.keys(validSignatures).includes(signature)) {
-        console.error('Format de fichier non reconnu');
+        console.error('Format de fichier non reconnu, signature:', signature);
+        // Essayer de valider avec Sharp directement au lieu de rejeter
+        try {
+          const metadata = await sharp(buffer, { failOnError: false }).metadata();
+          if (metadata && metadata.width && metadata.height) {
+            console.log('Image validée par Sharp malgré signature inconnue');
+            return true;
+          }
+        } catch (error) {
+          console.error('Validation Sharp échouée:', error);
+        }
         return false;
       }
 

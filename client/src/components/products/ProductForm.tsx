@@ -382,10 +382,20 @@ const ProductForm: React.FC = () => {
       });
       
       if (!response.ok) {
-        console.error('Erreur lors de l\'upload des images');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Erreur lors de l\'upload des images');
       }
+      
+      const result = await response.json();
+      if (!result.success) {
+        throw new Error(result.message || 'Erreur lors de l\'upload des images');
+      }
+      
+      console.log('Images uploadées avec succès:', result.data);
     } catch (error) {
       console.error('Erreur lors de l\'upload des images:', error);
+      // Remonter l'erreur pour l'afficher à l'utilisateur
+      throw error;
     }
   };
   
