@@ -8,6 +8,9 @@ import { PRODUCT_CATEGORIES_BY_SECTOR, getCategoriesBySector } from '../../const
 // Target audience pour les produits
 const TARGET_AUDIENCE_OPTIONS = {
   demographic: [
+    '0-2 ans',
+    '3-12 ans',
+    '13-17 ans',
     '18-24 ans',
     '25-34 ans',
     '35-44 ans',

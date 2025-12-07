@@ -618,6 +618,9 @@ export const TONE_OF_VOICE: ToneOfVoice[] = [
 
 export const TARGET_AUDIENCES = {
   demographic: [
+    "0-2 ans",
+    "3-12 ans",
+    "13-17 ans",
     "18-24 ans",
     "25-34 ans",
     "35-44 ans",
