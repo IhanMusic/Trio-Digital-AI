@@ -66,7 +66,7 @@ export class GeminiImageService {
         aspectRatio = '1:1',
         referenceImage,
         referenceImages,
-        referenceImageStrength = 0.35
+        referenceImageStrength = 0.6
       } = options;
 
       // 🎯 SUPPORT MULTI-PRODUITS : Utiliser referenceImages si disponible
