@@ -5,8 +5,8 @@
  * - Support multi-produits
  */
 
-import { GeminiImageService } from '../server/src/services/GeminiImageService';
-import { PlatformFormatService } from '../server/src/services/PlatformFormatService';
+import { GeminiImageService } from '../server/src/services/GeminiImageService.js';
+import { PlatformFormatService } from '../server/src/services/PlatformFormatService.js';
 import * as fs from 'fs';
 import * as path from 'path';
 

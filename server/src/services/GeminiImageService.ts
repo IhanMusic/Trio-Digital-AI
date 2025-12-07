@@ -128,9 +128,9 @@ export class GeminiImageService {
         console.log(`🎯 Prompt final construit avec ${finalReferenceImages.length} référence(s) produit(s)`);
       }
 
-      // Générer l'image avec Gemini 3 Pro en utilisant la nouvelle syntaxe
+      // Générer l'image avec Gemini 2 Pro (temporaire pour économiser le quota)
       const response = await ai.models.generateContent({
-        model: 'gemini-3-pro-image-preview',
+        model: 'gemini-2.0-flash-exp',
         contents: promptContent,
         config: {
           responseModalities: ['TEXT', 'IMAGE'],
