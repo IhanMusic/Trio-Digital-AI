@@ -1,5 +1,5 @@
 export const SECTORS = [
-  "Agriculture et Agroalimentaire",
+  "Agroalimentaire et FMCG",
   "Artisanat et Métiers d'art",
   "Assurance et Mutuelle",
   "Automobile",
@@ -13,7 +13,6 @@ export const SECTORS = [
   "Éducation et Formation",
   "Énergie et Ressources",
   "Environnement et Développement durable",
-  "FMCG (Fast-Moving Consumer Goods)",
   "Hôtellerie, Restauration et Loisirs",
   "Immobilier",
   "Industrie Manufacturière",
@@ -33,22 +32,39 @@ export const SECTORS = [
 
 // Mapping des catégories par secteur d'activité
 export const PRODUCT_CATEGORIES_BY_SECTOR: Record<string, string[]> = {
-  "Agriculture et Agroalimentaire": [
+  "Agroalimentaire et FMCG": [
+    // Produits frais
     "Produits laitiers",
     "Viandes et charcuterie",
     "Fruits et légumes",
     "Céréales et légumineuses",
-    "Boissons alcoolisées",
-    "Boissons non-alcoolisées",
+    
+    // Produits transformés
     "Boulangerie-pâtisserie",
     "Épicerie salée",
     "Épicerie sucrée",
-    "Produits bio",
-    "Surgelés",
     "Conserves",
+    "Surgelés",
     "Condiments et sauces",
+    "Snacking",
+    "Alimentation packagée",
+    
+    // Boissons (unifié)
+    "Boissons alcoolisées",
+    "Boissons non-alcoolisées",
+    
+    // Produits spécialisés
+    "Produits bio",
     "Nutrition animale",
-    "Équipements agricoles"
+    "Équipements agricoles",
+    
+    // FMCG non-alimentaire
+    "Produits d'hygiène",
+    "Produits d'entretien",
+    "Produits pour bébés",
+    "Produits pour animaux",
+    "Cosmétiques de masse",
+    "Tabac"
   ],
   "Artisanat et Métiers d'art": [
     "Bijouterie artisanale",
@@ -231,20 +247,6 @@ export const PRODUCT_CATEGORIES_BY_SECTOR: Record<string, string[]> = {
     "Certification environnementale",
     "Dépollution",
     "Sensibilisation écologique"
-  ],
-  "FMCG (Fast-Moving Consumer Goods)": [
-    "Produits d'hygiène",
-    "Produits d'entretien",
-    "Alimentation packagée",
-    "Boissons",
-    "Tabac",
-    "Cosmétiques de masse",
-    "Produits pour bébés",
-    "Produits pour animaux",
-    "Snacking",
-    "Produits surgelés",
-    "Conserves",
-    "Produits bio"
   ],
   "Hôtellerie, Restauration et Loisirs": [
     "Hôtellerie",

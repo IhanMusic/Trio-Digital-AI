@@ -9,14 +9,14 @@ import * as path from "path";
 
 async function testGeminiAPI() {
   console.log('🧪 === TEST DIRECT API GEMINI ===');
-  console.log('Clé API:', 'AIzaSyC0RYZMQ7Ekqcq3IgTTFYUt82RS56swEbc');
+  console.log('Clé API:', 'AIzaSyDm1lCPSSxKBTIfAuKuUyl1_aO5Gn2G8NE');
   console.log('Modèle cible: gemini-3-pro-image-preview (Nano Banana Pro)');
   
   try {
     // 1. Initialiser le client Gemini avec la nouvelle clé
     console.log('\n📡 Initialisation du client Gemini...');
     const ai = new GoogleGenAI({ 
-      apiKey: 'AIzaSyC0RYZMQ7Ekqcq3IgTTFYUt82RS56swEbc' 
+      apiKey: 'AIzaSyDm1lCPSSxKBTIfAuKuUyl1_aO5Gn2G8NE' 
     });
     console.log('✅ Client Gemini initialisé');
 
@@ -152,7 +152,7 @@ async function testGeminiFallback() {
   
   try {
     const ai = new GoogleGenAI({ 
-      apiKey: 'AIzaSyC0RYZMQ7Ekqcq3IgTTFYUt82RS56swEbc' 
+      apiKey: 'AIzaSyDm1lCPSSxKBTIfAuKuUyl1_aO5Gn2G8NE' 
     });
 
     const prompt = "Create a simple product photo of a beverage bottle";

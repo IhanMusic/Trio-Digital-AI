@@ -75,6 +75,10 @@ const ProductForm: React.FC = () => {
   const [error, setError] = useState('');
   const [isEditMode] = useState(!!productId);
   
+  // États pour la liaison intelligente avec la marque
+  const [brandSector, setBrandSector] = useState<string>('');
+  const [showAllCategories, setShowAllCategories] = useState(false);
+  
   // États pour les champs dynamiques
   const [newFlavor, setNewFlavor] = useState('');
   const [newScent, setNewScent] = useState('');
@@ -117,6 +121,32 @@ const ProductForm: React.FC = () => {
     labels: []
   });
   
+  // Récupérer le secteur de la marque pour filtrer les catégories
+  useEffect(() => {
+    if (brandId && token) {
+      const fetchBrandSector = async () => {
+        try {
+          const response = await fetch(`${config.apiUrl}/brands/${brandId}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          
+          if (response.ok) {
+            const result = await response.json();
+            if (result.success && result.data.sector) {
+              setBrandSector(result.data.sector);
+            }
+          }
+        } catch (error) {
+          console.error('Erreur lors de la récupération du secteur de la marque:', error);
+        }
+      };
+      
+      fetchBrandSector();
+    }
+  }, [brandId, token]);
+
   // Charger les données du produit si on est en mode édition
   useEffect(() => {
     if (productId && token) {
@@ -181,6 +211,14 @@ const ProductForm: React.FC = () => {
       fetchProductDetails();
     }
   }, [productId, token, brandId]);
+
+  // Fonction pour obtenir les catégories filtrées selon le secteur de la marque
+  const getFilteredCategories = () => {
+    if (showAllCategories || !brandSector) {
+      return Object.values(PRODUCT_CATEGORIES_BY_SECTOR).flat();
+    }
+    return getCategoriesBySector(brandSector);
+  };
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -469,6 +507,35 @@ const ProductForm: React.FC = () => {
               <label htmlFor="category" className="block text-sm font-medium text-white/80 mb-2">
                 Catégorie *
               </label>
+              
+              {/* Affichage du contexte de la marque */}
+              {brandSector && (
+                <div className="mb-4 p-3 bg-[#53dfb2]/10 border border-[#53dfb2]/30 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-[#53dfb2] font-medium">
+                        Secteur de la marque : {brandSector}
+                      </p>
+                      <p className="text-xs text-[#53dfb2]/70">
+                        {getFilteredCategories().length} catégories pertinentes
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="showAllCategories"
+                        checked={showAllCategories}
+                        onChange={(e) => setShowAllCategories(e.target.checked)}
+                        className="form-checkbox h-4 w-4 text-[#53dfb2]"
+                      />
+                      <label htmlFor="showAllCategories" className="text-xs text-white/70">
+                        Voir toutes les catégories
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
               <select
                 id="category"
                 name="category"
@@ -478,13 +545,19 @@ const ProductForm: React.FC = () => {
                 onChange={handleInputChange}
               >
                 <option value="">Sélectionnez une catégorie</option>
-                {/* Afficher toutes les catégories de tous les secteurs */}
-                {Object.values(PRODUCT_CATEGORIES_BY_SECTOR).flat().map((category: string) => (
+                {getFilteredCategories().map((category: string) => (
                   <option key={category} value={category}>
                     {category}
                   </option>
                 ))}
               </select>
+              
+              {brandSector && !showAllCategories && (
+                <p className="text-xs text-white/50 mt-2">
+                  Catégories filtrées pour le secteur "{brandSector}". 
+                  Cochez "Voir toutes les catégories" pour plus d'options.
+                </p>
+              )}
             </div>
           </div>
           
