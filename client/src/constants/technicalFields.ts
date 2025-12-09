@@ -12,6 +12,8 @@ export interface TechnicalField {
 
 export const TECHNICAL_FIELDS_BY_SECTOR: Record<string, TechnicalField[]> = {
   "Agroalimentaire et FMCG": [
+    { key: "flavors", label: "Arômes", type: "tags" },
+    { key: "scents", label: "Parfums", type: "tags" },
     { key: "calories", label: "Calories (pour 100g/ml)", type: "number", unit: "kcal" },
     { key: "proteins", label: "Protéines", type: "number", unit: "g" },
     { key: "carbs", label: "Glucides", type: "number", unit: "g" },

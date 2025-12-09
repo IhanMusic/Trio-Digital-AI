@@ -81,8 +81,6 @@ const ProductForm: React.FC = () => {
   const [showAllCategories, setShowAllCategories] = useState(false);
   
   // États pour les champs dynamiques
-  const [newFlavor, setNewFlavor] = useState('');
-  const [newScent, setNewScent] = useState('');
   const [newUSP, setNewUSP] = useState('');
   const [newBenefit, setNewBenefit] = useState('');
   const [newIngredient, setNewIngredient] = useState('');
@@ -276,9 +274,7 @@ const ProductForm: React.FC = () => {
     }));
     
     // Réinitialiser le champ d'entrée
-    if (field === 'flavors') setNewFlavor('');
-    else if (field === 'scents') setNewScent('');
-    else if (field === 'uniqueSellingPoints') setNewUSP('');
+    if (field === 'uniqueSellingPoints') setNewUSP('');
     else if (field === 'customerBenefits') setNewBenefit('');
     else if (field === 'certifications') setNewCertification('');
     else if (field === 'labels') setNewLabel('');
@@ -787,88 +783,6 @@ const ProductForm: React.FC = () => {
           </div>
         </section>
         
-        {/* Caractéristiques */}
-        <section className="glass-panel p-6 rounded-xl">
-          <h2 className="text-xl font-semibold text-white mb-6 border-b border-white/20 pb-2">
-            Caractéristiques
-          </h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Arômes */}
-            <div>
-              <label className="block text-sm font-medium text-white/80 mb-2">
-                Arômes
-              </label>
-              <div className="flex items-center space-x-2 mb-2">
-                <input
-                  type="text"
-                  className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#53dfb2] focus:border-transparent"
-                  value={newFlavor}
-                  onChange={(e) => setNewFlavor(e.target.value)}
-                  placeholder="Nouvel arôme"
-                />
-                <button
-                  type="button"
-                  className="glass-button px-3 py-2"
-                  onClick={() => handleAddItem('flavors', newFlavor)}
-                >
-                  +
-                </button>
-              </div>
-              <div className="space-y-2 max-h-40 overflow-y-auto">
-                {formData.flavors.map((flavor, index) => (
-                  <div key={index} className="flex items-center justify-between bg-white/10 px-3 py-2 rounded-lg">
-                    <span className="text-white/80">{flavor}</span>
-                    <button
-                      type="button"
-                      className="text-red-400 hover:text-red-300"
-                      onClick={() => handleRemoveItem('flavors', index)}
-                    >
-                      &times;
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            {/* Parfums */}
-            <div>
-              <label className="block text-sm font-medium text-white/80 mb-2">
-                Parfums
-              </label>
-              <div className="flex items-center space-x-2 mb-2">
-                <input
-                  type="text"
-                  className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#53dfb2] focus:border-transparent"
-                  value={newScent}
-                  onChange={(e) => setNewScent(e.target.value)}
-                  placeholder="Nouveau parfum"
-                />
-                <button
-                  type="button"
-                  className="glass-button px-3 py-2"
-                  onClick={() => handleAddItem('scents', newScent)}
-                >
-                  +
-                </button>
-              </div>
-              <div className="space-y-2 max-h-40 overflow-y-auto">
-                {formData.scents.map((scent, index) => (
-                  <div key={index} className="flex items-center justify-between bg-white/10 px-3 py-2 rounded-lg">
-                    <span className="text-white/80">{scent}</span>
-                    <button
-                      type="button"
-                      className="text-red-400 hover:text-red-300"
-                      onClick={() => handleRemoveItem('scents', index)}
-                    >
-                      &times;
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
         
         {/* Certifications & Labels */}
         <section className="glass-panel p-6 rounded-xl">
