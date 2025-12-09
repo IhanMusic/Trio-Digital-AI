@@ -820,6 +820,7 @@ const ProductForm: React.FC = () => {
             </h2>
             <TechnicalFieldsRenderer
               sector={brandSector}
+              category={formData.category}
               formData={formData}
               setFormData={setFormData}
             />
