@@ -49,21 +49,31 @@ export const PRODUCT_CATEGORIES_BY_SECTOR: Record<string, string[]> = {
     "Snacking",
     "Alimentation packagée",
     
-    // Boissons (unifié)
+    // Boissons alcoolisées
     "Boissons alcoolisées",
-    "Boissons non-alcoolisées",
+    
+    // Boissons non-alcoolisées (détaillées)
+    "Eaux",
+    "Sodas et colas",
+    "Jus de fruits",
+    "Boissons lactées",
+    "Boissons énergisantes",
+    "Thés et infusions",
+    "Cafés",
+    "Boissons végétales",
+    "Boissons sportives",
+    "Sirops et concentrés",
     
     // Produits spécialisés
     "Produits bio",
     "Nutrition animale",
     "Équipements agricoles",
     
-    // FMCG non-alimentaire
-    "Produits d'hygiène",
+    // FMCG non-alimentaire (hygiène basique uniquement)
+    "Produits d'hygiène corporelle",
     "Produits d'entretien",
     "Produits pour bébés",
     "Produits pour animaux",
-    "Cosmétiques de masse",
     "Tabac"
   ],
   "Artisanat et Métiers d'art": [
@@ -128,7 +138,8 @@ export const PRODUCT_CATEGORIES_BY_SECTOR: Record<string, string[]> = {
     "Parfumerie",
     "Soins capillaires",
     "Maquillage",
-    "Soins homme",
+    "Cosmétiques homme",
+    "Parapharmacie",
     "Produits bio et naturels",
     "Instituts de beauté",
     "Spa et thalasso",
