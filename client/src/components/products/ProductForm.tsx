@@ -214,9 +214,15 @@ const ProductForm: React.FC = () => {
 
   // Fonction pour obtenir les catégories filtrées selon le secteur de la marque
   const getFilteredCategories = () => {
-    if (showAllCategories || !brandSector) {
+    if (showAllCategories) {
       return Object.values(PRODUCT_CATEGORIES_BY_SECTOR).flat();
     }
+    
+    // Si pas de secteur chargé, retourner tableau vide pour éviter le mélange
+    if (!brandSector) {
+      return [];
+    }
+    
     return getCategoriesBySector(brandSector);
   };
   
