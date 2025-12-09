@@ -529,9 +529,10 @@ export const PRODUCT_CATEGORIES_BY_SECTOR: Record<string, string[]> = {
   ]
 };
 
-// Fonction utilitaire pour récupérer les catégories d'un secteur
+// Fonction utilitaire pour récupérer les catégories d'un secteur (triées alphabétiquement)
 export const getCategoriesBySector = (sector: string): string[] => {
-  return PRODUCT_CATEGORIES_BY_SECTOR[sector] || [];
+  const categories = PRODUCT_CATEGORIES_BY_SECTOR[sector] || [];
+  return categories.sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
 };
 
 // Classification des secteurs par type (pour compatibilité avec sectorUtils.ts)
