@@ -41,16 +41,75 @@ export const PRODUCT_CATEGORIES_BY_SECTOR: Record<string, string[]> = {
     
     // Produits transformés
     "Boulangerie-pâtisserie",
-    "Épicerie salée",
-    "Épicerie sucrée",
     "Conserves",
     "Surgelés",
-    "Condiments et sauces",
-    "Snacking",
-    "Alimentation packagée",
     
-    // Boissons alcoolisées
-    "Boissons alcoolisées",
+    // Épicerie salée (détaillée)
+    "Chips et apéritifs salés",
+    "Crackers et biscuits apéritifs",
+    "Fruits à coque salés",
+    "Olives et tapenades",
+    "Antipasti et mezze",
+    "Conserves de légumes",
+    "Cornichons et pickles",
+    "Sauces et condiments",
+    "Soupes et potages",
+    "Plats cuisinés en conserve",
+    "Huiles et vinaigres",
+    "Moutardes et mayonnaises",
+    "Épices et aromates",
+    "Bouillons et fonds de sauce",
+    
+    // Épicerie sucrée (détaillée)
+    "Biscuits secs et petits-beurre",
+    "Cookies et sablés",
+    "Gâteaux individuels",
+    "Madeleines et financiers",
+    "Biscuits diététiques",
+    "Chocolats et pralines",
+    "Bonbons et gommes",
+    "Caramels et nougats",
+    "Chewing-gums et pastilles",
+    "Confiseries de fête",
+    "Confitures et gelées",
+    "Miels et sirops",
+    "Pâtes à tartiner chocolat",
+    "Crèmes dessert à tartiner",
+    "Desserts lactés sucrés",
+    "Pâtisseries industrielles",
+    "Entremets et mousses",
+    "Compotes et fruits au sirop",
+    
+    // Snacking (détaillé)
+    "Barres énergétiques et protéinées",
+    "Fruits secs et mélanges",
+    "Graines et oléagineux",
+    "Galettes de riz et maïs",
+    "Popcorn et maïs soufflé",
+    "Bretzels et crackers snack",
+    "Mini-viennoiseries",
+    "Barres chocolatées",
+    "Compotes à boire",
+    "Fruits en portions individuelles",
+    "Yaourts à boire",
+    
+    // Alimentation packagée (détaillée)
+    "Plats cuisinés frais",
+    "Sandwichs et paninis",
+    "Wraps et tortillas",
+    "Salades composées",
+    "Quiches et tartes salées",
+    "Terrines et rillettes",
+    "Saucissons et charcuterie sèche",
+    "Fromages portion",
+    "Cuisine asiatique",
+    "Cuisine méditerranéenne",
+    "Cuisine mexicaine",
+    "Spécialités régionales",
+    "Soupes fraîches",
+    "Smoothies et jus frais",
+    "Produits végétariens et vegan",
+    "Produits sans gluten",
     
     // Boissons non-alcoolisées (détaillées)
     "Eaux",
@@ -66,15 +125,13 @@ export const PRODUCT_CATEGORIES_BY_SECTOR: Record<string, string[]> = {
     
     // Produits spécialisés
     "Produits bio",
-    "Nutrition animale",
     "Équipements agricoles",
     
     // FMCG non-alimentaire (hygiène basique uniquement)
     "Produits d'hygiène corporelle",
     "Produits d'entretien",
     "Produits pour bébés",
-    "Produits pour animaux",
-    "Tabac"
+    "Produits pour animaux"
   ],
   "Artisanat et Métiers d'art": [
     "Bijouterie artisanale",
