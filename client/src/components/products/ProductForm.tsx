@@ -4,6 +4,7 @@ import { useAuthContext } from '../../contexts/AuthContext';
 import { config } from '../../config/env';
 import { ProductData } from '../../types/brief';
 import { PRODUCT_CATEGORIES_BY_SECTOR, getCategoriesBySector } from '../../constants/formOptions';
+import { TechnicalFieldsRenderer } from './TechnicalFieldsRenderer';
 
 // Target audience pour les produits
 const TARGET_AUDIENCE_OPTIONS = {
@@ -118,7 +119,8 @@ const ProductForm: React.FC = () => {
       highlights: ''
     },
     certifications: [],
-    labels: []
+    labels: [],
+    technicalDetails: {}
   });
   
   // Récupérer le secteur de la marque pour filtrer les catégories
@@ -199,7 +201,8 @@ const ProductForm: React.FC = () => {
               highlights: product.technicalSheet?.highlights || ''
             },
             certifications: product.certifications || [],
-            labels: product.labels || []
+            labels: product.labels || [],
+            technicalDetails: product.technicalDetails || {}
           });
         } catch (error) {
           setError(error instanceof Error ? error.message : 'Une erreur est survenue');
@@ -361,6 +364,7 @@ const ProductForm: React.FC = () => {
         },
         certifications: formData.certifications,
         labels: formData.labels,
+        technicalDetails: formData.technicalDetails,
         // Conserver les URLs d'images existantes en mode édition
         images: {
           main: formData.mainImageUrl || '',
@@ -947,6 +951,20 @@ const ProductForm: React.FC = () => {
           </div>
         </section>
         
+        {/* Détails techniques dynamiques */}
+        {brandSector && (
+          <section className="glass-panel p-6 rounded-xl">
+            <h2 className="text-xl font-semibold text-white mb-6 border-b border-white/20 pb-2">
+              Spécifications Techniques
+            </h2>
+            <TechnicalFieldsRenderer
+              sector={brandSector}
+              formData={formData}
+              setFormData={setFormData}
+            />
+          </section>
+        )}
+
         {/* Images */}
         <section className="glass-panel p-6 rounded-xl">
           <h2 className="text-xl font-semibold text-white mb-6 border-b border-white/20 pb-2">

@@ -112,6 +112,9 @@ export interface ProductData {
   // Certifications & Labels
   certifications: string[];
   labels: string[];
+  
+  // Nouveau : Champs techniques dynamiques par secteur
+  technicalDetails: Record<string, any>; // Flexible pour tous secteurs
 }
 
 // ============================================
