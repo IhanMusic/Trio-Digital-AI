@@ -12,6 +12,8 @@ export interface TechnicalField {
 
 export const TECHNICAL_FIELDS_BY_SECTOR: Record<string, TechnicalField[]> = {
   "Agroalimentaire et FMCG": [
+    { key: "usageOccasions", label: "Occasions d'usage", type: "multiselect", 
+      options: ["Petit-déjeuner", "Déjeuner", "Dîner", "Collation", "Avant sport", "Après sport", "En déplacement", "À la maison", "Au travail", "Moment détente"] },
     { key: "flavors", label: "Arômes", type: "tags" },
     { key: "scents", label: "Parfums", type: "tags" },
     { key: "calories", label: "Calories (pour 100g/ml)", type: "number", unit: "kcal" },
@@ -32,6 +34,8 @@ export const TECHNICAL_FIELDS_BY_SECTOR: Record<string, TechnicalField[]> = {
   ],
 
   "Beauté et Bien-être": [
+    { key: "usageOccasions", label: "Occasions d'usage", type: "multiselect", 
+      options: ["Soin du matin", "Soin du soir", "Avant maquillage", "Après démaquillage", "Avant sport", "Après sport", "Moment détente", "Soin express", "Routine hebdomadaire"] },
     { key: "skinTypes", label: "Types de peau", type: "multiselect", 
       options: ["Normale", "Sèche", "Grasse", "Mixte", "Sensible", "Mature", "Acnéique"] },
     { key: "activeIngredients", label: "Ingrédients actifs", type: "tags" },

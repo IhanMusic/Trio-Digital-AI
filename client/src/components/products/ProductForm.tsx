@@ -49,23 +49,6 @@ const TARGET_AUDIENCE_OPTIONS = {
   ]
 };
 
-// Occasions d'usage courantes
-const COMMON_USAGE_OCCASIONS = [
-  'Petit-déjeuner',
-  'Déjeuner',
-  'Dîner',
-  'Collation',
-  'Avant sport',
-  'Après sport',
-  'Au travail',
-  'À la maison',
-  'En déplacement',
-  'Moment détente',
-  'Soin du matin',
-  'Soin du soir',
-  'Occasion spéciale',
-  'Quotidien'
-];
 
 const ProductForm: React.FC = () => {
   const navigate = useNavigate();
@@ -620,42 +603,6 @@ const ProductForm: React.FC = () => {
           ))}
         </section>
 
-        {/* Occasions d'usage */}
-        <section className="glass-panel p-6 rounded-xl">
-          <h2 className="text-xl font-semibold text-white mb-6 border-b border-white/20 pb-2">
-            Occasions d'Usage
-          </h2>
-          
-          <p className="text-sm text-white/60 mb-4">
-            Sélectionnez les moments ou situations où ce produit est utilisé
-          </p>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {COMMON_USAGE_OCCASIONS.map((occasion) => (
-              <label key={occasion} className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  className="form-checkbox h-4 w-4 text-[#53dfb2]"
-                  checked={formData.usageOccasions.includes(occasion)}
-                  onChange={() => {
-                    if (formData.usageOccasions.includes(occasion)) {
-                      setFormData(prev => ({
-                        ...prev,
-                        usageOccasions: prev.usageOccasions.filter(o => o !== occasion)
-                      }));
-                    } else {
-                      setFormData(prev => ({
-                        ...prev,
-                        usageOccasions: [...prev.usageOccasions, occasion]
-                      }));
-                    }
-                  }}
-                />
-                <span className="text-white text-sm">{occasion}</span>
-              </label>
-            ))}
-          </div>
-        </section>
         
         {/* Proposition de valeur */}
         <section className="glass-panel p-6 rounded-xl">
