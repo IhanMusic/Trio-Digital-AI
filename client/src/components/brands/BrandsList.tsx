@@ -63,15 +63,17 @@ const BrandLogo: React.FC<{ brand: Brand; size?: 'sm' | 'md' | 'lg' }> = ({ bran
       : `${config.apiUrl}/static/${brand.logo}`; // Fichier local
 
     return (
-      <img 
-        src={logoUrl} 
-        alt={brand.name}
-        className={`${sizeClasses[size]} object-contain rounded-xl bg-white/5 p-2`}
-        onError={() => {
-          console.error(`Erreur de chargement du logo pour ${brand.name}:`, logoUrl);
-          setImageError(true); // Basculer vers le fallback
-        }}
-      />
+      <div className={`${sizeClasses[size]} rounded-xl bg-white/5 p-2 flex items-center justify-center`}>
+        <img 
+          src={logoUrl} 
+          alt={brand.name}
+          className="max-w-full max-h-full object-contain"
+          onError={() => {
+            console.error(`Erreur de chargement du logo pour ${brand.name}:`, logoUrl);
+            setImageError(true); // Basculer vers le fallback
+          }}
+        />
+      </div>
     );
   }
 
