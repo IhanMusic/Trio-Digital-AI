@@ -13,7 +13,65 @@ interface Brand {
   createdAt: string;
   logo?: string;
   description?: string;
+  colors?: {
+    primary?: string;
+    secondary?: string;
+    accent?: string;
+  };
 }
+
+// Helper functions for brand logo fallback
+const getInitials = (name: string): string => {
+  return name
+    .split(' ')
+    .map(word => word[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+};
+
+const getColorFromName = (name: string): string => {
+  const colors = [
+    '#53dfb2', '#3fa88a', '#6366f1', '#8b5cf6', 
+    '#ec4899', '#f59e0b', '#10b981', '#3b82f6',
+    '#14b8a6', '#f97316', '#06b6d4', '#a855f7'
+  ];
+  const hash = name.split('').reduce((acc, char) => 
+    acc + char.charCodeAt(0), 0
+  );
+  return colors[hash % colors.length];
+};
+
+const BrandLogo: React.FC<{ brand: Brand; size?: 'sm' | 'md' | 'lg' }> = ({ brand, size = 'md' }) => {
+  const sizeClasses = {
+    sm: 'w-12 h-12 text-lg',
+    md: 'w-16 h-16 text-2xl',
+    lg: 'w-20 h-20 text-3xl'
+  };
+
+  if (brand.logo) {
+    return (
+      <img 
+        src={`${config.apiUrl}/static/${brand.logo}`} 
+        alt={brand.name}
+        className={`${sizeClasses[size]} object-contain rounded-xl`}
+      />
+    );
+  }
+
+  // Fallback: Initiales stylées avec couleur de marque
+  const backgroundColor = brand.colors?.primary || getColorFromName(brand.name);
+  const initials = getInitials(brand.name);
+
+  return (
+    <div 
+      className={`${sizeClasses[size]} rounded-xl flex items-center justify-center font-bold text-white shadow-lg`}
+      style={{ backgroundColor }}
+    >
+      {initials}
+    </div>
+  );
+};
 
 const BrandsList: React.FC = () => {
   const { token, isLoading: authLoading, isAuthenticated } = useAuthContext();
@@ -225,17 +283,7 @@ const BrandsList: React.FC = () => {
                 >
                   {/* Brand Logo/Icon */}
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#53dfb2]/20 to-[#3fa88a]/20 flex items-center justify-center text-3xl">
-                      {brand.logo ? (
-                        <img 
-                          src={`${config.apiUrl}/static/${brand.logo}`} 
-                          alt={brand.name}
-                          className="w-full h-full object-contain rounded-xl"
-                        />
-                      ) : (
-                        '🏢'
-                      )}
-                    </div>
+                    <BrandLogo brand={brand} size="md" />
                     <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80">
                       {brand.sector}
                     </span>
@@ -281,16 +329,8 @@ const BrandsList: React.FC = () => {
                   <li key={brand._id}>
                     <div className="px-6 py-4 flex items-center hover:bg-white/5 transition-colors">
                       {/* Logo */}
-                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[#53dfb2]/20 to-[#3fa88a]/20 flex items-center justify-center text-2xl mr-4 flex-shrink-0">
-                        {brand.logo ? (
-                          <img 
-                            src={`${config.apiUrl}/static/${brand.logo}`} 
-                            alt={brand.name}
-                            className="w-full h-full object-contain rounded-lg"
-                          />
-                        ) : (
-                          '🏢'
-                        )}
+                      <div className="mr-4 flex-shrink-0">
+                        <BrandLogo brand={brand} size="sm" />
                       </div>
 
                       {/* Info */}
