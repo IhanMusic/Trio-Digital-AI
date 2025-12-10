@@ -67,9 +67,10 @@ export const BriefForm: React.FC = () => {
   const saveDraft = React.useCallback(() => {
     if (!isEditMode) { // Ne pas sauvegarder en mode édition
       try {
+        // Créer une copie des données sans le logo (File object ne peut pas être sérialisé)
+        const { logo, ...draftDataWithoutLogo } = formData;
         const draftData = {
-          ...formData,
-          logo: null, // Ne pas sauvegarder le fichier logo
+          ...draftDataWithoutLogo,
           timestamp: Date.now()
         };
         localStorage.setItem(getDraftKey(), JSON.stringify(draftData));
@@ -91,7 +92,8 @@ export const BriefForm: React.FC = () => {
           // Vérifier que le brouillon n'est pas trop ancien (24h)
           const isRecent = Date.now() - draftData.timestamp < 24 * 60 * 60 * 1000;
           if (isRecent) {
-            setFormData(prev => ({ ...prev, ...draftData, logo: null }));
+            // Restaurer les données sans écraser le logo s'il existe déjà
+            setFormData(prev => ({ ...prev, ...draftData }));
             setSaveStatus('saved');
             setTimeout(() => setSaveStatus('idle'), 2000);
           } else {
