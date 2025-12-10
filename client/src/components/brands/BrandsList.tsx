@@ -43,26 +43,39 @@ const getColorFromName = (name: string): string => {
 };
 
 const BrandLogo: React.FC<{ brand: Brand; size?: 'sm' | 'md' | 'lg' }> = ({ brand, size = 'md' }) => {
+  const [imageError, setImageError] = React.useState(false);
+  
   const sizeClasses = {
     sm: 'w-12 h-12 text-lg',
     md: 'w-16 h-16 text-2xl',
     lg: 'w-20 h-20 text-3xl'
   };
 
-  if (brand.logo) {
-    return (
-      <img 
-        src={`${config.apiUrl}/static/${brand.logo}`} 
-        alt={brand.name}
-        className={`${sizeClasses[size]} object-contain rounded-xl`}
-      />
-    );
-  }
-
   // Fallback: Initiales stylées avec couleur de marque
   const backgroundColor = brand.colors?.primary || getColorFromName(brand.name);
   const initials = getInitials(brand.name);
 
+  // Si le logo existe et qu'il n'y a pas eu d'erreur de chargement
+  if (brand.logo && !imageError) {
+    // Déterminer l'URL correcte du logo
+    const logoUrl = brand.logo.startsWith('http') 
+      ? brand.logo  // URL Cloudinary complète
+      : `${config.apiUrl}/static/${brand.logo}`; // Fichier local
+
+    return (
+      <img 
+        src={logoUrl} 
+        alt={brand.name}
+        className={`${sizeClasses[size]} object-contain rounded-xl`}
+        onError={() => {
+          console.error(`Erreur de chargement du logo pour ${brand.name}:`, logoUrl);
+          setImageError(true); // Basculer vers le fallback
+        }}
+      />
+    );
+  }
+
+  // Fallback: Afficher les initiales
   return (
     <div 
       className={`${sizeClasses[size]} rounded-xl flex items-center justify-center font-bold text-white shadow-lg`}
