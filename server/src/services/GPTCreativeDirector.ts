@@ -100,6 +100,17 @@ interface PostContext {
 }
 
 /**
+ * Interface pour l'analyse sémantique du texte généré
+ */
+interface TextSemanticAnalysis {
+  mainMessage: string;
+  emotionalTone: string;
+  visualElements: string[];
+  keyThemes: string[];
+  targetEmotion: string;
+}
+
+/**
  * Système anti-répétition pour améliorer la diversité des prompts
  * Instance par calendrier pour éviter les répétitions
  */
@@ -224,11 +235,15 @@ export class GPTCreativeDirector {
       const antiRepetition = AntiRepetitionPromptManager.getInstance(calendarId);
       const avoidanceInstructions = antiRepetition.getAvoidanceInstructions();
 
-      // 2. Analyser le contexte temporel et géographique
+      // 2. 🆕 ANALYSE SÉMANTIQUE DU TEXTE GÉNÉRÉ (Priorité 1 - Cohérence texte-image)
+      const textAnalysis = this.analyzeGeneratedText(postContext.generatedText);
+      console.log(`[GPTCreativeDirector] 📊 Analyse sémantique: Message="${textAnalysis.mainMessage}", Ton="${textAnalysis.emotionalTone}"`);
+
+      // 3. Analyser le contexte temporel et géographique
       const temporalContext = this.analyzeTemporalContext(postContext.scheduledDate, postContext.postIndex);
       const geographicContext = this.analyzeGeographicContext(calendar.generationSettings?.countries);
 
-      // 3. Construire le prompt GPT ultra-sophistiqué
+      // 4. Construire le prompt GPT ultra-sophistiqué avec analyse textuelle
       const gptPrompt = this.buildCreativeDirectorPrompt(
         brand,
         product,
@@ -236,7 +251,8 @@ export class GPTCreativeDirector {
         postContext,
         temporalContext,
         geographicContext,
-        avoidanceInstructions
+        avoidanceInstructions,
+        textAnalysis
       );
 
       // 4. Appeler GPT pour générer le prompt d'image
@@ -300,8 +316,88 @@ export class GPTCreativeDirector {
   }
 
   /**
+   * 🆕 ANALYSE SÉMANTIQUE DU TEXTE GÉNÉRÉ
+   * Extrait le message principal, le ton émotionnel et les éléments visuels suggérés
+   */
+  private static analyzeGeneratedText(generatedText?: string): TextSemanticAnalysis {
+    if (!generatedText) {
+      return {
+        mainMessage: 'Non spécifié',
+        emotionalTone: 'Neutre',
+        visualElements: [],
+        keyThemes: [],
+        targetEmotion: 'Engagement'
+      };
+    }
+
+    // Extraction du message principal (première phrase ou hook)
+    const sentences = generatedText.split(/[.!?]+/).filter(s => s.trim().length > 0);
+    const mainMessage = sentences[0]?.trim() || 'Non spécifié';
+
+    // Analyse du ton émotionnel (mots-clés émotionnels)
+    const emotionalKeywords = {
+      joyeux: ['joie', 'heureux', 'bonheur', 'sourire', 'célébr', 'fête', 'plaisir'],
+      inspirant: ['inspir', 'motiv', 'rêve', 'ambition', 'réussi', 'transform'],
+      nostalgique: ['souvenir', 'mémoire', 'autrefois', 'tradition', 'héritage'],
+      urgent: ['maintenant', 'aujourd\'hui', 'vite', 'urgent', 'limité', 'dernière chance'],
+      serein: ['calme', 'paisible', 'sérénité', 'douceur', 'tranquille', 'zen'],
+      dynamique: ['énergie', 'action', 'mouvement', 'dynamique', 'vivant', 'intense'],
+      luxueux: ['luxe', 'premium', 'élégant', 'raffiné', 'exclusif', 'prestige'],
+      authentique: ['authentique', 'vrai', 'naturel', 'sincère', 'genuine', 'réel']
+    };
+
+    let emotionalTone = 'Neutre';
+    const textLower = generatedText.toLowerCase();
+    for (const [tone, keywords] of Object.entries(emotionalKeywords)) {
+      if (keywords.some(keyword => textLower.includes(keyword))) {
+        emotionalTone = tone.charAt(0).toUpperCase() + tone.slice(1);
+        break;
+      }
+    }
+
+    // Extraction des éléments visuels suggérés
+    const visualKeywords = [
+      'couleur', 'lumière', 'ombre', 'texture', 'forme', 'ligne',
+      'main', 'visage', 'sourire', 'regard', 'geste',
+      'nature', 'ville', 'intérieur', 'extérieur',
+      'matin', 'soir', 'nuit', 'jour',
+      'table', 'cuisine', 'salon', 'bureau'
+    ];
+    const visualElements = visualKeywords.filter(keyword => textLower.includes(keyword));
+
+    // Extraction des thèmes clés
+    const themeKeywords = {
+      famille: ['famille', 'enfant', 'parent', 'ensemble'],
+      travail: ['travail', 'bureau', 'professionnel', 'carrière'],
+      bienêtre: ['bien-être', 'santé', 'forme', 'équilibre'],
+      lifestyle: ['lifestyle', 'vie', 'quotidien', 'routine'],
+      innovation: ['innovation', 'nouveau', 'moderne', 'technologie'],
+      tradition: ['tradition', 'héritage', 'classique', 'authentique']
+    };
+
+    const keyThemes: string[] = [];
+    for (const [theme, keywords] of Object.entries(themeKeywords)) {
+      if (keywords.some(keyword => textLower.includes(keyword))) {
+        keyThemes.push(theme);
+      }
+    }
+
+    // Déterminer l'émotion cible
+    const targetEmotion = emotionalTone !== 'Neutre' ? emotionalTone : 'Engagement';
+
+    return {
+      mainMessage,
+      emotionalTone,
+      visualElements,
+      keyThemes,
+      targetEmotion
+    };
+  }
+
+  /**
    * Construit le prompt GPT ultra-sophistiqué pour le directeur artistique
    * 🎯 UTILISE MAINTENANT LA BIBLIOTHÈQUE DE PRESETS CANNES LIONS
+   * 🆕 INTÈGRE L'ANALYSE SÉMANTIQUE DU TEXTE POUR COHÉRENCE MAXIMALE
    */
   private static buildCreativeDirectorPrompt(
     brand: BrandData,
@@ -310,7 +406,8 @@ export class GPTCreativeDirector {
     postContext: PostContext,
     temporalContext: string,
     geographicContext: string,
-    avoidanceInstructions: string
+    avoidanceInstructions: string,
+    textAnalysis: TextSemanticAnalysis
   ): string {
     // 🎯 SÉLECTION AUTOMATIQUE D'UN PRESET UNIQUE VIA GlobalStyleTracker
     const selectedPreset = selectCreativePreset(
@@ -365,9 +462,44 @@ par le système anti-répétition global pour garantir la diversité maximale.
 ═══════════════════════════════════════════════════════════════
 `;
 
+    // 🆕 SECTION ANALYSE SÉMANTIQUE DU TEXTE (Priorité 1 - Cohérence)
+    const textAnalysisSection = `
+═══════════════════════════════════════════════════════════════
+📝 ANALYSE SÉMANTIQUE DU TEXTE GÉNÉRÉ (COHÉRENCE OBLIGATOIRE):
+═══════════════════════════════════════════════════════════════
+
+MESSAGE PRINCIPAL DU TEXTE:
+"${textAnalysis.mainMessage}"
+
+TON ÉMOTIONNEL DÉTECTÉ:
+${textAnalysis.emotionalTone}
+
+ÉLÉMENTS VISUELS SUGGÉRÉS PAR LE TEXTE:
+${textAnalysis.visualElements.length > 0 ? textAnalysis.visualElements.join(', ') : 'Aucun élément visuel spécifique'}
+
+THÈMES CLÉS IDENTIFIÉS:
+${textAnalysis.keyThemes.length > 0 ? textAnalysis.keyThemes.join(', ') : 'Thèmes généraux'}
+
+ÉMOTION CIBLE À ÉVOQUER:
+${textAnalysis.targetEmotion}
+
+⚠️ IMPÉRATIF CRITIQUE - COHÉRENCE TEXTE-IMAGE:
+L'image DOIT refléter EXACTEMENT le message et le ton du texte généré.
+- Si le texte parle de "matin", l'image doit montrer une ambiance matinale
+- Si le texte évoque la "famille", l'image doit suggérer un contexte familial
+- Si le texte utilise un ton "joyeux", l'image doit être lumineuse et positive
+- Si le texte mentionne des éléments visuels, ils DOIVENT apparaître dans l'image
+
+🎯 OBJECTIF: Créer une SYNERGIE PARFAITE entre texte et image pour maximiser
+l'impact émotionnel et la mémorabilité (critère Cannes Lions Gold).
+═══════════════════════════════════════════════════════════════
+`;
+
     return `Tu es un directeur artistique de niveau Cannes Lions Gold. Ta mission est de créer un prompt d'image PARFAIT et UNIQUE pour générer une image publicitaire exceptionnelle.
 
 ${presetSection}
+
+${textAnalysisSection}
 
 🎯 CONTEXTE DE LA MARQUE:
 Nom: ${brand.name}
@@ -497,18 +629,25 @@ ${avoidanceInstructions}
 8. 💡 RACONTE une histoire visuelle captivante
 9. 🎭 ÉVOQUE l'émotion appropriée au secteur et au produit
 10. 📱 EST OPTIMISÉ pour les réseaux sociaux (impact visuel fort)
+11. 🆕 REFLÈTE PARFAITEMENT le message et le ton du texte généré (cohérence texte-image)
+12. 🆕 ÉVOQUE l'émotion cible "${textAnalysis.targetEmotion}" de manière visuelle
+13. 🆕 INTÈGRE les éléments visuels suggérés par le texte: ${textAnalysis.visualElements.join(', ') || 'éléments contextuels appropriés'}
 
 FORMAT DE RÉPONSE:
 Génère UNIQUEMENT le prompt d'image final, détaillé et technique, prêt à être envoyé à Gemini.
 Le prompt doit faire 200-400 mots et inclure:
-- Description de la scène principale
+- Description de la scène principale (EN COHÉRENCE avec le texte: "${textAnalysis.mainMessage}")
 - Technique photographique utilisée
 - Spécifications techniques (objectif, ouverture, etc.)
-- Éclairage et ambiance
+- Éclairage et ambiance (reflétant le ton "${textAnalysis.emotionalTone}")
 - Palette de couleurs avec intégration marque
 - Composition et cadrage
-- Mood et émotion recherchés
+- Mood et émotion recherchés (émotion cible: "${textAnalysis.targetEmotion}")
 - Références stylistiques
+- 🆕 Éléments visuels du texte intégrés: ${textAnalysis.visualElements.join(', ') || 'contexte approprié'}
+
+⚠️ RAPPEL CRITIQUE: L'image doit être la traduction visuelle PARFAITE du texte généré.
+Quelqu'un qui lit le texte puis voit l'image doit ressentir une COHÉRENCE TOTALE.
 
 IMPORTANT: Réponds UNIQUEMENT avec le prompt d'image, sans texte additionnel.`;
   }

@@ -31,6 +31,12 @@ export interface DetailedQualityScore {
   creativeExcellence: number;
   cannesLionsPotential: number;
   
+  // 🆕 NOUVEAUX CRITÈRES CANNES LIONS GOLD
+  visualStorytelling: number; // Capacité à raconter une histoire visuellement
+  textImageCoherence: number; // Cohérence entre le texte et l'image
+  memorability: number; // Mémorabilité et impact durable
+  culturalRelevance: number; // Pertinence culturelle et contextuelle
+  
   // Détails additionnels
   criticalIssues: string[];
   minorImprovements: string[];
@@ -51,18 +57,23 @@ export class CannesLionsImageScorer {
   
   /**
    * Score une image générée selon les critères Cannes Lions
+   * @param imageUrl - URL de l'image à scorer
+   * @param variation - Numéro de variation
+   * @param hasHands - Si l'image contient des mains
+   * @param generatedText - Texte généré associé pour évaluer la cohérence (nouveau)
    */
   static async scoreImage(
     imageUrl: string,
     variation: number,
-    hasHands: boolean = false
+    hasHands: boolean = false,
+    generatedText?: string
   ): Promise<DetailedQualityScore> {
     
     logger.info(`📊 Scoring variation ${variation} avec Gemini Vision...`);
     
     try {
-      // Construire le prompt de scoring ultra-détaillé
-      const scoringPrompt = this.buildScoringPrompt(hasHands);
+      // Construire le prompt de scoring ultra-détaillé avec texte pour cohérence
+      const scoringPrompt = this.buildScoringPrompt(hasHands, generatedText);
       
       // Appeler Gemini Vision API pour analyser l'image
       const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -137,12 +148,25 @@ export class CannesLionsImageScorer {
   /**
    * Construit le prompt de scoring ultra-détaillé
    */
-  private static buildScoringPrompt(hasHands: boolean): string {
+  private static buildScoringPrompt(hasHands: boolean, generatedText?: string): string {
+    // Section cohérence texte-image si texte fourni
+    const textCoherenceSection = generatedText ? `
+═══════════════════════════════════════════════════════════════
+📝 TEXTE ASSOCIÉ À L'IMAGE (pour évaluation de cohérence):
+═══════════════════════════════════════════════════════════════
+"${generatedText.substring(0, 500)}"
+
+⚠️ IMPORTANT: Évaluer si l'image reflète fidèlement le message et le ton du texte.
+═══════════════════════════════════════════════════════════════
+` : '';
+
     return `You are a professional advertising judge for the Cannes Lions International Festival of Creativity.
 Analyze this commercial photography image and provide detailed scoring.
 
+${textCoherenceSection}
+
 ═══════════════════════════════════════════════════════════════
-CANNES LIONS IMAGE QUALITY ASSESSMENT
+CANNES LIONS IMAGE QUALITY ASSESSMENT (19 CRITÈRES)
 ═══════════════════════════════════════════════════════════════
 
 Score each criterion from 0-100 and provide detailed analysis.
@@ -271,11 +295,49 @@ ${hasHands ? `
     - Ready for global advertising?
     Score: [X/100]
 
+🆕 16. VISUAL STORYTELLING (0-100):
+    - Does the image tell a clear story without words?
+    - Narrative elements present and coherent
+    - Emotional journey evident in the composition
+    - Viewer can understand the context and message instantly
+    - Story arc visible (beginning, middle, end suggested)
+    Score: [X/100]
+    Story detected: [Describe the visual narrative]
+
+🆕 17. TEXT-IMAGE COHERENCE (0-100):
+    ${generatedText ? `
+    - Does the image perfectly match the text message?
+    - Visual elements align with text descriptions
+    - Mood and tone consistent between text and image
+    - No contradictions or mismatches
+    - Synergy creates stronger combined impact
+    ` : '- N/A (no text provided for comparison)'}
+    Score: [X/100]
+    ${generatedText ? 'Coherence analysis: [Explain how image matches or differs from text]' : ''}
+
+🆕 18. MEMORABILITY (0-100):
+    - Will viewers remember this image 24-48 hours later?
+    - Unique visual hook or distinctive element present
+    - Not generic or forgettable
+    - Creates lasting impression through originality
+    - "Thumb-stopping" power on social media
+    Score: [X/100]
+    Memorable elements: [What makes this image stick in memory?]
+
+🆕 19. CULTURAL RELEVANCE (0-100):
+    - Appropriate for target culture and context
+    - No cultural insensitivity or stereotypes
+    - Resonates with intended audience values
+    - Timely and contextually aware
+    - Universal appeal vs. culturally specific (as appropriate)
+    Score: [X/100]
+    Cultural notes: [Any cultural considerations observed]
+
 ═══════════════════════════════════════════════════════════════
 SUMMARY & RECOMMENDATIONS
 ═══════════════════════════════════════════════════════════════
 
-OVERALL AVERAGE SCORE: [Calculate average of all scores]
+OVERALL AVERAGE SCORE: [Calculate average of all 19 scores]
 
 CRITICAL ISSUES (Score < 70, requires regeneration):
 [List issues that are deal-breakers and require image regeneration]
@@ -325,7 +387,7 @@ Be honest and critical - this is for Cannes Lions level quality.`;
       return 75;
     };
     
-    // Extraire tous les scores
+    // Extraire tous les scores (15 originaux + 4 nouveaux = 19 critères)
     const scores = {
       anatomicalAccuracy: extractScore(text, 'ANATOMICAL ACCURACY'),
       compositionExcellence: extractScore(text, 'COMPOSITION EXCELLENCE'),
@@ -341,7 +403,12 @@ Be honest and critical - this is for Cannes Lions level quality.`;
       backgroundQuality: extractScore(text, 'BACKGROUND QUALITY'),
       professionalism: extractScore(text, 'PROFESSIONALISM'),
       creativeExcellence: extractScore(text, 'CREATIVE EXCELLENCE'),
-      cannesLionsPotential: extractScore(text, 'CANNES LIONS POTENTIAL')
+      cannesLionsPotential: extractScore(text, 'CANNES LIONS POTENTIAL'),
+      // 🆕 NOUVEAUX CRITÈRES CANNES LIONS GOLD
+      visualStorytelling: extractScore(text, 'VISUAL STORYTELLING'),
+      textImageCoherence: extractScore(text, 'TEXT-IMAGE COHERENCE'),
+      memorability: extractScore(text, 'MEMORABILITY'),
+      culturalRelevance: extractScore(text, 'CULTURAL RELEVANCE')
     };
     
     // Calculer le score global (moyenne)
@@ -428,6 +495,11 @@ Be honest and critical - this is for Cannes Lions level quality.`;
       professionalism: 75,
       creativeExcellence: 75,
       cannesLionsPotential: 75,
+      // 🆕 NOUVEAUX CRITÈRES PAR DÉFAUT
+      visualStorytelling: 75,
+      textImageCoherence: 75,
+      memorability: 75,
+      culturalRelevance: 75,
       criticalIssues: [],
       minorImprovements: [],
       recommendations: ['Scoring failed - using default scores'],
