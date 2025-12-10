@@ -1,4 +1,15 @@
 import OpenAI from 'openai';
+import {
+  selectCreativePreset,
+  PHOTOGRAPHIC_STYLES,
+  CREATIVE_CONTEXTS,
+  COLOR_PALETTES,
+  CREATIVE_FRAMEWORKS,
+  LIGHTING_SETUPS,
+  preFilterStylesBySector,
+  preFilterContextsByUsage,
+  CreativePreset
+} from './CreativePresetsLibrary';
 
 // Lazy initialization d'OpenAI pour éviter les erreurs d'import
 let openai: OpenAI | null = null;
@@ -290,6 +301,7 @@ export class GPTCreativeDirector {
 
   /**
    * Construit le prompt GPT ultra-sophistiqué pour le directeur artistique
+   * 🎯 UTILISE MAINTENANT LA BIBLIOTHÈQUE DE PRESETS CANNES LIONS
    */
   private static buildCreativeDirectorPrompt(
     brand: BrandData,
@@ -300,7 +312,62 @@ export class GPTCreativeDirector {
     geographicContext: string,
     avoidanceInstructions: string
   ): string {
+    // 🎯 SÉLECTION AUTOMATIQUE D'UN PRESET UNIQUE VIA GlobalStyleTracker
+    const selectedPreset = selectCreativePreset(
+      postContext.postIndex,
+      postContext.totalPosts,
+      brand.sector,
+      product.usageOccasions,
+      postContext.platform || 'default'
+    );
+
+    console.log(`[GPTCreativeDirector] 🎨 Preset sélectionné: Style="${selectedPreset.style.name}", Contexte="${selectedPreset.context.name}", Palette="${selectedPreset.palette.name}"`);
+
+    // 🎯 CONSTRUIRE LA SECTION PRESET POUR GPT
+    const presetSection = `
+═══════════════════════════════════════════════════════════════
+🎨 PRESET CRÉATIF CANNES LIONS SÉLECTIONNÉ (OBLIGATOIRE):
+═══════════════════════════════════════════════════════════════
+
+📸 STYLE PHOTOGRAPHIQUE IMPOSÉ:
+Nom: ${selectedPreset.style.name}
+Catégorie: ${selectedPreset.style.category}
+Référence: ${selectedPreset.style.reference}
+Éclairage: ${selectedPreset.style.lighting}
+Composition: ${selectedPreset.style.composition}
+Mood: ${selectedPreset.style.mood}
+Specs techniques: ${selectedPreset.style.technicalSpecs}
+
+🌍 CONTEXTE VISUEL IMPOSÉ:
+Nom: ${selectedPreset.context.name}
+Description: ${selectedPreset.context.description}
+
+🎨 PALETTE DE COULEURS IMPOSÉE:
+Nom: ${selectedPreset.palette.name}
+Description: ${selectedPreset.palette.description}
+Application: ${selectedPreset.palette.application}
+Intégration marque: ${selectedPreset.palette.brandIntegration}%
+
+🧠 FRAMEWORK CRÉATIF IMPOSÉ:
+Nom: ${selectedPreset.framework.name}
+Structure: ${selectedPreset.framework.structure}
+Application: ${selectedPreset.framework.application}
+
+💡 ÉCLAIRAGE IMPOSÉ:
+Nom: ${selectedPreset.lighting.name}
+Moment: ${selectedPreset.lighting.timeOfDay}
+Caractéristiques: ${selectedPreset.lighting.characteristics}
+Mood: ${selectedPreset.lighting.mood}
+
+⚠️ IMPÉRATIF ABSOLU: Tu DOIS utiliser EXACTEMENT ce preset dans ton prompt.
+Ne pas inventer d'autres styles ou contextes. Ce preset a été sélectionné
+par le système anti-répétition global pour garantir la diversité maximale.
+═══════════════════════════════════════════════════════════════
+`;
+
     return `Tu es un directeur artistique de niveau Cannes Lions Gold. Ta mission est de créer un prompt d'image PARFAIT et UNIQUE pour générer une image publicitaire exceptionnelle.
+
+${presetSection}
 
 🎯 CONTEXTE DE LA MARQUE:
 Nom: ${brand.name}
@@ -407,20 +474,20 @@ IMPORTANT: Réponds UNIQUEMENT avec le prompt d'image, sans texte additionnel.`;
   }
 
   /**
-   * Analyse le contexte temporel avec équilibre saisonnier intelligent (70/30)
-   * 70% des posts sont intemporels, 30% intègrent subtilement la saison
+   * Analyse le contexte temporel avec équilibre saisonnier intelligent (80/20)
+   * 80% des posts sont intemporels, 20% intègrent subtilement la saison
    */
   private static analyzeTemporalContext(scheduledDate?: string, postIndex: number = 0): string {
     if (!scheduledDate) {
       return "Contexte temporel: Focus intemporel sur le produit et la marque, sans référence saisonnière.";
     }
 
-    // 🎯 ALGORITHME D'ÉQUILIBRE SAISONNIER 70/30
+    // 🎯 ALGORITHME D'ÉQUILIBRE SAISONNIER 80/20
     // Utiliser l'index du post pour déterminer si on inclut la saison
     const shouldIncludeSeason = this.shouldIncludeSeasonalContext(postIndex);
     
     if (!shouldIncludeSeason) {
-      return "Contexte temporel: Focus intemporel sur le produit et la marque. Éviter les références saisonnières, privilégier un style universel et moderne.";
+      return "Contexte temporel: Focus INTEMPOREL ABSOLU sur le produit et la marque. INTERDICTION STRICTE de toute référence saisonnière (pas de neige, feuilles d'automne, fleurs de printemps, soleil d'été, etc.). Privilégier un style universel, moderne et applicable toute l'année.";
     }
 
     const date = new Date(scheduledDate);
@@ -468,13 +535,13 @@ IMPORTANT: Réponds UNIQUEMENT avec le prompt d'image, sans texte additionnel.`;
   }
 
   /**
-   * Détermine si ce post doit inclure un contexte saisonnier (algorithme 70/30)
+   * Détermine si ce post doit inclure un contexte saisonnier (algorithme 80/20)
    */
   private static shouldIncludeSeasonalContext(postIndex: number): boolean {
-    // Algorithme basé sur l'index du post pour créer un pattern 70/30
-    // Posts 0,1,4,5,7,8 = intemporels (70%)
-    // Posts 2,3,6,9 = saisonniers (30%)
-    const seasonalPattern = [false, false, true, true, false, false, true, false, false, true];
+    // Algorithme basé sur l'index du post pour créer un pattern 80/20
+    // Posts 0,1,2,3,5,6,7,8 = intemporels (80%)
+    // Posts 4,9 = saisonniers (20%)
+    const seasonalPattern = [false, false, false, false, true, false, false, false, false, true];
     return seasonalPattern[postIndex % seasonalPattern.length];
   }
 
