@@ -377,13 +377,53 @@ Couleurs de marque: ${brand.colors?.primary || 'Non spécifié'} ${brand.colors?
 Valeurs: ${brand.values?.join(', ') || 'Non spécifié'}
 Audience cible: ${brand.targetAudience || calendar.targetAudience || 'Non spécifié'}
 
-🛍️ CONTEXTE DU PRODUIT:
+🛍️ CONTEXTE DU PRODUIT ENRICHI:
 Nom: ${product.name}
 Catégorie: ${product.category}
 Description: ${product.description}
 Points forts: ${product.uniqueSellingPoints?.join(', ') || 'Non spécifié'}
 Bénéfices clients: ${product.customerBenefits?.join(', ') || 'Non spécifié'}
 Occasions d'usage: ${product.usageOccasions?.join(', ') || 'Non spécifié'}
+
+${(product as any).flavors && (product as any).flavors.length > 0 ? `
+🍃 PROFIL SENSORIEL (à évoquer visuellement):
+Arômes: ${(product as any).flavors.join(', ')}
+→ IMPÉRATIF: Créer une ambiance visuelle qui ÉVOQUE ces arômes
+→ Utiliser des éléments visuels, couleurs et compositions qui suggèrent ces saveurs
+` : ''}
+
+${(product as any).scents && (product as any).scents.length > 0 ? `
+🌸 PARFUMS (à suggérer visuellement):
+${(product as any).scents.join(', ')}
+→ IMPÉRATIF: Utiliser des éléments visuels qui ÉVOQUENT ces senteurs
+→ Créer une atmosphère olfactive par l'image (fleurs, nature, fraîcheur, etc.)
+` : ''}
+
+${(product as any).technicalDetails?.ingredients && (product as any).technicalDetails.ingredients.length > 0 ? `
+🌿 INGRÉDIENTS PREMIUM À METTRE EN SCÈNE:
+${(product as any).technicalDetails.ingredients.slice(0, 3).join(', ')}
+→ IMPÉRATIF: Intégrer visuellement ces ingrédients dans la composition
+→ Montrer la qualité et l'authenticité des ingrédients (raw, naturel, premium)
+` : ''}
+
+${(product as any).certifications && (product as any).certifications.length > 0 ? `
+🏆 CERTIFICATIONS À INTÉGRER SUBTILEMENT:
+${(product as any).certifications.join(', ')}
+→ Inclure discrètement les badges/logos de certification dans l'image
+→ Renforcer la crédibilité sans surcharger visuellement
+` : ''}
+
+${(product as any).labels && (product as any).labels.length > 0 ? `
+✓ LABELS QUALITÉ À VALORISER:
+${(product as any).labels.join(', ')}
+→ Intégrer ces labels comme éléments de réassurance visuelle
+` : ''}
+
+${(product as any).technicalDetails?.usage ? `
+📖 CONTEXTE D'UTILISATION:
+${(product as any).technicalDetails.usage}
+→ Créer des scénarios visuels AUTHENTIQUES montrant le produit en usage réel
+` : ''}
 
 ${postContext.selectedProducts && postContext.selectedProducts.length > 0 ? `
 🎯 PRODUITS SÉLECTIONNÉS POUR CE POST:

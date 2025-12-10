@@ -331,6 +331,8 @@ class PostGenerationService {
         specifications: product.technicalSheet?.specifications || {},
         flavors: product.flavors || [],
         scents: product.scents || [],
+        certifications: product.certifications || [],
+        labels: product.labels || [],
         technicalDetails: {
           ingredients: product.technicalSheet?.ingredients || [],
           nutritionalInfo: product.technicalSheet?.nutritionalInfo,
@@ -893,13 +895,47 @@ Produit ${index + 1}: ${product.name}
 - Catégorie: ${product.category}
 - Points forts: ${product.uniqueSellingPoints.join(', ')}
 - Bénéfices client: ${product.customerBenefits.join(', ')}
-${product.flavors.length > 0 ? `- Arômes: ${product.flavors.join(', ')}` : ''}
-${product.scents.length > 0 ? `- Parfums: ${product.scents.join(', ')}` : ''}
-${product.technicalDetails.ingredients.length > 0 ? `- Ingrédients clés: ${product.technicalDetails.ingredients.join(', ')}` : ''}
-${product.technicalDetails.highlights ? `- Points clés: ${product.technicalDetails.highlights}` : ''}
-${product.technicalDetails.usage ? `- Utilisation: ${product.technicalDetails.usage}` : ''}
-${Object.keys(product.specifications).length > 0 ? `- Spécifications: ${Object.entries(product.specifications).map(([key, value]) => `${key}: ${value}`).join(', ')}` : ''}
+${product.flavors && product.flavors.length > 0 ? `- Arômes: ${product.flavors.join(', ')}` : ''}
+${product.scents && product.scents.length > 0 ? `- Parfums: ${product.scents.join(', ')}` : ''}
+${product.technicalDetails?.ingredients && product.technicalDetails.ingredients.length > 0 ? `- Ingrédients clés: ${product.technicalDetails.ingredients.slice(0, 5).join(', ')}` : ''}
+${product.technicalDetails?.highlights ? `- Points clés: ${product.technicalDetails.highlights}` : ''}
+${product.technicalDetails?.usage ? `- Utilisation: ${product.technicalDetails.usage}` : ''}
+${product.certifications && product.certifications.length > 0 ? `- Certifications: ${product.certifications.join(', ')}` : ''}
+${product.labels && product.labels.length > 0 ? `- Labels: ${product.labels.join(', ')}` : ''}
+${Object.keys(product.specifications || {}).length > 0 ? `- Spécifications: ${Object.entries(product.specifications).map(([key, value]) => `${key}: ${value}`).join(', ')}` : ''}
 `).join('\n')}
+
+🎯 DIRECTIVES CRÉATIVES POUR L'EXPLOITATION DES DONNÉES PRODUIT:
+
+📸 STORYTELLING SENSORIEL:
+${briefData.products.some(p => p.flavors?.length > 0 || p.scents?.length > 0) ? `
+- Créer des descriptions ÉVOCATRICES qui font appel aux sens
+- Utiliser un langage sensoriel immersif (ex: "notes de vanille bourbon", "fraîcheur mentholée")
+- Évoquer visuellement les arômes et parfums dans la direction artistique
+` : ''}
+
+🌿 VALORISATION DES INGRÉDIENTS:
+${briefData.products.some(p => p.technicalDetails?.ingredients?.length > 0) ? `
+- Mettre en avant les ingrédients PREMIUM, NATURELS ou BIO
+- Créer des visuels qui montrent la qualité des ingrédients
+- Raconter l'histoire des ingrédients (origine, bienfaits)
+` : ''}
+
+🏆 BADGES DE CONFIANCE:
+${briefData.products.some(p => p.certifications?.length > 0 || p.labels?.length > 0) ? `
+- Intégrer subtilement les certifications et labels dans le storytelling
+- Renforcer la crédibilité avec ces preuves de qualité
+- Utiliser ces éléments comme différenciateurs clés
+` : ''}
+
+📖 CONTENU ÉDUCATIF:
+${briefData.products.some(p => p.technicalDetails?.usage) ? `
+- Créer des posts tutoriels/tips basés sur les modes d'utilisation
+- Éduquer l'audience sur les meilleures pratiques
+- Transformer les spécifications techniques en bénéfices concrets
+` : ''}
+
+⚠️ OBLIGATION : Exploiter ces données riches pour créer du contenu DIFFÉRENCIANT et ENGAGEANT
 
 🎯 SÉLECTION INTELLIGENTE DES PRODUITS (IMPÉRATIF) :
 Vous devez choisir intelligemment le(s) produit(s) optimal(aux) selon le contexte créatif de ce post :
