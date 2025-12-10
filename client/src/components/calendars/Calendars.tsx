@@ -9,15 +9,13 @@ import {
   CONTENT_TYPES, 
   TONE_OF_VOICE 
 } from '../../constants/formOptions';
+import SearchBar from '../common/SearchBar';
+import StatusBadge, { StatusType } from '../common/StatusBadge';
+import StatsCard from '../common/StatsCard';
+import EmptyState from '../common/EmptyState';
+import { useFilters } from '../../hooks/useFilters';
 
 type Status = 'draft' | 'active' | 'completed' | 'archived';
-
-const STATUS_TRANSLATIONS: Record<Status, string> = {
-  draft: 'Brouillon',
-  active: 'En cours',
-  completed: 'Terminé',
-  archived: 'Archivé'
-};
 
 interface CalendarData {
   _id: string;
@@ -303,8 +301,39 @@ const Calendars: React.FC = () => {
   });
 
   const [calendars, setCalendars] = useState<CalendarData[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string>('all');
 
   const navigate = useNavigate();
+
+  // Filters and search
+  const {
+    searchQuery,
+    setSearchQuery,
+    filteredData: filteredCalendars,
+    setFilter,
+    clearAllFilters,
+    hasActiveFilters
+  } = useFilters({
+    data: calendars,
+    searchFields: ['name'],
+    filterFunctions: {
+      status: (calendar, value) => value === 'all' || calendar.status === value
+    }
+  });
+
+  // Update status filter
+  useEffect(() => {
+    setFilter('status', selectedStatus);
+  }, [selectedStatus, setFilter]);
+
+  // Calculate statistics
+  const stats = {
+    total: calendars.length,
+    draft: calendars.filter(c => c.status === 'draft').length,
+    active: calendars.filter(c => c.status === 'active').length,
+    completed: calendars.filter(c => c.status === 'completed').length,
+    archived: calendars.filter(c => c.status === 'archived').length
+  };
 
   // Charger les marques et les calendriers au montage du composant
   React.useEffect(() => {
@@ -705,13 +734,14 @@ const Calendars: React.FC = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-10">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-[#53dfb2] bg-clip-text text-transparent">
           Calendriers Éditoriaux
         </h1>
         <button
           onClick={() => setShowForm(true)}
-          className="glass-button inline-flex items-center"
+          className="glass-button inline-flex items-center justify-center"
         >
           <svg
             className="-ml-1 mr-2 h-5 w-5"
@@ -729,63 +759,173 @@ const Calendars: React.FC = () => {
         </button>
       </div>
 
-      {/* Liste des calendriers */}
-      <div className="glass-panel overflow-hidden">
-        <ul className="divide-y divide-white/10">
-          {calendars.length === 0 ? (
-            <li className="px-6 py-6 text-center text-white/60">
-              Aucun calendrier trouvé. Créez-en un nouveau !
-            </li>
+      {calendars.length === 0 ? (
+        <EmptyState
+          icon="📅"
+          title="Aucun calendrier"
+          description="Créez votre premier calendrier éditorial pour planifier et générer du contenu pour vos réseaux sociaux."
+          actionLabel="Nouveau Calendrier"
+          onAction={() => setShowForm(true)}
+        />
+      ) : (
+        <>
+          {/* Statistics Dashboard */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+            <StatsCard
+              icon="📊"
+              label="Total"
+              value={stats.total}
+              color="text-white"
+            />
+            <StatsCard
+              icon="📝"
+              label="Brouillons"
+              value={stats.draft}
+              color="text-gray-400"
+            />
+            <StatsCard
+              icon="🎯"
+              label="En cours"
+              value={stats.active}
+              color="text-[#53dfb2]"
+            />
+            <StatsCard
+              icon="✅"
+              label="Terminés"
+              value={stats.completed}
+              color="text-green-400"
+            />
+            <StatsCard
+              icon="📦"
+              label="Archivés"
+              value={stats.archived}
+              color="text-orange-400"
+            />
+          </div>
+
+          {/* Search and Filters */}
+          <div className="glass-panel p-4 mb-6">
+            <div className="flex flex-col md:flex-row gap-4">
+              {/* Search Bar */}
+              <div className="flex-1">
+                <SearchBar
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  placeholder="Rechercher un calendrier..."
+                />
+              </div>
+
+              {/* Status Filter */}
+              <div className="flex items-center gap-2">
+                <select
+                  value={selectedStatus}
+                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  className="glass-input py-3"
+                >
+                  <option value="all">Tous les statuts</option>
+                  <option value="draft">📝 Brouillons</option>
+                  <option value="active">🎯 En cours</option>
+                  <option value="completed">✅ Terminés</option>
+                  <option value="archived">📦 Archivés</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Active Filters Info */}
+            {hasActiveFilters && (
+              <div className="mt-3 flex items-center justify-between text-sm">
+                <span className="text-white/60">
+                  {filteredCalendars.length} calendrier{filteredCalendars.length > 1 ? 's' : ''} trouvé{filteredCalendars.length > 1 ? 's' : ''}
+                </span>
+                <button
+                  onClick={clearAllFilters}
+                  className="text-[#53dfb2] hover:text-[#53dfb2]/80 transition-colors"
+                >
+                  Réinitialiser les filtres
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Calendars Display */}
+          {filteredCalendars.length === 0 ? (
+            <EmptyState
+              icon="🔍"
+              title="Aucun résultat"
+              description="Aucun calendrier ne correspond à vos critères de recherche."
+              actionLabel="Réinitialiser"
+              onAction={clearAllFilters}
+            />
           ) : (
-            calendars.map((calendar) => (
-              <li key={calendar._id}>
-                <div className="px-6 py-6 hover:bg-white/5 transition-colors">
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-col">
-                      <p className="text-sm font-medium text-[#53dfb2] truncate">
+            /* Cards View */
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredCalendars.map((calendar) => (
+                <div 
+                  key={calendar._id} 
+                  className="glass-panel p-6 hover:scale-[1.02] transition-all duration-300"
+                >
+                  {/* Header */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-lg font-semibold text-white mb-1 truncate">
                         {calendar.name}
-                      </p>
-                      <p className="mt-2 text-sm text-white/60">
+                      </h3>
+                      <p className="text-sm text-white/60">
                         {calendar.brandId?.name || 'Marque inconnue'}
                       </p>
                     </div>
-                    <div className="ml-2 flex-shrink-0 flex">
-                      <div className="flex space-x-3">
-                        <Link
-                          to={`/results/${calendar._id}`}
-                          className="glass-button text-xs py-2"
-                        >
-                          Voir le contenu
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(calendar._id)}
-                          className="glass-button text-xs py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700"
-                        >
-                          Supprimer
-                        </button>
-                        <p className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-[#53dfb2]/20 text-[#53dfb2]">
-                          {STATUS_TRANSLATIONS[calendar.status]}
-                        </p>
-                      </div>
+                    <StatusBadge 
+                      status={calendar.status as StatusType} 
+                      size="sm"
+                    />
+                  </div>
+
+                  {/* Dates */}
+                  <div className="mb-4 space-y-2">
+                    <div className="flex items-center text-xs text-white/60">
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      Du {new Date(calendar.startDate).toLocaleDateString('fr-FR')} au {new Date(calendar.endDate).toLocaleDateString('fr-FR')}
                     </div>
                   </div>
-                  <div className="mt-4">
+
+                  {/* Progress Bar */}
+                  <div className="mb-4">
+                    <div className="flex justify-between text-xs text-white/60 mb-2">
+                      <span>Progression</span>
+                      <span>{calendar.progress || 0}%</span>
+                    </div>
                     <div className="relative w-full bg-white/10 rounded-full h-2">
                       <div
                         className="absolute h-2 bg-gradient-to-r from-[#53dfb2] to-[#3fa88a] rounded-full transition-all duration-500"
                         style={{ width: `${calendar.progress || 0}%` }}
                       />
                     </div>
-                    <p className="mt-2 text-xs text-white/60 text-right">
-                      {calendar.progress || 0}% complété
-                    </p>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-2 pt-4 border-t border-white/10">
+                    <Link
+                      to={`/results/${calendar._id}`}
+                      className="flex-1 glass-button text-center text-xs py-2"
+                    >
+                      👁️ Voir
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(calendar._id)}
+                      className="glass-button text-xs py-2 px-3 bg-red-500/20 hover:bg-red-500/30"
+                      title="Supprimer"
+                    >
+                      🗑️
+                    </button>
                   </div>
                 </div>
-              </li>
-            ))
+              ))}
+            </div>
           )}
-        </ul>
-      </div>
+        </>
+      )}
 
       {/* Modal de création de calendrier */}
       {showForm && (

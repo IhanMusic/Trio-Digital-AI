@@ -3,6 +3,10 @@ import { useParams } from 'react-router-dom';
 import { config } from '../../config/env';
 import { useAuthContext } from '../../contexts/AuthContext';
 import CarouselViewer from './CarouselViewer';
+import SearchBar from '../common/SearchBar';
+import StatusBadge, { StatusType } from '../common/StatusBadge';
+import StatsCard from '../common/StatsCard';
+import { useFilters } from '../../hooks/useFilters';
 
 // Fonction de debounce personnalisée
 function useDebounce<T extends (...args: any[]) => any>(
@@ -118,10 +122,65 @@ const Results: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isPolling, setIsPolling] = useState(false);
+  const [selectedPlatform, setSelectedPlatform] = useState<string>('all');
+  const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [selectedMediaType, setSelectedMediaType] = useState<string>('all');
   
   // Utiliser des refs pour éviter les dépendances circulaires
   const postsRef = useRef<Post[]>([]);
   const isPollingRef = useRef(false);
+
+  // Filters and search
+  const {
+    searchQuery,
+    setSearchQuery,
+    filteredData: filteredPosts,
+    setFilter,
+    clearAllFilters,
+    hasActiveFilters
+  } = useFilters({
+    data: posts,
+    searchFields: ['content'],
+    filterFunctions: {
+      platform: (post, value) => value === 'all' || post.platform === value,
+      status: (post, value) => value === 'all' || post.status === value,
+      mediaType: (post, value) => {
+        if (value === 'all') return true;
+        if (value === 'video') return post.content.mediaType === 'video';
+        if (value === 'carousel') return post.content.contentType === 'carousel';
+        if (value === 'image') return !!(post.content.imageUrl && post.content.contentType !== 'carousel' && post.content.mediaType !== 'video');
+        if (value === 'pending') return !post.content.imageUrl && !post.content.videoUrl;
+        return true;
+      }
+    }
+  });
+
+  // Update filters
+  useEffect(() => {
+    setFilter('platform', selectedPlatform);
+  }, [selectedPlatform, setFilter]);
+
+  useEffect(() => {
+    setFilter('status', selectedStatus);
+  }, [selectedStatus, setFilter]);
+
+  useEffect(() => {
+    setFilter('mediaType', selectedMediaType);
+  }, [selectedMediaType, setFilter]);
+
+  // Calculate statistics
+  const stats = {
+    total: posts.length,
+    pending: posts.filter(p => p.status === 'pending_validation').length,
+    approved: posts.filter(p => p.status === 'approved').length,
+    rejected: posts.filter(p => p.status === 'rejected').length,
+    withMedia: posts.filter(p => p.content.imageUrl || p.content.videoUrl).length,
+    videos: posts.filter(p => p.content.mediaType === 'video').length,
+    carousels: posts.filter(p => p.content.contentType === 'carousel').length
+  };
+
+  // Get unique platforms
+  const platforms = ['all', ...Array.from(new Set(posts.map(p => p.platform)))];
 
   const updatePost = useCallback(async (postId: string, newText: string) => {
     try {
@@ -458,8 +517,8 @@ const Results: React.FC = () => {
     );
   }
 
-  // Grouper les posts par plateforme
-  const groupedPosts = posts.reduce<Record<string, Post[]>>((acc, post) => {
+  // Grouper les posts filtrés par plateforme
+  const groupedPosts = filteredPosts.reduce<Record<string, Post[]>>((acc, post) => {
     const platform = post.platform;
     if (!acc[platform]) {
       acc[platform] = [];
@@ -470,7 +529,8 @@ const Results: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex items-center justify-between mb-10">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-[#53dfb2] bg-clip-text text-transparent">
           Publications Générées
         </h1>
@@ -483,8 +543,143 @@ const Results: React.FC = () => {
           </div>
         )}
       </div>
-      
-      {Object.entries(groupedPosts).map(([platform, platformPosts]) => (
+
+      {/* Statistics Dashboard */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-6">
+        <StatsCard
+          icon="📊"
+          label="Total"
+          value={stats.total}
+          color="text-white"
+        />
+        <StatsCard
+          icon="⏳"
+          label="En validation"
+          value={stats.pending}
+          color="text-yellow-400"
+        />
+        <StatsCard
+          icon="✅"
+          label="Validés"
+          value={stats.approved}
+          color="text-green-400"
+        />
+        <StatsCard
+          icon="❌"
+          label="Refusés"
+          value={stats.rejected}
+          color="text-red-400"
+        />
+        <StatsCard
+          icon="🖼️"
+          label="Avec média"
+          value={stats.withMedia}
+          color="text-blue-400"
+        />
+        <StatsCard
+          icon="🎬"
+          label="Vidéos"
+          value={stats.videos}
+          color="text-purple-400"
+        />
+        <StatsCard
+          icon="🎠"
+          label="Carrousels"
+          value={stats.carousels}
+          color="text-pink-400"
+        />
+      </div>
+
+      {/* Search and Filters */}
+      <div className="glass-panel p-4 mb-6">
+        <div className="flex flex-col gap-4">
+          {/* Search Bar */}
+          <div className="flex-1">
+            <SearchBar
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="Rechercher dans le contenu..."
+            />
+          </div>
+
+          {/* Filters Row */}
+          <div className="flex flex-col md:flex-row gap-3">
+            {/* Platform Filter */}
+            <select
+              value={selectedPlatform}
+              onChange={(e) => setSelectedPlatform(e.target.value)}
+              className="glass-input py-3 flex-1"
+            >
+              <option value="all">Toutes les plateformes</option>
+              {platforms.filter(p => p !== 'all').map(platform => (
+                <option key={platform} value={platform}>
+                  {platformIcons[platform] || '📱'} {platform.charAt(0).toUpperCase() + platform.slice(1)}
+                </option>
+              ))}
+            </select>
+
+            {/* Status Filter */}
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              className="glass-input py-3 flex-1"
+            >
+              <option value="all">Tous les statuts</option>
+              <option value="pending_validation">⏳ En validation</option>
+              <option value="approved">✅ Validés</option>
+              <option value="rejected">❌ Refusés</option>
+            </select>
+
+            {/* Media Type Filter */}
+            <select
+              value={selectedMediaType}
+              onChange={(e) => setSelectedMediaType(e.target.value)}
+              className="glass-input py-3 flex-1"
+            >
+              <option value="all">Tous les types</option>
+              <option value="image">🖼️ Images</option>
+              <option value="video">🎬 Vidéos</option>
+              <option value="carousel">🎠 Carrousels</option>
+              <option value="pending">⏳ En génération</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Active Filters Info */}
+        {hasActiveFilters && (
+          <div className="mt-3 flex items-center justify-between text-sm">
+            <span className="text-white/60">
+              {filteredPosts.length} publication{filteredPosts.length > 1 ? 's' : ''} trouvée{filteredPosts.length > 1 ? 's' : ''}
+            </span>
+            <button
+              onClick={clearAllFilters}
+              className="text-[#53dfb2] hover:text-[#53dfb2]/80 transition-colors"
+            >
+              Réinitialiser les filtres
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Posts Display */}
+      {filteredPosts.length === 0 ? (
+        <div className="glass-panel text-center py-16 px-6">
+          <div className="text-6xl mb-4">🔍</div>
+          <h3 className="text-2xl font-semibold text-white mb-3">
+            Aucun résultat
+          </h3>
+          <p className="text-white/60 mb-8 max-w-md mx-auto">
+            Aucune publication ne correspond à vos critères de recherche.
+          </p>
+          <button
+            onClick={clearAllFilters}
+            className="glass-button inline-flex items-center"
+          >
+            Réinitialiser les filtres
+          </button>
+        </div>
+      ) : (
+        Object.entries(groupedPosts).map(([platform, platformPosts]) => (
         <div key={platform} className="mb-12">
           <h2 className="text-2xl font-semibold mb-6 flex items-center text-white">
             <span className="mr-3">{platformIcons[platform] || '📱'}</span>
@@ -621,14 +816,10 @@ const Results: React.FC = () => {
                       })}
                     </span>
                     <div className="flex items-center space-x-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        post.status === 'pending_validation' ? 'bg-white/10 text-white' :
-                        post.status === 'approved' ? 'bg-[#53dfb2]/20 text-[#53dfb2]' :
-                        'bg-red-500/20 text-red-400'
-                      }`}>
-                        {post.status === 'pending_validation' ? 'En validation' :
-                         post.status === 'approved' ? 'Validé' : 'Refusé'}
-                      </span>
+                      <StatusBadge 
+                        status={post.status as StatusType} 
+                        size="sm"
+                      />
                       <div className="flex space-x-1">
                         <button
                           onClick={async () => {
@@ -799,7 +990,8 @@ const Results: React.FC = () => {
             ))}
           </div>
         </div>
-      ))}
+        ))
+      )}
     </div>
   );
 };
