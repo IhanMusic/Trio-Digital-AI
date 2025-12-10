@@ -333,6 +333,8 @@ class PostGenerationService {
         scents: product.scents || [],
         certifications: product.certifications || [],
         labels: product.labels || [],
+        targetAudience: product.targetAudience?.demographic?.[0] || undefined,
+        ageRange: product.targetAudience?.demographic?.[0] || undefined,
         technicalDetails: {
           ingredients: product.technicalSheet?.ingredients || [],
           nutritionalInfo: product.technicalSheet?.nutritionalInfo,
@@ -496,6 +498,116 @@ Créer UNE publication qui pourrait remporter l'Or aux Cannes Lions dans la cat�
 
 6. **Loss Aversion Triggers** (utilisé avec éthique)
    - Parler de ce que l'audience manque (FOMO), puis présenter la solution
+
+═══════════════════════════════════════════════════════════════
+🎯 ADAPTATION INTELLIGENTE PAR ÂGE CIBLE
+═══════════════════════════════════════════════════════════════
+
+${briefData.products.length > 0 && (briefData.products[0].targetAudience || briefData.products[0].ageRange) ? `
+ÂGE CIBLE DÉTECTÉ : ${briefData.products[0].targetAudience || briefData.products[0].ageRange}
+
+INSTRUCTIONS ADAPTATIVES AUTOMATIQUES :
+
+👶 0-3 ANS (Bébés) :
+- Ton : Doux, rassurant, parental
+- Vocabulaire : Simple, émotionnel, sécurisant
+- Style visuel suggéré : Pastels, féerique, tendresse
+- Référence photo : Anne Geddes, Meg Bitton
+- Mood : Douceur, sécurité, amour parental
+
+🧒 4-8 ANS (Enfants) :
+- Ton : Ludique, imaginatif, énergique
+- Vocabulaire : Aventure, magie, découverte, superhéros
+- Style visuel suggéré : Coloré, dynamique, joyeux
+- Référence photo : Brandon Woelfel (couleurs vives)
+- Mood : Émerveillement, joie, énergie
+
+👦 9-12 ANS (Préados) :
+- Ton : Cool, moderne, aspirationnel
+- Vocabulaire : Aventure, indépendance, découverte, confiance
+- Style visuel suggéré : Dynamique, sportif, nature, exploration
+- Référence photo : Chris Burkard, Jimmy Chin
+- Mood : Confiance, découverte, indépendance
+
+🧑 13-17 ANS (Ados) :
+- Ton : Authentique, tendance, rebelle
+- Vocabulaire : Identité, appartenance, expression, cool
+- Style visuel suggéré : Urbain, mode, réseaux sociaux
+- Référence photo : Petra Collins, Ryan McGinley
+- Mood : Identité, appartenance, authenticité
+
+👨 18-35 ANS (Jeunes adultes) :
+- Ton : Aspirationnel, moderne, lifestyle
+- Vocabulaire : Réussite, authenticité, expérience, transformation
+- Style visuel suggéré : Instagram-friendly, minimaliste, lifestyle
+- Référence photo : Brandon Woelfel, Murad Osmann
+- Mood : Aspiration, réussite, authenticité
+
+👩 35-55 ANS (Adultes) :
+- Ton : Professionnel, élégant, qualité
+- Vocabulaire : Expertise, famille, bien-être, qualité
+- Style visuel suggéré : Sophistiqué, raffiné, élégant
+- Référence photo : Annie Leibovitz, Peter Lindbergh
+- Mood : Confiance, stabilité, qualité
+
+👴 55+ ANS (Seniors) :
+- Ton : Classique, rassurant, tradition
+- Vocabulaire : Sagesse, confort, héritage, tradition
+- Style visuel suggéré : Chaleureux, naturel, classique
+- Référence photo : Steve McCurry, Sebastião Salgado
+- Mood : Sérénité, confort, dignité
+
+⚠️ IMPÉRATIF : Adapter AUTOMATIQUEMENT le ton, vocabulaire et suggestions visuelles selon l'âge cible.
+` : 'Âge cible non spécifié - utiliser un ton universel adapté au secteur et à la plateforme.'}
+═══════════════════════════════════════════════════════════════
+
+═══════════════════════════════════════════════════════════════
+📸 ADAPTATION PHOTOGRAPHIQUE PAR SECTEUR
+═══════════════════════════════════════════════════════════════
+
+SECTEUR : ${brand.sector}
+POSITIONNEMENT : ${brand.pricePositioning || 'Non spécifié'}
+
+INSTRUCTIONS STYLE PAR SECTEUR :
+
+🍔 FOOD & BEVERAGE :
+- Budget : Style rustique, authentique (Dennis Prescott, Mowie Kay)
+- Mid-range : Style lifestyle, appétissant (Todd Selby, Tara O'Brady)
+- Luxury : Style gastronomique, artistique (Mikkel Jul Hvilshøj, Ren Fuller)
+- Techniques : Overhead shots, natural light, food styling, macro
+
+💄 BEAUTY & COSMETICS :
+- Budget : Style naturel, accessible (Glossier aesthetic)
+- Mid-range : Style lifestyle, aspirationnel (Sephora style)
+- Luxury : Style dramatique, iconique (Annie Leibovitz, Mario Testino)
+- Techniques : Dramatic lighting, close-ups, skin texture, color theory
+
+👗 FASHION & APPAREL :
+- Budget : Style street, authentique (Scott Schuman, Tommy Ton)
+- Mid-range : Style lifestyle, tendance (Zara aesthetic)
+- Luxury : Style éditorial, artistique (Peter Lindbergh, Paolo Roversi)
+- Techniques : Environmental portraits, movement, texture, editorial
+
+💻 TECH & ELECTRONICS :
+- Budget : Style fonctionnel, clair (product shots simples)
+- Mid-range : Style lifestyle, moderne (Samsung style)
+- Luxury : Style minimaliste, premium (Apple aesthetic - minimalist perfection)
+- Techniques : Clean backgrounds, reflections, macro details, lifestyle integration
+
+🏠 HOME & LIFESTYLE :
+- Budget : Style cozy, accessible (IKEA aesthetic)
+- Mid-range : Style aspirationnel, moderne (West Elm style)
+- Luxury : Style architectural, sophistiqué (Architectural Digest)
+- Techniques : Natural light, wide angles, styling, atmospheric
+
+🚗 AUTOMOTIVE :
+- Budget : Style pratique, fonctionnel
+- Mid-range : Style dynamique, lifestyle (Toyota style)
+- Luxury : Style cinématographique, dramatique (Easton Chang, Amy Shore)
+- Techniques : Motion blur, reflections, dramatic angles, environmental
+
+⚠️ IMPÉRATIF : Choisir un style photographique cohérent avec le secteur ET le positionnement prix.
+═══════════════════════════════════════════════════════════════
 
 🌐 EXPERTISE LINGUISTIQUE:
 Langues: ${calendar.targetLanguages.map(lang => getLanguageName(lang)).join(', ')}
@@ -820,6 +932,26 @@ ${relevantKeyDates.map(kd => `- ${kd.name} (${kd.description})`).join('\n')}
 Ces dates sont culturellement significatives pour ${calendar.targetCountry} et doivent être intégrées avec le niveau de pertinence approprié.
 ` : ''}
 
+═══════════════════════════════════════════════════════════════
+✅ CHECKLIST VALIDATION FINALE (à vérifier avant de répondre)
+═══════════════════════════════════════════════════════════════
+
+Avant de générer ta réponse, VÉRIFIE OBLIGATOIREMENT :
+
+□ Longueur texte respectée (${platform === 'instagram' ? '100-125 chars' : platform === 'linkedin' ? '150-180 chars' : platform === 'facebook' ? '80-100 chars' : platform === 'twitter' ? '280 chars max' : '100-150 chars'})
+□ Langue correcte (${calendar.targetLanguages.map(lang => getLanguageName(lang)).join(', ')})
+□ Ton adapté à l'âge cible (${briefData.products.length > 0 && (briefData.products[0].targetAudience || briefData.products[0].ageRange) ? briefData.products[0].targetAudience || briefData.products[0].ageRange : 'universel'})
+□ Style photographique cohérent avec secteur (${brand.sector})
+□ Couleurs marque intégrées (${brand.colors?.primary || 'palette appropriée'})
+□ Framework psychologique appliqué (AIDA ou PAS)
+□ Produit intégré subtilement (pas de pitch commercial)
+□ CTA émotionnel (pas transactionnel)
+□ Format de réponse exact respecté
+□ Conformité légale secteur ${brand.sector}
+
+⚠️ SI UNE SEULE CASE N'EST PAS COCHÉE → RECOMMENCER LA GÉNÉRATION
+═══════════════════════════════════════════════════════════════
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📋 FORMAT DE RÉPONSE (STRUCTURE STRICTE OBLIGATOIRE)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -875,7 +1007,48 @@ Behaviors: [Patterns]
 - Reste en mémoire 48h+
 - Pourrait être présentée aux Cannes Lions
 
-NIVEAU D'EXIGENCE: WORLD-CLASS CREATIVE AGENCY 🏆`
+NIVEAU D'EXIGENCE: WORLD-CLASS CREATIVE AGENCY 🏆
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔴 RAPPEL FINAL - CONTRAINTES CRITIQUES 🔴
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ AVANT DE RÉPONDRE, VÉRIFIER OBLIGATOIREMENT :
+
+✓ LONGUEUR TEXTE RESPECTÉE :
+  ${platform === 'instagram' ? '• Instagram : 100-125 caractères MAXIMUM' : ''}
+  ${platform === 'facebook' ? '• Facebook : 80-100 caractères MAXIMUM' : ''}
+  ${platform === 'linkedin' ? '• LinkedIn : 150-180 caractères MAXIMUM' : ''}
+  ${platform === 'tiktok' ? '• TikTok : 100-120 caractères MAXIMUM' : ''}
+  ${platform === 'twitter' ? '• Twitter : 280 caractères MAXIMUM' : ''}
+
+✓ FORMAT DE RÉPONSE EXACT :
+  ---POST #1---
+  ---HASHTAGS---
+  ---CALL TO ACTION---
+  ---IMAGE PROMPT #1---
+  ---IMAGE STYLE---
+  ---AUDIENCE TARGETING---
+  ---COMPETITIVE EDGE---
+  ---LEGAL COMPLIANCE---
+  ---CULTURAL RELEVANCE---
+
+✓ LANGUE OBLIGATOIRE : ${calendar.targetLanguages.map(lang => getLanguageName(lang)).join(', ')}
+
+✓ COULEURS MARQUE INTÉGRÉES : ${brand.colors?.primary || 'Palette appropriée'}
+
+✓ TON DE COMMUNICATION : ${calendar.communicationStyle || 'Professionnel'}
+
+✓ FRAMEWORKS APPLIQUÉS : AIDA ou PAS
+
+✓ CONFORMITÉ LÉGALE : ${brand.sector} respectée
+
+⚠️ SI UNE SEULE CONTRAINTE N'EST PAS RESPECTÉE :
+→ LA PUBLICATION SERA REJETÉE
+→ RECOMMENCER LA GÉNÉRATION
+
+🎯 OBJECTIF FINAL : Cannes Lions Gold - Excellence Absolue
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`
           },
           {
             role: 'user',
@@ -958,6 +1131,40 @@ Vous devez choisir intelligemment le(s) produit(s) optimal(aux) selon le context
 
 Cette sélection déterminera quelles images de référence seront utilisées pour la génération visuelle.
 ` : ''}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌍 ADAPTATION CULTURELLE OBLIGATOIRE - ${calendar.targetCountry.toUpperCase()}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ IMPÉRATIF : Utilise ta connaissance native de GPT-5 pour adapter le contenu à ${calendar.targetCountry}.
+
+📋 CHECKLIST CULTURELLE (à appliquer automatiquement) :
+
+1. **TABOUS CULTURELS** :
+   - Identifie les tabous de ${calendar.targetCountry} (religion, politique, mœurs)
+   - Ne JAMAIS les violer dans le contenu ou les visuels suggérés
+   
+2. **VALEURS LOCALES** :
+   - Intègre les valeurs culturelles dominantes de ${calendar.targetCountry}
+   - Exemple : Si MENA → Famille, hospitalité, tradition-modernité
+   
+3. **CODES VISUELS** :
+   - Suggère des éléments visuels qui résonnent avec ${calendar.targetCountry}
+   - Évite les clichés et stéréotypes
+   
+4. **RÉFÉRENCES CULTURELLES** :
+   - Utilise des références que l'audience de ${calendar.targetCountry} comprendra
+   - Évite les références trop occidentales si marché non-occidental
+
+5. **COMPORTEMENTS CONSOMMATEURS** :
+   - Adapte le CTA aux habitudes d'achat de ${calendar.targetCountry}
+   - Exemple : Si MENA → Importance de la recommandation familiale
+
+🎯 OBJECTIF : Le contenu doit sembler écrit par un natif de ${calendar.targetCountry}.
+
+⚠️ NOTE : Le style de communication "${calendar.communicationStyle}" est DÉJÀ défini.
+Cette section concerne uniquement l'adaptation culturelle PAR PAYS.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 AUDIENCE CIBLE & INSIGHTS PSYCHOGRAPHIQUES
 - Marché : ${calendar.targetCountry}
@@ -1399,7 +1606,8 @@ DIRECTIVES CRÉATIVES
                     const score = await CannesLionsImageScorer.scoreImage(
                       variation.url,
                       variation.variation,
-                      hasHands
+                      hasHands,
+                      parsedPost.postContent // 🆕 Passer le texte pour évaluer la cohérence
                     );
                     
                     scoredVariations.push({
@@ -1431,6 +1639,11 @@ DIRECTIVES CRÉATIVES
                         professionalism: 75,
                         creativeExcellence: 75,
                         cannesLionsPotential: 75,
+                        // 🆕 NOUVEAUX CRITÈRES PAR DÉFAUT
+                        visualStorytelling: 75,
+                        textImageCoherence: 75,
+                        memorability: 75,
+                        culturalRelevance: 75,
                         criticalIssues: [],
                         minorImprovements: [],
                         recommendations: [],
