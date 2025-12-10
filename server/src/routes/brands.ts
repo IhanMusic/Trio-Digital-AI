@@ -294,24 +294,76 @@ router.put('/:id', authenticate, upload.single('logo'), async (req: express.Requ
   try {
     let brandData;
     
+    console.log('🔍 Début mise à jour marque...');
+    console.log('📁 Fichier reçu:', req.file ? 'Oui' : 'Non');
+    console.log('📝 Body reçu:', Object.keys(req.body));
+    
     // Si on a des données FormData avec logo
     if (req.file) {
-      brandData = JSON.parse(req.body.brandData);
+      console.log('📄 Parsing brandData depuis FormData...');
       
-      // Upload et redimensionnement du logo
-      const logoUrl = await CloudinaryService.uploadImage(req.file.buffer, {
-        folder: 'brands/logos',
-        transformation: [
-          { width: 1080, height: 1080, crop: 'fill', gravity: 'center' },
-          { quality: 'auto', format: 'auto' }
-        ]
-      });
+      try {
+        // Vérifier que brandData existe
+        if (!req.body.brandData) {
+          throw new Error('brandData manquant dans FormData');
+        }
+        
+        console.log('📄 brandData brut:', req.body.brandData.substring(0, 200) + '...');
+        brandData = JSON.parse(req.body.brandData);
+        console.log('✅ JSON parsé avec succès');
+        
+      } catch (parseError) {
+        console.error('❌ Erreur parsing JSON:', parseError);
+        console.error('📄 brandData reçu:', req.body.brandData);
+        
+        return res.status(400).json({
+          success: false,
+          message: 'Erreur de parsing des données du formulaire',
+          details: `JSON invalide: ${parseError instanceof Error ? parseError.message : 'Format incorrect'}`,
+          error: 'INVALID_JSON_FORMAT'
+        });
+      }
       
-      brandData.logo = logoUrl;
+      console.log('🖼️ Upload du logo vers Cloudinary...');
+      
+      try {
+        // Upload et redimensionnement du logo
+        const logoResult = await CloudinaryService.uploadImage(req.file.buffer, {
+          folder: 'brands/logos',
+          transformation: [
+            { width: 1080, height: 1080, crop: 'fill', gravity: 'center' },
+            { quality: 'auto', format: 'auto' }
+          ]
+        });
+        
+        brandData.logo = logoResult.url;
+        console.log('✅ Logo uploadé:', logoResult.url);
+        
+      } catch (cloudinaryError) {
+        console.error('❌ Erreur Cloudinary:', cloudinaryError);
+        
+        return res.status(500).json({
+          success: false,
+          message: 'Erreur lors de l\'upload du logo',
+          details: cloudinaryError instanceof Error ? cloudinaryError.message : 'Erreur Cloudinary inconnue',
+          error: 'CLOUDINARY_UPLOAD_FAILED'
+        });
+      }
+      
     } else {
       // Données JSON classiques
+      console.log('📝 Données JSON classiques');
       brandData = req.body;
     }
+
+    console.log('💾 Mise à jour de la marque en base...');
+    console.log('📊 Données finales:', {
+      name: brandData.name,
+      sector: brandData.sector,
+      hasDescription: !!brandData.description,
+      hasLogo: !!brandData.logo,
+      brandId: req.params.id
+    });
 
     const brand = await Brand.findOneAndUpdate(
       {
@@ -319,24 +371,61 @@ router.put('/:id', authenticate, upload.single('logo'), async (req: express.Requ
         userId: req.user?._id
       },
       brandData,
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!brand) {
+      console.error('❌ Marque non trouvée:', req.params.id);
       return res.status(404).json({
         success: false,
         message: 'Marque non trouvée'
       });
     }
 
+    console.log('✅ Marque mise à jour avec succès:', brand._id);
+
     res.json({
       success: true,
       data: brand
     });
   } catch (error) {
-    res.status(400).json({
+    console.error('❌ Erreur mise à jour marque:', error);
+    
+    let statusCode = 400;
+    let message = 'Erreur lors de la mise à jour de la marque';
+    let details = '';
+    let errorCode = 'UNKNOWN_ERROR';
+    
+    if (error instanceof Error) {
+      // Erreurs de validation Mongoose
+      if (error.name === 'ValidationError') {
+        message = 'Données invalides';
+        details = Object.values((error as any).errors).map((err: any) => err.message).join(', ');
+        errorCode = 'VALIDATION_ERROR';
+      }
+      // Erreurs de duplication
+      else if (error.message.includes('duplicate key')) {
+        message = 'Une marque avec ce nom existe déjà';
+        statusCode = 409;
+        errorCode = 'DUPLICATE_NAME';
+      }
+      // Erreurs de token/auth
+      else if (error.message.includes('jwt') || error.message.includes('token')) {
+        message = 'Session expirée, veuillez vous reconnecter';
+        statusCode = 401;
+        errorCode = 'AUTH_ERROR';
+      }
+      // Autres erreurs
+      else {
+        details = error.message;
+      }
+    }
+    
+    res.status(statusCode).json({
       success: false,
-      message: 'Erreur lors de la mise à jour de la marque',
+      message,
+      details,
+      errorCode,
       error: error instanceof Error ? error.message : 'Erreur inconnue'
     });
   }
