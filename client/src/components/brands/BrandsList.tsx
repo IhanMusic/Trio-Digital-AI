@@ -66,7 +66,7 @@ const BrandLogo: React.FC<{ brand: Brand; size?: 'sm' | 'md' | 'lg' }> = ({ bran
       <img 
         src={logoUrl} 
         alt={brand.name}
-        className={`${sizeClasses[size]} object-contain rounded-xl`}
+        className={`${sizeClasses[size]} object-contain rounded-xl bg-white/5 p-2`}
         onError={() => {
           console.error(`Erreur de chargement du logo pour ${brand.name}:`, logoUrl);
           setImageError(true); // Basculer vers le fallback
