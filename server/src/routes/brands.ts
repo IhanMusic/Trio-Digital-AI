@@ -136,12 +136,12 @@ router.post('/', authenticate, upload.single('logo'), async (req: express.Reques
       console.log('🖼️ Upload du logo vers Cloudinary...');
       
       try {
-        // Upload et redimensionnement du logo
+        // Upload et redimensionnement du logo en carré avec padding (sans crop)
         const logoResult = await CloudinaryService.uploadImage(req.file.buffer, {
           folder: 'brands/logos',
           transformation: [
-            { width: 1080, height: 1080, crop: 'fill', gravity: 'center' },
-            { quality: 'auto', format: 'auto' }
+            { width: 1080, height: 1080, crop: 'pad', background: 'transparent', gravity: 'center' },
+            { quality: 'auto', format: 'png' }
           ]
         });
         
@@ -327,12 +327,12 @@ router.put('/:id', authenticate, upload.single('logo'), async (req: express.Requ
       console.log('🖼️ Upload du logo vers Cloudinary...');
       
       try {
-        // Upload et redimensionnement du logo
+        // Upload et redimensionnement du logo en carré avec padding (sans crop)
         const logoResult = await CloudinaryService.uploadImage(req.file.buffer, {
           folder: 'brands/logos',
           transformation: [
-            { width: 1080, height: 1080, crop: 'fill', gravity: 'center' },
-            { quality: 'auto', format: 'auto' }
+            { width: 1080, height: 1080, crop: 'pad', background: 'transparent', gravity: 'center' },
+            { quality: 'auto', format: 'png' }
           ]
         });
         
