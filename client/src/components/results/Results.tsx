@@ -129,6 +129,9 @@ const Results: React.FC = () => {
   // Utiliser des refs pour éviter les dépendances circulaires
   const postsRef = useRef<Post[]>([]);
   const isPollingRef = useRef(false);
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const retryCountRef = useRef(0);
+  const MAX_RETRIES = 3;
 
   // Filters and search
   const {
@@ -205,10 +208,52 @@ const Results: React.FC = () => {
 
   const debouncedUpdate = useDebounce(updatePost, 1000);
 
-  // Fonction de refresh intelligente pour le polling - SANS dépendances circulaires
+  // Fonction utilitaire pour comparer les médias d'un post
+  const hasMediaChanged = useCallback((oldPost: Post, newPost: Post): boolean => {
+    // Comparer imageUrl
+    if (oldPost.content.imageUrl !== newPost.content.imageUrl) return true;
+    
+    // Comparer videoUrl
+    if (oldPost.content.videoUrl !== newPost.content.videoUrl) return true;
+    
+    // Comparer imageUrls (carrousels)
+    const oldUrls = oldPost.content.imageUrls || [];
+    const newUrls = newPost.content.imageUrls || [];
+    if (oldUrls.length !== newUrls.length) return true;
+    if (oldUrls.some((url, idx) => url !== newUrls[idx])) return true;
+    
+    return false;
+  }, []);
+
+  // Fonction de fetch avec retry automatique
+  const fetchWithRetry = useCallback(async (url: string, options: RequestInit, retries = MAX_RETRIES): Promise<Response> => {
+    try {
+      const response = await fetch(url, options);
+      
+      // Réinitialiser le compteur de retry en cas de succès
+      retryCountRef.current = 0;
+      
+      return response;
+    } catch (error) {
+      retryCountRef.current++;
+      
+      if (retryCountRef.current < retries) {
+        // Exponential backoff: 2s, 4s, 8s
+        const delay = Math.pow(2, retryCountRef.current) * 1000;
+        console.log(`⚠️ Erreur réseau, retry ${retryCountRef.current}/${retries} dans ${delay}ms...`);
+        
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return fetchWithRetry(url, options, retries);
+      }
+      
+      throw error;
+    }
+  }, []);
+
+  // Fonction de refresh intelligente pour le polling - OPTIMISÉE
   const refreshPosts = useCallback(async () => {
     if (isPollingRef.current) {
-      console.log('Polling déjà en cours, skip...');
+      console.log('⏭️ Polling déjà en cours, skip...');
       return;
     }
     
@@ -218,7 +263,7 @@ const Results: React.FC = () => {
       
       console.log('🔄 Polling: Vérification des nouveaux posts...');
       
-      const response = await fetch(
+      const response = await fetchWithRetry(
         `${config.apiUrl}/posts/calendar/${calendarId}`,
         {
           headers: {
@@ -228,7 +273,7 @@ const Results: React.FC = () => {
       );
       
       if (!response.ok) {
-        console.error('❌ Erreur HTTP lors du refresh des posts:', response.status);
+        console.error('❌ Erreur HTTP lors du refresh des posts:', response.status, response.statusText);
         return;
       }
 
@@ -241,35 +286,45 @@ const Results: React.FC = () => {
       const newPostsData = result.data;
       const currentPosts = postsRef.current;
       
-      // Logique de comparaison améliorée
+      // Logique de comparaison AMÉLIORÉE
       let hasChanges = false;
+      let changesDetails: string[] = [];
       
       // Cas 1: Nouveaux posts ajoutés
       if (newPostsData.length > currentPosts.length) {
-        console.log(`✅ ${newPostsData.length - currentPosts.length} nouveaux posts détectés`);
+        const diff = newPostsData.length - currentPosts.length;
+        changesDetails.push(`${diff} nouveau(x) post(s)`);
         hasChanges = true;
       }
       
-      // Cas 2: Posts existants mis à jour (nouvelles images/vidéos)
-      if (newPostsData.length === currentPosts.length) {
-        const postsWithNewMedia = newPostsData.filter((newPost: Post) => {
-          const existingPost = currentPosts.find(p => p._id === newPost._id);
-          if (!existingPost) return false;
-          
-          // Vérifier si le post a reçu une nouvelle image ou vidéo
-          const hadMedia = existingPost.content.imageUrl || existingPost.content.videoUrl;
-          const hasMedia = newPost.content.imageUrl || newPost.content.videoUrl;
-          
-          return !hadMedia && hasMedia;
-        });
+      // Cas 2: Posts existants mis à jour (médias)
+      const updatedPosts = newPostsData.filter((newPost: Post) => {
+        const existingPost = currentPosts.find(p => p._id === newPost._id);
+        if (!existingPost) return false;
         
-        if (postsWithNewMedia.length > 0) {
-          console.log(`✅ ${postsWithNewMedia.length} posts ont reçu leurs médias`);
-          hasChanges = true;
-        }
+        return hasMediaChanged(existingPost, newPost);
+      });
+      
+      if (updatedPosts.length > 0) {
+        changesDetails.push(`${updatedPosts.length} post(s) mis à jour`);
+        hasChanges = true;
+        
+        // Logger les détails des changements
+        updatedPosts.forEach((post: Post) => {
+          const existingPost = currentPosts.find(p => p._id === post._id);
+          if (existingPost) {
+            const changes: string[] = [];
+            if (existingPost.content.imageUrl !== post.content.imageUrl) changes.push('image');
+            if (existingPost.content.videoUrl !== post.content.videoUrl) changes.push('vidéo');
+            if ((existingPost.content.imageUrls?.length || 0) !== (post.content.imageUrls?.length || 0)) changes.push('carrousel');
+            console.log(`  📝 Post ${post._id}: ${changes.join(', ')} modifié(s)`);
+          }
+        });
       }
       
       if (hasChanges) {
+        console.log(`✅ Changements détectés: ${changesDetails.join(', ')}`);
+        
         // Charger les dimensions des nouvelles images
         await Promise.all(newPostsData.map(loadImageDimensions));
         
@@ -284,17 +339,23 @@ const Results: React.FC = () => {
       
     } catch (error) {
       console.error('❌ Erreur lors du refresh des posts:', error);
-      // Continuer le polling même en cas d'erreur
+      
+      // Si trop d'erreurs consécutives, afficher un message à l'utilisateur
+      if (retryCountRef.current >= MAX_RETRIES) {
+        setError('Erreur de connexion. Vérifiez votre connexion internet et actualisez la page.');
+      }
     } finally {
       isPollingRef.current = false;
       setIsPolling(false);
     }
-  }, [calendarId, token]); // PLUS de dépendance sur posts.length !
+  }, [calendarId, token, hasMediaChanged, fetchWithRetry]);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(
+        console.log('📥 Chargement initial des posts...');
+        
+        const response = await fetchWithRetry(
           `${config.apiUrl}/posts/calendar/${calendarId}`,
           {
             headers: {
@@ -304,7 +365,7 @@ const Results: React.FC = () => {
         );
         
         if (!response.ok) {
-          throw new Error('Erreur lors de la récupération des posts');
+          throw new Error(`Erreur lors de la récupération des posts: ${response.status} ${response.statusText}`);
         }
 
         const result = await response.json();
@@ -314,6 +375,8 @@ const Results: React.FC = () => {
 
         const postsData = result.data;
         
+        console.log(`✅ ${postsData.length} posts chargés`);
+        
         // Charger les dimensions des images
         await Promise.all(postsData.map(loadImageDimensions));
         
@@ -321,52 +384,85 @@ const Results: React.FC = () => {
         postsRef.current = postsData;
         setPosts(postsData);
       } catch (error) {
-        console.error('Erreur:', error);
-        setError(error instanceof Error ? error.message : 'Erreur inconnue');
+        console.error('❌ Erreur lors du chargement initial:', error);
+        setError(error instanceof Error ? error.message : 'Erreur lors de la génération du contenu: Failed to fetch');
       } finally {
         setLoading(false);
       }
     };
 
     fetchPosts();
-  }, [calendarId, token]);
+  }, [calendarId, token, fetchWithRetry]);
 
   // Synchroniser postsRef avec posts state
   useEffect(() => {
     postsRef.current = posts;
   }, [posts]);
 
-  // Système de polling automatique - SANS timeout et dépendances fixes
+  // Système de polling automatique - OPTIMISÉ et ROBUSTE
   useEffect(() => {
-    if (posts.length === 0 || loading) return; // Pas de polling avant le premier chargement
+    // Nettoyer l'ancien interval si existant
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+    
+    if (loading) {
+      console.log('⏸️ Chargement en cours, polling en attente...');
+      return;
+    }
+    
+    if (postsRef.current.length === 0) {
+      console.log('⏸️ Aucun post chargé, polling en attente...');
+      return;
+    }
     
     console.log('🚀 Démarrage du polling automatique pour les nouveaux posts');
     
-    // Déterminer si la génération est probablement terminée
-    const postsWithoutMedia = posts.filter(post => 
-      !post.content.imageUrl && !post.content.videoUrl
-    );
+    // Fonction pour vérifier si la génération est terminée
+    const checkGenerationComplete = () => {
+      const currentPosts = postsRef.current;
+      const postsWithoutMedia = currentPosts.filter(post => 
+        !post.content.imageUrl && !post.content.videoUrl && 
+        (!post.content.imageUrls || post.content.imageUrls.length === 0)
+      );
+      
+      console.log(`📊 État actuel: ${currentPosts.length} posts total, ${postsWithoutMedia.length} sans média`);
+      
+      return postsWithoutMedia.length === 0 && currentPosts.length > 0;
+    };
     
-    console.log(`📊 État actuel: ${posts.length} posts total, ${postsWithoutMedia.length} sans média`);
-    
-    // Si tous les posts ont leurs médias, arrêter le polling
-    if (postsWithoutMedia.length === 0 && posts.length > 0) {
-      console.log('✅ Tous les posts ont leurs médias, arrêt du polling');
+    // Vérification initiale
+    if (checkGenerationComplete()) {
+      console.log('✅ Tous les posts ont leurs médias, pas de polling nécessaire');
       return;
     }
     
     // Démarrer le polling toutes les 10 secondes
-    const interval = setInterval(() => {
+    pollingIntervalRef.current = setInterval(() => {
+      // Vérifier si la génération est terminée avant chaque poll
+      if (checkGenerationComplete()) {
+        console.log('✅ Génération terminée, arrêt du polling');
+        if (pollingIntervalRef.current) {
+          clearInterval(pollingIntervalRef.current);
+          pollingIntervalRef.current = null;
+        }
+        return;
+      }
+      
       refreshPosts();
     }, 10000);
     
-    // PLUS de timeout ! Le polling continue indéfiniment jusqu'à ce que tous les posts aient leurs médias
+    console.log('⏰ Polling configuré: vérification toutes les 10 secondes');
     
     return () => {
       console.log('🛑 Nettoyage du polling');
-      clearInterval(interval);
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+        pollingIntervalRef.current = null;
+      }
     };
-  }, [posts.length, loading]); // PLUS de dépendance sur refreshPosts !
+  }, [loading, refreshPosts]); // Dépendances minimales et stables
 
   // Effet pour mettre à jour les dimensions des images si nécessaire
   useEffect(() => {
