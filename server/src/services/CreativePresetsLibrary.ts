@@ -5076,7 +5076,6 @@ export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
     "conceptual",
     "digital",
     "artisanat",
-    "healthcare",
   ],
   dairy: [
     "food",
@@ -5093,7 +5092,6 @@ export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
     "experimental",
     "conceptual",
     "artisanat",
-    "healthcare",
   ],
   beverage: [
     "beverage",
@@ -5112,8 +5110,6 @@ export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
     "experimental",
     "conceptual",
     "digital",
-    "ai_tech",
-    "healthcare",
   ],
 
   // ========== BEAUTÉ & COSMÉTIQUE (16 catégories - FUSION CRÉATIVE) ==========
@@ -5129,9 +5125,7 @@ export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
     "nature",
     "experimental",
     "fashion",
-    "food",
     "digital",
-    "ai_tech",
     "conceptual",
     "artisanat",
   ],
@@ -5147,11 +5141,9 @@ export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
     "nature",
     "action",
     "fashion",
-    "food",
     "experimental",
     "conceptual",
     "digital",
-    "telehealth",
   ],
 
   // ========== MODE & LIFESTYLE (17 catégories - CROSS-POLLINATION MAXIMALE) ==========
@@ -5266,7 +5258,6 @@ export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
     "digital",
     "ai_tech",
     "nature",
-    "beauty",
     "editorial",
   ],
   automotive: [
@@ -5284,7 +5275,6 @@ export const SECTOR_TO_CATEGORIES: Record<string, string[]> = {
     "digital",
     "ai_tech",
     "nature",
-    "beauty",
     "minimal",
   ],
 
