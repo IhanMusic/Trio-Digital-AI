@@ -18,6 +18,7 @@ import sharp from 'sharp';
 import { GPTCreativeDirector } from './GPTCreativeDirector';
 import { GPTVideoCreativeDirector } from './GPTVideoCreativeDirector';
 import { CannesLionsImageScorer, ScoredImage } from './CannesLionsImageScorer';
+import { CreativeOrchestrator } from '../creative-engine/orchestrator/CreativeOrchestrator';
 
 // 🔥 CONFIGURATION GÉNÉRATION VIDÉO
 // Mettre à true pour générer des REELs au lieu d'images
@@ -173,6 +174,17 @@ class PostGenerationService {
   // Rate limiting pour OpenAI GPT-4
   private lastOpenAICallTime: number = 0;
   private readonly OPENAI_MIN_DELAY_MS = 1000; // 1 seconde entre chaque appel (60 RPM max pour GPT-4)
+
+  /**
+   * Retourne la saison actuelle pour l'adaptation créative
+   */
+  private getCurrentSeason(): 'spring' | 'summer' | 'autumn' | 'winter' {
+    const month = new Date().getMonth();
+    if (month >= 2 && month <= 4) return 'spring';
+    if (month >= 5 && month <= 7) return 'summer';
+    if (month >= 8 && month <= 10) return 'autumn';
+    return 'winter';
+  }
 
   /**
    * Attendre pour respecter le rate limit OpenAI
@@ -1367,9 +1379,42 @@ DIRECTIVES CRÉATIVES
               logger.info(`   - Support multi-produits: ${referenceImagesBase64.length > 1 ? 'OUI' : 'NON'}`);
             }
             
-            // 🎨 NOUVEAU SYSTÈME : GPT CREATIVE DIRECTOR APRÈS GÉNÉRATION DU TEXTE
-            logger.info('🎨 === GPT CREATIVE DIRECTOR POST-GÉNÉRATION ===');
-            logger.info(`🎯 Génération prompt d'image cohérent avec le texte généré`);
+            // 🎨 NOUVEAU SYSTÈME : CREATIVE ENGINE 2026 + GPT CREATIVE DIRECTOR
+            logger.info('🎨 === CREATIVE ENGINE 2026 + GPT CREATIVE DIRECTOR ===');
+            logger.info(`🎯 Génération prompt d'image avec presets sectoriels 2026`);
+            
+            // 🆕 ÉTAPE 1: Utiliser CreativeOrchestrator pour obtenir la direction créative sectorielle
+            const orchestrator = new CreativeOrchestrator({ diversityMode: 'high' });
+            let creativeDirection;
+            try {
+              creativeDirection = await orchestrator.generateCreativeDirection({
+                brand: {
+                  name: brand.name,
+                  sector: brand.sector,
+                  colors: brand.colors,
+                  values: brand.values
+                },
+                product: selectedProducts.length > 0 ? {
+                  name: selectedProducts[0].name,
+                  category: selectedProducts[0].category,
+                  description: selectedProducts[0].description
+                } : undefined,
+                platform: platform,
+                objective: calendar.campaignObjective || 'engagement',
+                language: calendar.targetLanguages?.[0] || 'fr',
+                season: this.getCurrentSeason()
+              });
+              
+              logger.info(`✅ CreativeOrchestrator 2026 - Direction créative générée:`);
+              logger.info(`   - Style: ${creativeDirection.style.name}`);
+              logger.info(`   - Contexte: ${creativeDirection.context.name}`);
+              logger.info(`   - Palette: ${creativeDirection.palette.name}`);
+              logger.info(`   - Score Cannes Lions: ${creativeDirection.metadata.cannesLionsScore}/100`);
+            } catch (orchestratorError: any) {
+              logger.error('❌ Erreur CreativeOrchestrator:', orchestratorError.message);
+              logger.info('⚠️  Fallback vers GPT Creative Director seul');
+              creativeDirection = null;
+            }
             
             // Préparer les données pour GPT Creative Director
             const brandData = {
