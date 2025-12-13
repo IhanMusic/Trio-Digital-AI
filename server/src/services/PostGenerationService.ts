@@ -19,6 +19,7 @@ import { GPTCreativeDirector } from './GPTCreativeDirector';
 import { GPTVideoCreativeDirector } from './GPTVideoCreativeDirector';
 import { CannesLionsImageScorer, ScoredImage } from './CannesLionsImageScorer';
 import { CreativeOrchestrator } from '../creative-engine/orchestrator/CreativeOrchestrator';
+import VisualStrategistService, { VisualStrategy, VisualStrategyContext } from './VisualStrategistService';
 
 // 🔥 CONFIGURATION GÉNÉRATION VIDÉO
 // Mettre à true pour générer des REELs au lieu d'images
@@ -391,13 +392,43 @@ class PostGenerationService {
         logger.info(`Date #${index + 1}: ${date.toLocaleDateString()} à ${date.getHours()}:${date.getMinutes()}`);
       });
       
-      // Générer du contenu pour chaque date individuellement
-      for (let i = 0; i < dates.length; i++) {
-        const date = dates[i];
-        logger.info(`\nGénération du contenu pour ${platform} - Post #${i + 1} (${date.toLocaleDateString()})`);
-        
-        // Incrémenter l'index global pour le prochain post
-        globalPostIndex++;
+        // Générer du contenu pour chaque date individuellement
+        for (let i = 0; i < dates.length; i++) {
+          const date = dates[i];
+          logger.info(`\nGénération du contenu pour ${platform} - Post #${i + 1} (${date.toLocaleDateString()})`);
+          
+          // Incrémenter l'index global pour le prochain post
+          globalPostIndex++;
+          
+          // 🎨 COUCHE 1 : GÉNÉRATION DE STRATÉGIE VISUELLE
+          logger.info('\n🎨 === COUCHE 1 : VISUAL STRATEGIST ===');
+          
+          let visualStrategy: VisualStrategy | null = null;
+          try {
+            const strategyContext: VisualStrategyContext = {
+              postIndex: i,
+              totalPosts: dates.length,
+              brand: brand,
+              products: products,
+              platform: platform,
+              country: calendar.targetCountry,
+              calendarId: String(calendar._id),
+              scheduledDate: date,
+              season: this.getCurrentSeason()
+            };
+            
+            visualStrategy = await VisualStrategistService.generateStrategy(strategyContext);
+            
+            logger.info(`✅ Stratégie visuelle générée:`);
+            logger.info(`   - Concept: "${visualStrategy.concept}"`);
+            logger.info(`   - Style photo: "${visualStrategy.photographyStyle}"`);
+            logger.info(`   - Setting: "${visualStrategy.setting}"`);
+            logger.info(`   - Score diversité: ${visualStrategy.diversityScore}/100`);
+            
+          } catch (strategyError: any) {
+            logger.error('❌ Erreur génération stratégie visuelle:', strategyError.message);
+            logger.info('⚠️  Continuation sans stratégie visuelle spécifique');
+          }
         
         // 🎯 NOUVEAU : Analyser les types de contenu sélectionnés par l'utilisateur
         const userContentTypes = calendar.contentTypes || [];
@@ -1482,7 +1513,9 @@ DIRECTIVES CRÉATIVES
                 name: p.name,
                 category: p.category,
                 description: p.description
-              }))
+              })),
+              // 🆕 COUCHE 1 : STRATÉGIE VISUELLE
+              visualStrategy: visualStrategy || undefined
             };
             
             // Générer le prompt d'image avec GPT Creative Director APRÈS avoir le texte

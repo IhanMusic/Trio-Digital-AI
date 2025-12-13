@@ -97,6 +97,19 @@ interface PostContext {
   // CONTEXTE : Données enrichies
   keyDates?: Array<{ name: string; importance: string }>;
   selectedProducts?: Array<{ name: string; category: string; description: string }>;
+  // 🆕 COUCHE 1 : STRATÉGIE VISUELLE
+  visualStrategy?: {
+    concept: string;
+    mood: string;
+    setting: string;
+    lightingStyle: string;
+    photographyStyle: string;
+    composition: string;
+    productIntegration: string;
+    culturalContext: string;
+    uniqueAngle: string;
+    diversityScore: number;
+  };
 }
 
 /**
@@ -495,7 +508,55 @@ l'impact émotionnel et la mémorabilité (critère Cannes Lions Gold).
 ═══════════════════════════════════════════════════════════════
 `;
 
+    // 🆕 SECTION STRATÉGIE VISUELLE (COUCHE 1 - Priorité absolue)
+    const visualStrategySection = postContext.visualStrategy ? `
+═══════════════════════════════════════════════════════════════
+🎨 STRATÉGIE VISUELLE COUCHE 1 (PRIORITÉ ABSOLUE):
+═══════════════════════════════════════════════════════════════
+
+CONCEPT CRÉATIF IMPOSÉ:
+"${postContext.visualStrategy.concept}"
+
+MOOD ÉMOTIONNEL IMPOSÉ:
+"${postContext.visualStrategy.mood}"
+
+SETTING OBLIGATOIRE:
+"${postContext.visualStrategy.setting}"
+
+STYLE PHOTOGRAPHIQUE IMPOSÉ:
+"${postContext.visualStrategy.photographyStyle}"
+
+ÉCLAIRAGE IMPOSÉ:
+"${postContext.visualStrategy.lightingStyle}"
+
+COMPOSITION IMPOSÉE:
+"${postContext.visualStrategy.composition}"
+
+INTÉGRATION PRODUIT:
+"${postContext.visualStrategy.productIntegration}"
+
+CONTEXTE CULTUREL:
+"${postContext.visualStrategy.culturalContext}"
+
+ANGLE UNIQUE:
+"${postContext.visualStrategy.uniqueAngle}"
+
+SCORE DIVERSITÉ: ${postContext.visualStrategy.diversityScore}/100
+
+⚠️ IMPÉRATIF CRITIQUE - COUCHE 1 PRIORITAIRE:
+Cette stratégie visuelle a été générée par le VisualStrategistService pour garantir
+la diversité créative et éviter les répétitions. Tu DOIS l'utiliser comme base
+OBLIGATOIRE pour ton prompt d'image. Cette stratégie remplace et surpasse
+tous les autres presets ou suggestions.
+
+🎯 MISSION: Traduire cette stratégie visuelle en prompt technique détaillé
+tout en maintenant la cohérence avec le texte généré.
+═══════════════════════════════════════════════════════════════
+` : '';
+
     return `Tu es un directeur artistique de niveau Cannes Lions Gold. Ta mission est de créer un prompt d'image PARFAIT et UNIQUE pour générer une image publicitaire exceptionnelle.
+
+${visualStrategySection}
 
 ${presetSection}
 
