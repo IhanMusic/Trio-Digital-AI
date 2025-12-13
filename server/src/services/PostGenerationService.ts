@@ -559,11 +559,12 @@ INSTRUCTIONS ADAPTATIVES AUTOMATIQUES :
 - Mood : Douceur, sécurité, amour parental
 
 🧒 4-8 ANS (Enfants) :
-- Ton : Ludique, imaginatif, énergique
-- Vocabulaire : Aventure, magie, découverte, superhéros
-- Style visuel suggéré : Coloré, dynamique, joyeux
-- Référence photo : Brandon Woelfel (couleurs vives)
-- Mood : Émerveillement, joie, énergie
+- Ton : Ludique, imaginatif, énergique, FÉERIQUE
+- Vocabulaire : Aventure, magie, découverte, superhéros, licornes, fées, châteaux enchantés
+- Style visuel suggéré : Coloré, dynamique, joyeux, MAGIQUE avec éléments fantastiques
+- Référence photo : Brandon Woelfel (couleurs vives) + Disney/Pixar aesthetic
+- Mood : Émerveillement, joie, énergie, MAGIE PURE
+- Éléments féeriques : 🦄 Licornes, 🌈 Arcs-en-ciel, ✨ Paillettes, 🧚‍♀️ Fées, 🏰 Châteaux magiques
 
 👦 9-12 ANS (Préados) :
 - Ton : Cool, moderne, aspirationnel
