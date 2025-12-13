@@ -19,8 +19,8 @@ async function testVisualStrategistPipeline() {
   console.log('🧪 === TEST VISUAL STRATEGIST PIPELINE 3-COUCHES ===\n');
 
   try {
-    // Données de test simulées
-    const mockBrand: IBrand = {
+    // Données de test simulées (type assertion pour éviter l'erreur TypeScript)
+    const mockBrand = {
       _id: new mongoose.Types.ObjectId(),
       name: 'Danone',
       sector: 'Agroalimentaire et FMCG',
@@ -35,7 +35,7 @@ async function testVisualStrategistPipeline() {
       createdBy: new mongoose.Types.ObjectId(),
       createdAt: new Date(),
       updatedAt: new Date()
-    } as IBrand;
+    } as any; // Type assertion pour le test
 
     const mockProducts: IProduct[] = [
       {
