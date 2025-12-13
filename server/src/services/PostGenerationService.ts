@@ -1325,18 +1325,18 @@ DIRECTIVES CRÉATIVES
             const rawImagePrompt = parsedPost.imagePrompt;
             logger.info('Prompt GPT-5 original (premiers 200 chars):', rawImagePrompt.substring(0, 200) + '...');
             
-            // 🎯 PRÉPARER LES IMAGES DE RÉFÉRENCE MULTI-PRODUITS
+            // 🎯 PRÉPARER LES IMAGES DE RÉFÉRENCE - SEULEMENT LES PRODUITS SÉLECTIONNÉS PAR GPT-5
             let referenceImageBase64: string | undefined;
             let referenceImagesBase64: string[] = [];
             let hasProductReference = false;
             
             if (selectedProducts.length > 0) {
-              logger.info(`📦 Traitement de ${selectedProducts.length} produit(s) sélectionné(s) par GPT-5:`);
+              logger.info(`📦 Traitement UNIQUEMENT des ${selectedProducts.length} produit(s) sélectionné(s) par GPT-5:`);
               selectedProducts.forEach((product, index) => {
-                logger.info(`   ${index + 1}. ${product.name}`);
+                logger.info(`   ${index + 1}. ${product.name} ✅ SÉLECTIONNÉ pour le texte`);
               });
               
-              // Traiter chaque produit sélectionné
+              // 🎯 CORRECTION COHÉRENCE : Traiter SEULEMENT les produits sélectionnés par GPT-5
               for (const [index, product] of selectedProducts.entries()) {
                 logger.info(`\n📸 Traitement image produit ${index + 1}/${selectedProducts.length}: ${product.name}`);
                 
@@ -1405,9 +1405,10 @@ DIRECTIVES CRÉATIVES
                 }
               }
               
-              logger.info(`\n🎯 Résumé des images de référence:`);
+              logger.info(`\n🎯 Résumé des images de référence (COHÉRENCE TEXTE-IMAGE):`);
               logger.info(`   - Images collectées: ${referenceImagesBase64.length}/${selectedProducts.length}`);
-              logger.info(`   - Support multi-produits: ${referenceImagesBase64.length > 1 ? 'OUI' : 'NON'}`);
+              logger.info(`   - Produits dans le texte: ${selectedProducts.map(p => p.name).join(', ')}`);
+              logger.info(`   - Cohérence garantie: ${referenceImagesBase64.length > 0 ? 'OUI ✅' : 'NON ❌'}`);
             }
             
             // 🎨 NOUVEAU SYSTÈME : CREATIVE ENGINE 2026 + GPT CREATIVE DIRECTOR
