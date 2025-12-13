@@ -387,7 +387,6 @@ class VisualStrategistService {
   private static getCulturalContext(country: string, sector: string): string {
     const culturalContexts: Record<string, string> = {
       'France': 'French lifestyle authenticity, artisanal heritage',
-      'Morocco': 'Moroccan warmth, traditional modernity blend',
       'Algeria': 'Algerian hospitality, Mediterranean lifestyle',
       'Tunisia': 'Tunisian elegance, coastal sophistication',
       'Canada': 'Canadian natural lifestyle, multicultural harmony',

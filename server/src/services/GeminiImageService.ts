@@ -62,7 +62,7 @@ export class GeminiImageService {
       
       const {
         numberOfImages = 4,
-        imageSize = '1K',
+        imageSize = '2K', // ✅ DÉFAUT 2K pour qualité premium
         aspectRatio = '1:1',
         referenceImage,
         referenceImages,
@@ -92,6 +92,13 @@ export class GeminiImageService {
       // Attendre pour respecter le rate limit de Gemini (2 RPM max)
       await this.waitForRateLimit();
 
+      // 🎯 FORCER LA RÉSOLUTION SELON LE PARAMÈTRE imageSize
+      const resolutionInstruction = imageSize === '4K' 
+        ? ' Generate in ultra high resolution 4096x4096 pixels, maximum quality, professional grade.'
+        : imageSize === '2K'
+        ? ' Generate in high resolution 2048x2048 pixels, premium quality, broadcast ready.'
+        : ' Generate in standard resolution 1024x1024 pixels.';
+
       // Ajouter l'aspect ratio au prompt pour Instagram (format carré)
       const aspectRatioInstruction = aspectRatio === '1:1' 
         ? ' Generate a square image with 1:1 aspect ratio (same width and height).'
@@ -101,7 +108,7 @@ export class GeminiImageService {
         ? ' Generate a vertical image with 9:16 aspect ratio.'
         : '';
       
-      const enhancedPrompt = prompt + aspectRatioInstruction;
+      const enhancedPrompt = prompt + resolutionInstruction + aspectRatioInstruction;
 
       // 🎯 CONSTRUIRE LE CONTENU AVEC SUPPORT MULTI-RÉFÉRENCES
       let promptContent: any = enhancedPrompt;
