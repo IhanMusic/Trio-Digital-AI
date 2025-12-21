@@ -69,6 +69,7 @@ import { StabilityEditService } from '../services/StabilityEditService';
 import { MaskGenerationService } from '../services/MaskGenerationService';
 import { GeminiImageService } from '../services/GeminiImageService';
 import { PlatformFormatService } from '../services/PlatformFormatService';
+import { CannesLionsGeminiService, BrandContext, ProductContext, CalendarContext } from '../services/CannesLionsGeminiService';
 
 // Système de throttling pour Gemini (max 2 requêtes par minute pour la génération d'images)
 let lastGeminiCallTime = 0;
@@ -935,6 +936,165 @@ router.post('/gemini/generate', authenticate, checkGenerationQuota, upload.field
         code: errorCode,
         message: error.message || 'Erreur lors de la génération avec Gemini',
         service: 'gemini',
+        details: error.toString()
+      }
+    });
+  }
+});
+
+// Route pour Cannes Lions Gemini Generation - Niveau professionnel
+router.options('/gemini/cannes-lions', cors());
+
+router.post('/gemini/cannes-lions', authenticate, checkGenerationQuota, upload.fields([
+  { name: 'product_images', maxCount: 14 } // Support jusqu'à 14 images produit
+]), async (req: Request, res: Response) => {
+  try {
+    console.log('🏆 Début de la génération Cannes Lions avec Gemini');
+    
+    // Récupération des données du formulaire
+    const {
+      prompt,
+      brandData,
+      productData,
+      calendarData,
+      options = {}
+    } = req.body;
+    
+    console.log('Données reçues:', {
+      prompt: prompt?.substring(0, 100) + '...',
+      hasBrandData: !!brandData,
+      hasProductData: !!productData,
+      hasCalendarData: !!calendarData,
+      options
+    });
+    
+    // Validation des données requises
+    if (!prompt || typeof prompt !== 'string' || prompt.trim().length === 0) {
+      return res.status(400).json({
+        error: {
+          code: 'INVALID_PROMPT',
+          message: 'Le prompt créatif est requis',
+          service: 'cannes-lions-gemini'
+        }
+      });
+    }
+    
+    if (!brandData) {
+      return res.status(400).json({
+        error: {
+          code: 'MISSING_BRAND_DATA',
+          message: 'Les données de marque sont requises',
+          service: 'cannes-lions-gemini'
+        }
+      });
+    }
+    
+    if (!calendarData) {
+      return res.status(400).json({
+        error: {
+          code: 'MISSING_CALENDAR_DATA',
+          message: 'Les données de calendrier sont requises',
+          service: 'cannes-lions-gemini'
+        }
+      });
+    }
+    
+    // Parser les données JSON si elles sont en string
+    let parsedBrandData: BrandContext;
+    let parsedProductData: ProductContext[] = [];
+    let parsedCalendarData: CalendarContext;
+    let parsedOptions: any = {};
+    
+    try {
+      parsedBrandData = typeof brandData === 'string' ? JSON.parse(brandData) : brandData;
+      parsedProductData = typeof productData === 'string' ? JSON.parse(productData) : (productData || []);
+      parsedCalendarData = typeof calendarData === 'string' ? JSON.parse(calendarData) : calendarData;
+      parsedOptions = typeof options === 'string' ? JSON.parse(options) : options;
+    } catch (parseError) {
+      return res.status(400).json({
+        error: {
+          code: 'INVALID_JSON_DATA',
+          message: 'Erreur de parsing des données JSON',
+          service: 'cannes-lions-gemini',
+          details: parseError
+        }
+      });
+    }
+    
+    console.log('Données parsées:', {
+      brand: parsedBrandData.name,
+      products: parsedProductData.length,
+      calendar: parsedCalendarData.name,
+      country: parsedCalendarData.targetCountry
+    });
+    
+    // Attendre pour respecter le rate limit de Gemini
+    await waitForGeminiRateLimit();
+    
+    // Générer avec le service Cannes Lions optimisé
+    const result = await CannesLionsGeminiService.generateCannesLionsImage(
+      parsedBrandData,
+      parsedProductData,
+      parsedCalendarData,
+      prompt,
+      {
+        numberOfImages: parsedOptions.numberOfImages || 1,
+        imageSize: parsedOptions.imageSize || '2K',
+        aspectRatio: parsedOptions.aspectRatio || '1:1',
+        platforms: parsedCalendarData.socialNetworks,
+        contentType: parsedCalendarData.contentTypes[0] || 'social',
+        useReflectionMode: true,
+        enableGoogleSearch: parsedOptions.enableGoogleSearch || false
+      }
+    );
+    
+    console.log('🎉 Génération Cannes Lions terminée avec succès');
+    console.log(`📊 Résultats: ${result.images.length} image(s), temps: ${result.metadata.processingTime}ms`);
+    
+    // Retourner les résultats avec métadonnées complètes
+    res.json({
+      success: true,
+      data: result.images,
+      metadata: {
+        service: 'cannes-lions-gemini',
+        model: 'gemini-3-pro-image-preview',
+        promptUsed: result.metadata.promptUsed,
+        brandContext: result.metadata.brandContext.name,
+        productCount: result.metadata.productContexts.length,
+        culturalAdaptation: result.metadata.culturalAdaptation.country,
+        processingTime: result.metadata.processingTime,
+        generationParams: result.metadata.generationParams,
+        qualityScores: {
+          average: Math.round(result.images.reduce((acc, img) => acc + (img.qualityScore || 0), 0) / result.images.length),
+          brandCompliance: Math.round(result.images.reduce((acc, img) => acc + (img.brandCompliance || 0), 0) / result.images.length),
+          productFidelity: Math.round(result.images.reduce((acc, img) => acc + (img.productFidelity || 0), 0) / result.images.length)
+        }
+      }
+    });
+    
+  } catch (error: any) {
+    console.error('❌ Erreur lors de la génération Cannes Lions:', error);
+    
+    // Gérer les erreurs spécifiques
+    let statusCode = 500;
+    let errorCode = 'CANNES_LIONS_GENERATION_ERROR';
+    
+    if (error.message?.includes('quota') || error.message?.includes('rate limit')) {
+      statusCode = 429;
+      errorCode = 'RATE_LIMIT_ERROR';
+    } else if (error.message?.includes('authentication') || error.message?.includes('API key')) {
+      statusCode = 401;
+      errorCode = 'AUTHENTICATION_ERROR';
+    } else if (error.message?.includes('invalid') || error.message?.includes('Invalid')) {
+      statusCode = 400;
+      errorCode = 'INVALID_REQUEST';
+    }
+    
+    res.status(statusCode).json({
+      error: {
+        code: errorCode,
+        message: error.message || 'Erreur lors de la génération Cannes Lions',
+        service: 'cannes-lions-gemini',
         details: error.toString()
       }
     });
