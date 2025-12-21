@@ -134,7 +134,7 @@ const UserManagement: React.FC = () => {
         <div>
           <h1 className="text-2xl font-bold text-white">Gestion des utilisateurs</h1>
           <p className="text-white/60 mt-1">
-            {pagination.total} utilisateur{pagination.total > 1 ? 's' : ''} au total
+            {pagination?.total || 0} utilisateur{(pagination?.total || 0) > 1 ? 's' : ''} au total
           </p>
         </div>
         <button className="glass-button flex items-center space-x-2">

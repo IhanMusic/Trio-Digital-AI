@@ -30,12 +30,22 @@ export const useUserManagement = (): UseUserManagementReturn => {
       setLoading(true);
       setError(null);
       const response = await adminService.getUsers(filters);
-      setUsers(response.data);
-      setPagination(response.pagination);
+      // Fix: Access users array and pagination data from correct structure
+      // response.data is PaginatedResponse<AdminUser> which has { data: AdminUser[], pagination: {...} }
+      setUsers(response.data || []);
+      setPagination({
+        page: response.pagination?.page || 1,
+        limit: response.pagination?.limit || 20,
+        total: response.pagination?.total || 0,
+        pages: response.pagination?.pages || 0
+      });
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la récupération des utilisateurs';
       setError(errorMessage);
       console.error('Erreur users:', err);
+      // Ensure safe fallback values
+      setUsers([]);
+      setPagination({ page: 1, limit: 20, total: 0, pages: 0 });
     } finally {
       setLoading(false);
     }
