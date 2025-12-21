@@ -204,10 +204,10 @@ class PostGenerationService {
   }
 
   /**
-   * Calcule le nombre de posts par plateforme en fonction de la fréquence
+   * Calcule le nombre de posts par plateforme avec dispatch intelligent
+   * LinkedIn reçoit 50% moins de posts que les autres plateformes
    */
   private calculatePostsPerPlatform(calendar: ICalendar) {
-    const postsPerPlatform: Record<string, number> = {};
     const startDate = new Date(calendar.startDate);
     const endDate = new Date(calendar.endDate);
     
@@ -218,20 +218,20 @@ class PostGenerationService {
     
     logger.info(`Période du calendrier: ${totalDays} jours (du ${startDate.toLocaleDateString()} au ${endDate.toLocaleDateString()})`);
     
-    // Calculer le nombre de posts en fonction de la fréquence et du nombre de jours
+    // Calculer le nombre TOTAL de posts pour TOUTES les plateformes (pas par plateforme)
     let totalPosts: number;
     switch (calendar.frequency) {
       case 'daily':
-        totalPosts = totalDays; // Un post par jour
+        totalPosts = totalDays; // Un post par jour AU TOTAL
         break;
       case 'twice_daily':
-        totalPosts = totalDays * 2; // Deux posts par jour
+        totalPosts = totalDays * 2; // Deux posts par jour AU TOTAL
         break;
       case 'three_per_week':
-        totalPosts = Math.ceil(totalDays * (3 / 7)); // 3 posts par semaine
+        totalPosts = Math.ceil(totalDays * (3 / 7)); // 3 posts par semaine AU TOTAL
         break;
       case 'weekly':
-        totalPosts = Math.ceil(totalDays / 7); // 1 post par semaine
+        totalPosts = Math.ceil(totalDays / 7); // 1 post par semaine AU TOTAL
         break;
       default:
         totalPosts = totalDays;
@@ -240,23 +240,63 @@ class PostGenerationService {
     // S'assurer qu'il y a au moins un post
     totalPosts = Math.max(1, totalPosts);
     
-    logger.info(`Fréquence: ${calendar.frequency}, Total posts calculés: ${totalPosts}`);
+    logger.info(`🎯 NOUVEAU SYSTÈME DISPATCH: ${calendar.frequency} → ${totalPosts} posts AU TOTAL (pas par plateforme)`);
     
     // Obtenir la liste des plateformes sélectionnées par l'utilisateur
-    const selectedPlatforms = new Set(calendar.socialMediaAccounts?.map(acc => acc.platform.toLowerCase()) || []);
-    logger.info(`Plateformes sélectionnées: ${Array.from(selectedPlatforms).join(', ')}`);
+    const selectedPlatforms = calendar.socialMediaAccounts?.map(acc => acc.platform.toLowerCase()) || [];
     
-    // Calculer le nombre total de posts pour chaque plateforme
-    for (const [platform, frequency] of Object.entries(calendar.contentPlan.frequency)) {
-      // Ne générer du contenu que pour les plateformes sélectionnées
-      if (selectedPlatforms.has(platform.toLowerCase())) {
-        // Utiliser la fréquence spécifique à la plateforme si elle est définie
-        const platformFrequency = frequency || 1;
-        postsPerPlatform[platform] = totalPosts * platformFrequency;
-        logger.info(`Plateforme: ${platform}, Fréquence: ${platformFrequency}, Posts à générer: ${postsPerPlatform[platform]}`);
+    if (selectedPlatforms.length === 0) {
+      logger.info('⚠️  Aucune plateforme sélectionnée, fallback vers Instagram');
+      return { instagram: totalPosts };
+    }
+    
+    logger.info(`Plateformes sélectionnées: ${selectedPlatforms.join(', ')}`);
+    
+    // 🎯 NOUVEAU: Calculer les poids par plateforme (LinkedIn = 0.5, autres = 1.0)
+    const platformWeights: Record<string, number> = {};
+    let totalWeight = 0;
+    
+    for (const platform of selectedPlatforms) {
+      if (platform === 'linkedin') {
+        platformWeights[platform] = 0.5; // LinkedIn reçoit 50% moins de posts
       } else {
-        logger.info(`Plateforme: ${platform} ignorée (non sélectionnée par l'utilisateur)`);
+        platformWeights[platform] = 1.0; // Autres plateformes: poids normal
       }
+      totalWeight += platformWeights[platform];
+    }
+    
+    logger.info(`📊 Poids calculés:`, platformWeights);
+    logger.info(`📊 Poids total: ${totalWeight}`);
+    
+    // 🎯 DISPATCH: Répartir les posts selon les poids
+    const postsPerPlatform: Record<string, number> = {};
+    let distributedPosts = 0;
+    
+    for (const platform of selectedPlatforms) {
+      const weight = platformWeights[platform];
+      const platformPosts = Math.round((weight / totalWeight) * totalPosts);
+      postsPerPlatform[platform] = platformPosts;
+      distributedPosts += platformPosts;
+      
+      logger.info(`📱 ${platform}: ${platformPosts} posts (poids: ${weight}, ratio: ${((weight / totalWeight) * 100).toFixed(1)}%)`);
+    }
+    
+    // 🔧 Ajustement pour s'assurer que la somme = totalPosts (gestion des arrondis)
+    const difference = totalPosts - distributedPosts;
+    if (difference !== 0) {
+      // Ajouter/retirer la différence à la plateforme avec le plus gros poids (sauf LinkedIn)
+      const mainPlatform = selectedPlatforms.find(p => p !== 'linkedin') || selectedPlatforms[0];
+      postsPerPlatform[mainPlatform] += difference;
+      logger.info(`🔧 Ajustement: +${difference} posts pour ${mainPlatform} (total final: ${Object.values(postsPerPlatform).reduce((a, b) => a + b, 0)})`);
+    }
+    
+    // 📊 Résumé final
+    const finalTotal = Object.values(postsPerPlatform).reduce((a, b) => a + b, 0);
+    logger.info(`\n✅ DISPATCH FINAL:`);
+    logger.info(`   Total demandé: ${totalPosts} posts`);
+    logger.info(`   Total distribué: ${finalTotal} posts`);
+    for (const [platform, count] of Object.entries(postsPerPlatform)) {
+      logger.info(`   ${platform}: ${count} posts`);
     }
     
     return postsPerPlatform;
