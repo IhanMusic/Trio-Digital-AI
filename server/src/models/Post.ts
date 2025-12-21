@@ -60,6 +60,15 @@ export interface IPost extends Document {
   }[];
   aiGenerated: boolean;
   products: IProduct['_id'][]; // Référence aux produits associés
+  // Nouveaux champs pour l'enhancement
+  originalPostId?: IPost['_id']; // Référence au post original
+  enhancementType?: 'enhanced' | 'adapted'; // Type d'enhancement
+  enhancementHistory?: {
+    originalPostId: IPost['_id'];
+    enhancementType: 'enhanced' | 'adapted';
+    createdAt: Date;
+    targetProduct?: IProduct['_id']; // Pour les adaptations
+  }[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -174,6 +183,35 @@ const PostSchema: Schema = new Schema({
   products: [{
     type: Schema.Types.ObjectId,
     ref: 'Product'
+  }],
+  // Nouveaux champs pour l'enhancement
+  originalPostId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Post'
+  },
+  enhancementType: {
+    type: String,
+    enum: ['enhanced', 'adapted']
+  },
+  enhancementHistory: [{
+    originalPostId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Post',
+      required: true
+    },
+    enhancementType: {
+      type: String,
+      enum: ['enhanced', 'adapted'],
+      required: true
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    },
+    targetProduct: {
+      type: Schema.Types.ObjectId,
+      ref: 'Product'
+    }
   }]
 }, {
   timestamps: true

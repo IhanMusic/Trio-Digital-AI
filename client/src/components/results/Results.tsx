@@ -126,6 +126,13 @@ const Results: React.FC = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [selectedMediaType, setSelectedMediaType] = useState<string>('all');
   
+  // États pour les nouvelles fonctionnalités
+  const [enhancingPosts, setEnhancingPosts] = useState<Set<string>>(new Set());
+  const [adaptingPosts, setAdaptingPosts] = useState<Set<string>>(new Set());
+  const [showProductModal, setShowProductModal] = useState(false);
+  const [selectedPostForAdaptation, setSelectedPostForAdaptation] = useState<string | null>(null);
+  const [availableProducts, setAvailableProducts] = useState<Product[]>([]);
+  
   // Utiliser des refs pour éviter les dépendances circulaires
   const postsRef = useRef<Post[]>([]);
   const isPollingRef = useRef(false);

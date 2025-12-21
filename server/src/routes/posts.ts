@@ -1,6 +1,9 @@
 import express, { Request, Response } from 'express';
 import { authenticate } from '../middleware/auth';
 import Post, { IPost } from '../models/Post';
+import Brand from '../models/Brand';
+import Product from '../models/Product';
+import PostEnhancementService from '../services/PostEnhancementService';
 
 const router = express.Router();
 
@@ -120,6 +123,132 @@ router.get('/calendar/:calendarId', authenticate, async (req: Request, res: Resp
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Erreur inconnue'
+    });
+  }
+});
+
+// Améliorer un post existant (enhance)
+router.post('/:postId/enhance', authenticate, async (req: Request, res: Response) => {
+  try {
+    const { postId } = req.params;
+
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        error: 'Utilisateur non authentifié'
+      });
+    }
+
+    // Récupérer le post original
+    const originalPost = await Post.findById(postId);
+    if (!originalPost) {
+      return res.status(404).json({
+        success: false,
+        error: 'Post non trouvé'
+      });
+    }
+
+    // Récupérer la marque associée
+    const brand = await Brand.findById(originalPost.brandId);
+    if (!brand) {
+      return res.status(404).json({
+        success: false,
+        error: 'Marque non trouvée'
+      });
+    }
+
+    console.log(`🎨 Enhancement du post ${postId} pour la marque ${brand.name}`);
+
+    // Améliorer le post avec le service
+    const enhancedPost = await PostEnhancementService.enhancePost(
+      originalPost,
+      brand,
+      req.user
+    );
+
+    res.json({
+      success: true,
+      data: enhancedPost,
+      message: 'Post amélioré avec succès'
+    });
+
+  } catch (error: any) {
+    console.error('❌ Erreur lors de l\'enhancement du post:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Erreur lors de l\'amélioration du post'
+    });
+  }
+});
+
+// Adapter un post pour un autre produit
+router.post('/:postId/adapt-product', authenticate, async (req: Request, res: Response) => {
+  try {
+    const { postId } = req.params;
+    const { targetProductId } = req.body;
+
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        error: 'Utilisateur non authentifié'
+      });
+    }
+
+    if (!targetProductId) {
+      return res.status(400).json({
+        success: false,
+        error: 'ID du produit cible requis'
+      });
+    }
+
+    // Récupérer le post original
+    const originalPost = await Post.findById(postId);
+    if (!originalPost) {
+      return res.status(404).json({
+        success: false,
+        error: 'Post non trouvé'
+      });
+    }
+
+    // Récupérer la marque associée
+    const brand = await Brand.findById(originalPost.brandId);
+    if (!brand) {
+      return res.status(404).json({
+        success: false,
+        error: 'Marque non trouvée'
+      });
+    }
+
+    // Récupérer le produit cible
+    const targetProduct = await Product.findById(targetProductId);
+    if (!targetProduct) {
+      return res.status(404).json({
+        success: false,
+        error: 'Produit cible non trouvé'
+      });
+    }
+
+    console.log(`🔄 Adaptation du post ${postId} pour le produit ${targetProduct.name}`);
+
+    // Adapter le post pour le nouveau produit
+    const adaptedPost = await PostEnhancementService.adaptPostForProduct(
+      originalPost,
+      targetProduct,
+      brand,
+      req.user
+    );
+
+    res.json({
+      success: true,
+      data: adaptedPost,
+      message: `Post adapté avec succès pour le produit ${targetProduct.name}`
+    });
+
+  } catch (error: any) {
+    console.error('❌ Erreur lors de l\'adaptation du post:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Erreur lors de l\'adaptation du post'
     });
   }
 });
