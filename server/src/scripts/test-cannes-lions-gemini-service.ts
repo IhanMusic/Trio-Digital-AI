@@ -7,7 +7,6 @@
 
 import dotenv from 'dotenv';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
 // Configuration de l'environnement
 dotenv.config({ path: path.join(process.cwd(), '.env') });
@@ -359,7 +358,13 @@ async function runAllTests() {
   console.log('✅ Configuration vérifiée');
   console.log(`🔑 Google API Key: ${process.env.GOOGLE_API_KEY.substring(0, 10)}...`);
   
-  const results = {
+  const results: {
+    basic: any;
+    multiPlatform: any;
+    luxury: any;
+    variations: any;
+    cultural: any;
+  } = {
     basic: null,
     multiPlatform: null,
     luxury: null,
@@ -434,7 +439,7 @@ async function runAllTests() {
 }
 
 // Exécution si appelé directement
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (require.main === module) {
   runAllTests()
     .then(() => {
       console.log('\n✅ Tests terminés');
