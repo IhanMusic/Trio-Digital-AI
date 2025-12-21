@@ -364,10 +364,51 @@ Créez un contenu ${isEnhancement ? 'amélioré' : 'adapté'} qui surpasse l'ori
     logger.info('🎨 === GÉNÉRATION IMAGE AMÉLIORÉE ===');
 
     try {
-      // Préparer les images de référence des produits
+      // Préparer les images de référence
       let referenceImagesBase64: string[] = [];
       let hasProductReference = false;
+      let originalImageBase64: string | undefined;
 
+      // NOUVEAU: Récupérer l'image originale pour l'enhancement
+      if (postData.enhancementType === 'enhanced' && postData.originalPostId) {
+        try {
+          const originalPost = await Post.findById(postData.originalPostId);
+          if (originalPost && originalPost.content.imageUrl) {
+            logger.info('📸 Récupération de l\'image originale pour enhancement...');
+            
+            let originalImageBuffer: Buffer;
+            
+            if (originalPost.content.imageUrl.startsWith('http')) {
+              const response = await axios.get(originalPost.content.imageUrl, { 
+                responseType: 'arraybuffer',
+                timeout: 30000
+              });
+              originalImageBuffer = Buffer.from(response.data);
+            } else {
+              const fs = await import('fs');
+              const path = await import('path');
+              const fullPath = path.join(process.cwd(), 'public', originalPost.content.imageUrl);
+              originalImageBuffer = await fs.promises.readFile(fullPath);
+            }
+            
+            // Traitement haute résolution de l'image originale
+            const highResOriginalBuffer = await sharp(originalImageBuffer)
+              .resize(2048, 2048, {
+                fit: 'contain',
+                background: { r: 255, g: 255, b: 255, alpha: 1 }
+              })
+              .png({ quality: 100 })
+              .toBuffer();
+            
+            originalImageBase64 = highResOriginalBuffer.toString('base64');
+            logger.info('✅ Image originale récupérée et traitée');
+          }
+        } catch (error: any) {
+          logger.error('❌ Erreur récupération image originale:', error.message);
+        }
+      }
+
+      // Préparer les images de référence des produits
       for (const product of products) {
         if (product.images && product.images.main) {
           try {
@@ -472,7 +513,25 @@ Créez un contenu ${isEnhancement ? 'amélioré' : 'adapté'} qui surpasse l'ori
           const adjustedStrength = hasProductReference ? 0.7 + ((variation - 1) * 0.05) : undefined;
           
           let geminiResults;
-          if (referenceImagesBase64.length > 1) {
+          
+          // NOUVEAU: Pour l'enhancement, utiliser l'image originale comme référence principale
+          if (postData.enhancementType === 'enhanced' && originalImageBase64) {
+            logger.info('🎨 Enhancement avec image originale comme référence...');
+            
+            // Combiner image originale + images produits si disponibles
+            const allReferenceImages = [originalImageBase64, ...referenceImagesBase64];
+            
+            geminiResults = await GeminiImageService.generateImages(
+              finalImagePrompt,
+              {
+                numberOfImages: 1,
+                aspectRatio: postData.platform === 'instagram' ? '3:4' : '1:1',
+                imageSize: '2K',
+                referenceImages: allReferenceImages,
+                referenceImageStrength: 0.85 // Force élevée pour garder l'essence visuelle
+              }
+            );
+          } else if (referenceImagesBase64.length > 1) {
             geminiResults = await GeminiImageService.generateImages(
               finalImagePrompt,
               {
