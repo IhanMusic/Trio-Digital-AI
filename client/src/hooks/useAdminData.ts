@@ -24,11 +24,15 @@ export const useAdminData = (): UseAdminDataReturn => {
     try {
       setError(null);
       const usersResponse = await adminService.getUsers({ limit: 10 });
-      setUsers(usersResponse.data);
+      // Fix: Access users array from paginated response
+      // usersResponse is PaginatedResponse<AdminUser> which has { data: AdminUser[], pagination: {...} }
+      setUsers(usersResponse.data || []);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur lors de la récupération des utilisateurs';
       setError(errorMessage);
       console.error('Erreur users:', err);
+      // Ensure users is always an array even on error
+      setUsers([]);
     }
   }, []);
 

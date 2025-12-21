@@ -177,9 +177,9 @@ const AdminDashboard: React.FC = () => {
             Utilisateurs récents
           </h3>
           
-          {users.length > 0 ? (
+          {(users || []).length > 0 ? (
             <div className="space-y-3">
-              {users.slice(0, 5).map((user) => (
+              {(users || []).slice(0, 5).map((user) => (
                 <div key={user._id} className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="w-8 h-8 bg-gradient-to-r from-[#53dfb2] to-[#3fa88a] rounded-full flex items-center justify-center">
