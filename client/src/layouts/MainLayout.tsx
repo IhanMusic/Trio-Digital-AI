@@ -111,6 +111,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 >
                   Équipe
                 </Link>
+                <Link
+                  to="/admin"
+                  className={`${
+                    isActive('/admin')
+                      ? 'nav-link-active'
+                      : 'nav-link text-white/80 hover:text-white'
+                  } inline-flex items-center text-sm font-medium`}
+                >
+                  Admin
+                </Link>
               </div>
             </div>
 

@@ -13,8 +13,16 @@ import Register from './components/auth/Register';
 import ForgotPassword from './components/auth/ForgotPassword';
 import ResetPassword from './components/auth/ResetPassword';
 import PrivateRoute from './components/auth/PrivateRoute';
+import AdminRoute from './components/auth/AdminRoute';
 import LandingPage from './components/landing/LandingPage';
 import { useAuth } from './hooks/useAuth';
+
+// Composants admin
+import AdminLayout from './components/admin/AdminLayout';
+import AdminDashboard from './components/admin/AdminDashboard';
+import UserManagement from './components/admin/UserManagement';
+import SystemMonitoring from './components/admin/SystemMonitoring';
+import AdminSettings from './components/admin/AdminSettings';
 
 // Lazy loading des autres composants
 const Profile = React.lazy(() => import('./components/profile/Profile'));
@@ -191,6 +199,51 @@ const App: React.FC = () => {
                   <ProductIntegrationWithStability />
                 </MainLayout>
               </PrivateRoute>
+            }
+          />
+
+          {/* Routes admin protégées */}
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminLayout>
+                  <AdminDashboard />
+                </AdminLayout>
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/users"
+            element={
+              <AdminRoute>
+                <AdminLayout>
+                  <UserManagement />
+                </AdminLayout>
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/monitoring"
+            element={
+              <AdminRoute>
+                <AdminLayout>
+                  <SystemMonitoring />
+                </AdminLayout>
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/settings"
+            element={
+              <AdminRoute>
+                <AdminLayout>
+                  <AdminSettings />
+                </AdminLayout>
+              </AdminRoute>
             }
           />
 
