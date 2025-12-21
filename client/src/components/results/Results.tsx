@@ -590,6 +590,112 @@ const Results: React.FC = () => {
     }
   };
 
+  // Fonction pour récupérer les produits disponibles
+  const fetchAvailableProducts = useCallback(async () => {
+    try {
+      const response = await fetch(`${config.apiUrl}/products`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la récupération des produits');
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        setAvailableProducts(result.data);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des produits:', error);
+    }
+  }, [token]);
+
+  // Fonction pour améliorer un post
+  const handleEnhancePost = async (postId: string) => {
+    if (enhancingPosts.has(postId)) return;
+
+    try {
+      setEnhancingPosts(prev => new Set(prev).add(postId));
+
+      const response = await fetch(`${config.apiUrl}/posts/${postId}/enhance`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de l\'amélioration du post');
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        // Ajouter le nouveau post amélioré à la liste
+        setPosts(prevPosts => [result.data, ...prevPosts]);
+        console.log('✅ Post amélioré créé:', result.data._id);
+      }
+    } catch (error) {
+      console.error('❌ Erreur lors de l\'amélioration:', error);
+    } finally {
+      setEnhancingPosts(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(postId);
+        return newSet;
+      });
+    }
+  };
+
+  // Fonction pour adapter un post pour un autre produit
+  const handleAdaptForProduct = async (postId: string, targetProductId: string) => {
+    if (adaptingPosts.has(postId)) return;
+
+    try {
+      setAdaptingPosts(prev => new Set(prev).add(postId));
+
+      const response = await fetch(`${config.apiUrl}/posts/${postId}/adapt-product`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ targetProductId })
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de l\'adaptation du post');
+      }
+
+      const result = await response.json();
+      if (result.success) {
+        // Ajouter le nouveau post adapté à la liste
+        setPosts(prevPosts => [result.data, ...prevPosts]);
+        console.log('✅ Post adapté créé:', result.data._id);
+        setShowProductModal(false);
+        setSelectedPostForAdaptation(null);
+      }
+    } catch (error) {
+      console.error('❌ Erreur lors de l\'adaptation:', error);
+    } finally {
+      setAdaptingPosts(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(postId);
+        return newSet;
+      });
+    }
+  };
+
+  // Fonction pour ouvrir le modal de sélection de produit
+  const handleOpenProductModal = async (postId: string) => {
+    setSelectedPostForAdaptation(postId);
+    if (availableProducts.length === 0) {
+      await fetchAvailableProducts();
+    }
+    setShowProductModal(true);
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -1087,6 +1193,53 @@ const Results: React.FC = () => {
                         </div>
                       </details>
                     )}
+                    
+                    {/* Boutons d'action Enhancement */}
+                    <div className="mt-4 pt-4 border-t border-white/10">
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        {/* Bouton Enhance */}
+                        <button
+                          onClick={() => handleEnhancePost(post._id)}
+                          disabled={enhancingPosts.has(post._id)}
+                          className="flex-1 flex items-center justify-center px-4 py-2 bg-gradient-to-r from-[#53dfb2] to-[#4bc9a0] hover:from-[#4bc9a0] hover:to-[#53dfb2] text-white font-medium rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                        >
+                          {enhancingPosts.has(post._id) ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                              Amélioration...
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                              </svg>
+                              Enhance
+                            </>
+                          )}
+                        </button>
+
+                        {/* Bouton Utiliser pour un autre produit */}
+                        <button
+                          onClick={() => handleOpenProductModal(post._id)}
+                          disabled={adaptingPosts.has(post._id)}
+                          className="flex-1 flex items-center justify-center px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-pink-500 hover:to-purple-500 text-white font-medium rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                        >
+                          {adaptingPosts.has(post._id) ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                              Adaptation...
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                              </svg>
+                              Autre produit
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1094,6 +1247,76 @@ const Results: React.FC = () => {
           </div>
         </div>
         ))
+      )}
+
+      {/* Modal de sélection de produit */}
+      {showProductModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="glass-panel max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold text-white">
+                  Sélectionner un produit
+                </h3>
+                <button
+                  onClick={() => {
+                    setShowProductModal(false);
+                    setSelectedPostForAdaptation(null);
+                  }}
+                  className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                >
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <p className="text-white/70 mb-6">
+                Choisissez le produit pour lequel vous souhaitez adapter cette publication :
+              </p>
+
+              {availableProducts.length === 0 ? (
+                <div className="text-center py-8">
+                  <div className="text-4xl mb-4">📦</div>
+                  <p className="text-white/60">Aucun produit disponible</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {availableProducts.map(product => (
+                    <button
+                      key={product._id}
+                      onClick={() => {
+                        if (selectedPostForAdaptation) {
+                          handleAdaptForProduct(selectedPostForAdaptation, product._id);
+                        }
+                      }}
+                      className="flex items-center p-4 bg-white/5 hover:bg-white/10 rounded-lg transition-all duration-200 text-left border border-white/10 hover:border-[#53dfb2]/50"
+                    >
+                      {product.images?.main && (
+                        <img
+                          src={config.getImageUrl(product.images.main)}
+                          alt={product.name}
+                          className="w-16 h-16 rounded-lg object-cover mr-4 flex-shrink-0"
+                        />
+                      )}
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-white mb-1">
+                          {product.name}
+                        </h4>
+                        <p className="text-sm text-white/60 mb-2">
+                          {product.category}
+                        </p>
+                        <p className="text-xs text-white/50 line-clamp-2">
+                          {product.description}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
