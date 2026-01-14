@@ -2062,26 +2062,67 @@ The product should be the focal point (40-60% of frame), clearly visible, well-l
         const nanaBananaImageBuffer = Buffer.from(nanaBananaImageResponse.data);
         logger.info(`✅ Image téléchargée: ${nanaBananaImageBuffer.length} bytes`);
         
-        // 🎬 ÉTAPE 2: Générer la vidéo avec VEO3 (text-to-video DIRECT)
-        // ⚠️ CHANGEMENT MAJEUR: On utilise text-to-video au lieu de image-to-video
-        // pour éviter les problèmes de grille/collage/storyboard
+        // 🎬 ÉTAPE 2: Générer la vidéo avec VEO3 (AVEC RÉFÉRENCES PRODUIT)
+        // ⚠️ CORRECTION: On utilise generateVideoWithReferences pour préserver l'apparence du produit
         logger.info('\n🎬 ========================================');
-        logger.info('🎬 ÉTAPE 2/2: Génération vidéo DIRECTE avec VEO3');
+        logger.info('🎬 ÉTAPE 2/2: Génération vidéo AVEC RÉFÉRENCES PRODUIT');
         logger.info('🎬 ========================================');
         
-        logger.info('🎥 Génération vidéo TEXT-TO-VIDEO (pas d\'animation d\'image)');
-        logger.info('💡 Avantage: Vidéo continue fluide sans grille/collage');
+        // Préparer les images de référence du produit pour VEO3
+        let productReferenceBuffers: Buffer[] = [];
         
-        // 🆕 OPTION A: Text-to-video DIRECT (recommandé pour éviter les grilles)
-        // Le prompt GPT Video Creative Director est déjà optimisé pour ça
-        const video = await Veo3Service.generateVideo(
-          reelPrompt,
-          {
-            duration: 8,
-            aspectRatio: '9:16', // Format vertical pour REEL
-            resolution: '1080p'
+        if (products.length > 0) {
+          logger.info(`📦 Préparation des images de référence pour ${products.length} produit(s)...`);
+          
+          for (const product of products.slice(0, 3)) { // Max 3 références pour VEO3
+            if (product.images && product.images.main) {
+              try {
+                logger.info(`📥 Téléchargement image produit: ${product.name}`);
+                const response = await axios.get(product.images.main, {
+                  responseType: 'arraybuffer',
+                  timeout: 30000
+                });
+                const imageBuffer = Buffer.from(response.data);
+                productReferenceBuffers.push(imageBuffer);
+                logger.info(`✅ Image ${product.name} ajoutée aux références (${imageBuffer.length} bytes)`);
+              } catch (error: any) {
+                logger.error(`❌ Erreur téléchargement image ${product.name}:`, error.message);
+              }
+            }
           }
-        );
+        }
+        
+        let video;
+        
+        // 🎯 CHOIX INTELLIGENT: Avec ou sans références selon disponibilité
+        if (productReferenceBuffers.length > 0) {
+          logger.info(`🎥 Génération vidéo AVEC ${productReferenceBuffers.length} référence(s) produit`);
+          logger.info('💡 VEO3 préservera l\'apparence exacte du produit dans la vidéo');
+          
+          // ⚠️ IMPORTANT: generateVideoWithReferences force 16:9 et 8s
+          // On génère en 16:9 puis on pourra recadrer si nécessaire
+          video = await Veo3Service.generateVideoWithReferences(
+            reelPrompt,
+            productReferenceBuffers,
+            {
+              duration: 8,
+              aspectRatio: '16:9', // Forcé par VEO3 pour les références
+              resolution: '1080p'
+            }
+          );
+        } else {
+          logger.info('🎥 Génération vidéo TEXT-TO-VIDEO (aucune référence produit disponible)');
+          logger.info('⚠️ Le produit sera généré par l\'IA sans référence visuelle');
+          
+          video = await Veo3Service.generateVideo(
+            reelPrompt,
+            {
+              duration: 8,
+              aspectRatio: '9:16', // Format vertical pour REEL
+              resolution: '1080p'
+            }
+          );
+        }
         
         logger.info('✅ REEL généré avec succès par VEO3');
         logger.info('URL vidéo:', video.videoUrl);
