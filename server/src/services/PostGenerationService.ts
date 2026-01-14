@@ -2062,67 +2062,50 @@ The product should be the focal point (40-60% of frame), clearly visible, well-l
         const nanaBananaImageBuffer = Buffer.from(nanaBananaImageResponse.data);
         logger.info(`✅ Image téléchargée: ${nanaBananaImageBuffer.length} bytes`);
         
-        // 🎬 ÉTAPE 2: Générer la vidéo avec VEO3 (AVEC RÉFÉRENCES PRODUIT)
-        // ⚠️ CORRECTION: On utilise generateVideoWithReferences pour préserver l'apparence du produit
+        // 🎬 ÉTAPE 2: Animer l'image Nano Banana avec VEO3 (IMAGE-TO-VIDEO)
+        // ✅ BONNE APPROCHE: L'image contient déjà le produit fidèle, on l'anime simplement
         logger.info('\n🎬 ========================================');
-        logger.info('🎬 ÉTAPE 2/2: Génération vidéo AVEC RÉFÉRENCES PRODUIT');
+        logger.info('🎬 ÉTAPE 2/2: Animation IMAGE-TO-VIDEO avec VEO3');
         logger.info('🎬 ========================================');
         
-        // Préparer les images de référence du produit pour VEO3
-        let productReferenceBuffers: Buffer[] = [];
+        logger.info('🎥 Animation de l\'image Nano Banana (produit déjà fidèle dans l\'image)');
+        logger.info('💡 Avantage: Format 9:16 préservé + Produit exact de l\'image');
         
-        if (products.length > 0) {
-          logger.info(`📦 Préparation des images de référence pour ${products.length} produit(s)...`);
-          
-          for (const product of products.slice(0, 3)) { // Max 3 références pour VEO3
-            if (product.images && product.images.main) {
-              try {
-                logger.info(`📥 Téléchargement image produit: ${product.name}`);
-                const response = await axios.get(product.images.main, {
-                  responseType: 'arraybuffer',
-                  timeout: 30000
-                });
-                const imageBuffer = Buffer.from(response.data);
-                productReferenceBuffers.push(imageBuffer);
-                logger.info(`✅ Image ${product.name} ajoutée aux références (${imageBuffer.length} bytes)`);
-              } catch (error: any) {
-                logger.error(`❌ Erreur téléchargement image ${product.name}:`, error.message);
-              }
-            }
+        // 🎯 Prompt d'animation optimisé pour éviter les grilles/collages
+        const animationPrompt = `Animate this product image with smooth, professional motion.
+
+🎬 ANIMATION STYLE:
+- SINGLE CONTINUOUS SHOT - NO cuts, NO transitions, NO grid, NO collage
+- Subtle camera movement: slow dolly in OR gentle orbit around product
+- Product stays centered and in focus throughout
+- Background elements may have subtle parallax or atmospheric motion
+- Lighting may shift slightly for cinematic effect
+
+⚠️ CRITICAL CONSTRAINTS:
+- DO NOT create multiple panels or split-screen
+- DO NOT add any text, captions, or overlays
+- DO NOT change the product appearance
+- DO NOT create storyboard-style sequences
+- KEEP the product as the hero (40-60% of frame)
+
+🎯 MOTION SUGGESTIONS:
+- Gentle floating/hovering effect on product
+- Soft particle effects or light rays in background
+- Subtle depth-of-field shifts
+- Smooth 8-second continuous animation
+
+The goal is a premium, cinematic product reveal suitable for Instagram Reel.`;
+
+        // Utiliser generateVideoFromImage pour animer l'image Nano Banana
+        const video = await Veo3Service.generateVideoFromImage(
+          animationPrompt,
+          nanaBananaImageBuffer,
+          {
+            duration: 8,
+            aspectRatio: '9:16', // Format vertical pour REEL - PRÉSERVÉ!
+            resolution: '1080p'
           }
-        }
-        
-        let video;
-        
-        // 🎯 CHOIX INTELLIGENT: Avec ou sans références selon disponibilité
-        if (productReferenceBuffers.length > 0) {
-          logger.info(`🎥 Génération vidéo AVEC ${productReferenceBuffers.length} référence(s) produit`);
-          logger.info('💡 VEO3 préservera l\'apparence exacte du produit dans la vidéo');
-          
-          // ⚠️ IMPORTANT: generateVideoWithReferences force 16:9 et 8s
-          // On génère en 16:9 puis on pourra recadrer si nécessaire
-          video = await Veo3Service.generateVideoWithReferences(
-            reelPrompt,
-            productReferenceBuffers,
-            {
-              duration: 8,
-              aspectRatio: '16:9', // Forcé par VEO3 pour les références
-              resolution: '1080p'
-            }
-          );
-        } else {
-          logger.info('🎥 Génération vidéo TEXT-TO-VIDEO (aucune référence produit disponible)');
-          logger.info('⚠️ Le produit sera généré par l\'IA sans référence visuelle');
-          
-          video = await Veo3Service.generateVideo(
-            reelPrompt,
-            {
-              duration: 8,
-              aspectRatio: '9:16', // Format vertical pour REEL
-              resolution: '1080p'
-            }
-          );
-        }
+        );
         
         logger.info('✅ REEL généré avec succès par VEO3');
         logger.info('URL vidéo:', video.videoUrl);
