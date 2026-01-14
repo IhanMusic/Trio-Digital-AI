@@ -2062,19 +2062,23 @@ The product should be the focal point (40-60% of frame), clearly visible, well-l
         const nanaBananaImageBuffer = Buffer.from(nanaBananaImageResponse.data);
         logger.info(`✅ Image téléchargée: ${nanaBananaImageBuffer.length} bytes`);
         
-        // 🎬 ÉTAPE 2: Animer l'image avec VEO3 (image-to-video)
+        // 🎬 ÉTAPE 2: Générer la vidéo avec VEO3 (text-to-video DIRECT)
+        // ⚠️ CHANGEMENT MAJEUR: On utilise text-to-video au lieu de image-to-video
+        // pour éviter les problèmes de grille/collage/storyboard
         logger.info('\n🎬 ========================================');
-        logger.info('🎬 ÉTAPE 2/2: Animation avec VEO3');
+        logger.info('🎬 ÉTAPE 2/2: Génération vidéo DIRECTE avec VEO3');
         logger.info('🎬 ========================================');
         
-        logger.info('🎥 Animation de l\'image Nano Banana en REEL 9:16 vertical');
+        logger.info('🎥 Génération vidéo TEXT-TO-VIDEO (pas d\'animation d\'image)');
+        logger.info('💡 Avantage: Vidéo continue fluide sans grille/collage');
         
-        const video = await Veo3Service.generateVideoFromImage(
+        // 🆕 OPTION A: Text-to-video DIRECT (recommandé pour éviter les grilles)
+        // Le prompt GPT Video Creative Director est déjà optimisé pour ça
+        const video = await Veo3Service.generateVideo(
           reelPrompt,
-          nanaBananaImageBuffer,
           {
             duration: 8,
-            aspectRatio: '9:16', // ✅ Compatible avec image-to-video !
+            aspectRatio: '9:16', // Format vertical pour REEL
             resolution: '1080p'
           }
         );

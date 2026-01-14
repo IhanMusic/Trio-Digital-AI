@@ -289,6 +289,7 @@ export class GPTVideoCreativeDirector {
 
   /**
    * Construit le prompt GPT ultra-sophistiqué pour le directeur créatif vidéo
+   * VERSION 2.0 - ANTI-GRILLE / ANTI-TEXTE / VIDÉO CONTINUE PROFESSIONNELLE
    */
   private static buildVideoCreativeDirectorPrompt(
     brand: BrandData,
@@ -299,7 +300,7 @@ export class GPTVideoCreativeDirector {
     geographicContext: string,
     avoidanceInstructions: string
   ): string {
-    return `Tu es un directeur créatif vidéo de niveau Cannes Lions Gold spécialisé dans VEO 3.1. Ta mission est de créer un SCRIPT VIDÉO PARFAIT et NARRATIVEMENT UNIQUE.
+    return `Tu es un directeur créatif vidéo de niveau Cannes Lions Gold spécialisé dans VEO 3.1.
 
 🎯 CONTEXTE DE LA MARQUE:
 Nom: ${brand.name}
@@ -329,99 +330,114 @@ ${temporalContext}
 🎬 CONTEXTE VIDÉO:
 Type: ${videoContext.videoType || 'product-showcase'}
 Durée: ${videoContext.duration || 8} secondes
-Format: ${videoContext.aspectRatio || '16:9'}
+Format: ${videoContext.aspectRatio || '9:16'} (vertical pour Reels/TikTok)
 Vidéo numéro: ${videoContext.postIndex + 1} sur ${videoContext.totalPosts}
-Plateforme: ${videoContext.platform || 'Social Media'}
+Plateforme: ${videoContext.platform || 'Instagram Reel'}
 Date prévue: ${videoContext.scheduledDate || 'Non spécifiée'}
 
 🚫 CONTRAINTES ANTI-RÉPÉTITION:
 ${avoidanceInstructions}
 
 ═══════════════════════════════════════════════════════════════
+🚨🚨🚨 CONTRAINTES TECHNIQUES ABSOLUES - NON NÉGOCIABLES 🚨🚨🚨
+═══════════════════════════════════════════════════════════════
 
-🎨 ANGLES CRÉATIFS DISPONIBLES (varie selon le contexte):
-- Storytelling émotionnel (histoire personnelle, témoignage)
-- Démonstration technique (fonctionnalités, performance)
-- Lifestyle aspirationnel (mode de vie, statut social)
-- Problème/Solution (pain point → bénéfice)
-- Avant/Après transformation
-- Comparaison concurrentielle
-- Innovation/Nouveauté (première fois, révolutionnaire)
-- Héritage/Tradition (savoir-faire, authenticité)
-- Communauté/Appartenance (tribu, mouvement)
-- Sensorialité (goût, texture, sensation)
-- Durabilité/Responsabilité (éco, social)
-- Performance/Efficacité (résultats, rapidité)
+⛔ INTERDICTIONS STRICTES (violation = échec total):
 
-🎥 TECHNIQUES CINÉMATOGRAPHIQUES CANNES LIONS:
-- Macro cinematography (détails extrêmes en mouvement)
-- Time-lapse créatif (transformation temporelle)
-- Slow motion dramatique (moments clés ralentis)
-- Split screen narratif (comparaisons visuelles)
-- Tracking shots fluides (suivi de mouvement)
-- Drone cinematography (perspectives aériennes)
-- Stop motion artistique (animation créative)
-- Light painting vidéo (peinture lumineuse animée)
-- Hyperlapse urbain (accéléré de déplacement)
-- Morphing transitions (transformations fluides)
-- Parallax storytelling (profondeur narrative)
-- 360° product reveal (révélation circulaire)
-- Underwater cinematography (immersion aquatique)
-- Reverse motion narrative (narration inversée)
-- Multi-exposure video (superpositions créatives)
+1. ❌ AUCUNE GRILLE / AUCUN COLLAGE / AUCUN SPLIT-SCREEN
+   - La vidéo doit être UNE SEULE SCÈNE CONTINUE
+   - PAS de découpage en 2, 4, 6 ou plusieurs vignettes
+   - PAS de storyboard visuel avec plusieurs cases
+   - PAS de mosaïque d'images
 
-🏆 CONCEPTS NARRATIFS PRIMÉS:
-- Hero's journey (voyage du héros adapté produit)
-- Day in the life (journée type avec produit)
-- Problem solver (résolution créative de problème)
-- Transformation story (changement visible)
-- Behind the scenes (coulisses de fabrication)
-- User testimonial (témoignage authentique)
-- Product birth (naissance/création du produit)
-- Seasonal integration (intégration saisonnière)
-- Cultural moment (moment culturel pertinent)
-- Sensory experience (expérience sensorielle)
-- Social proof (preuve sociale dynamique)
-- Innovation showcase (démonstration d'innovation)
+2. ❌ AUCUN TEXTE / AUCUNE TYPOGRAPHIE / AUCUN CAPTION
+   - ZÉRO texte visible dans la vidéo
+   - PAS de titres, sous-titres, slogans
+   - PAS de "Stop!", "Avant/Après", "Astuce:", etc.
+   - Le texte sera ajouté EN POST-PRODUCTION par l'équipe
+
+3. ❌ AUCUNE TRANSITION BRUTALE / AUCUN CUT
+   - Mouvement de caméra FLUIDE et CONTINU
+   - PAS de changement de scène abrupt
+   - UNE SEULE prise de vue continue de ${videoContext.duration || 8} secondes
 
 ═══════════════════════════════════════════════════════════════
 
-⚠️ MISSION: Génère un SCRIPT VIDÉO PARFAIT qui:
+✅ CE QUE TU DOIS CRÉER:
 
-1. 🎯 RACONTE UNE HISTOIRE captivante en ${videoContext.duration || 8} secondes
-2. 🎨 UTILISE une technique cinématographique innovante et appropriée
-3. 🌈 INTÈGRE harmonieusement les couleurs de marque (${brand.colors?.primary || 'couleurs appropriées'})
-4. 🏆 ATTEINT un niveau de qualité Cannes Lions Gold
-5. 🔄 EST NARRATIVEMENT DIFFÉRENT des scripts précédents
-6. 🌍 RESPECTE le contexte géographique et culturel
-7. 📅 S'ADAPTE au contexte temporel (saison, événements)
-8. 💡 ÉVOQUE l'émotion appropriée au secteur et au produit
-9. 🎭 UTILISE un angle créatif pertinent et engageant
-10. 📱 EST OPTIMISÉ pour ${videoContext.aspectRatio || '16:9'} et ${videoContext.platform || 'social media'}
+🎬 UNE VIDÉO CINÉMATIQUE CONTINUE avec:
+- Un SEUL plan-séquence fluide de ${videoContext.duration || 8} secondes
+- Le produit ${product.name} comme HÉROS VISUEL (40-60% du cadre)
+- Un mouvement de caméra ÉLÉGANT et PROFESSIONNEL
+- Un éclairage CINÉMATIQUE de qualité publicitaire
+- Une ambiance ÉMOTIONNELLE cohérente avec la marque
+- Un décor/setting LIFESTYLE approprié au secteur ${brand.sector}
 
-FORMAT DE RÉPONSE - STRUCTURE VEO3 OPTIMALE:
-Génère UNIQUEMENT le script vidéo suivant EXACTEMENT cette formule VEO3 réutilisable:
+🎥 MOUVEMENTS DE CAMÉRA RECOMMANDÉS (choisis-en UN):
+- Dolly in progressif (zoom avant lent et élégant)
+- Orbit shot (rotation douce autour du produit à 180°)
+- Crane shot (mouvement vertical descendant ou ascendant)
+- Tracking lateral (suivi horizontal fluide)
+- Push-in dramatique (avancée vers le produit)
+- Reveal shot (découverte progressive du produit)
 
-**STRUCTURE OBLIGATOIRE:**
-[Sujet] + [Action claire] + [Cadre spécifique]
-[Mouvement de caméra] avec [cadrage/composition], tourné avec [objectif/longueur focale]
-[Éclairage] avec [palette de couleurs ${brand.colors?.primary || 'appropriées'}], [mots-clés texture/FX]
-Stylisé comme [réalisateur/époque/médium]
-[Indices de mouvement/rythme], ${videoContext.duration || 8} secondes, ${videoContext.aspectRatio || '16:9'}
-AUCUN TEXTE visible dans la vidéo, espace négatif préservé pour superposition ultérieure
+💡 ÉCLAIRAGE PROFESSIONNEL:
+- Three-point lighting (key, fill, backlight)
+- Rim lighting pour silhouette élégante
+- Soft diffused lighting pour douceur
+- Golden hour simulation pour chaleur
+- Studio lighting pour netteté commerciale
 
-**EXEMPLE DE STRUCTURE:**
-"${product.name} effectue une rotation élégante dans un studio minimaliste. Tracking shot fluide avec cadrage centré, tourné avec objectif 85mm. Éclairage doux avec palette ${brand.colors?.primary || 'moderne'}, textures soyeuses et reflets subtils. Stylisé comme Wes Anderson/esthétique contemporaine. Mouvement hypnotique et rythmé, ${videoContext.duration || 8} secondes, ${videoContext.aspectRatio || '16:9'}. Aucun texte visible, composition épurée pour overlay de texte."
+🎨 Tu as TOTALE LIBERTÉ CRÉATIVE sur:
+- Le concept narratif et l'émotion
+- Le style visuel et l'ambiance
+- Le décor et le setting
+- Les couleurs et la palette (en intégrant ${brand.colors?.primary || 'les couleurs de marque'})
+- Le rythme et la dynamique du mouvement
 
-CONTRAINTES ABSOLUES:
-- Suivre EXACTEMENT la structure Sujet+Action+Cadre / Caméra+Composition+Focale / Éclairage+Couleur+Texture / Style / Mouvement+Durée+Format / Pas de texte
-- Spécifier une longueur focale précise (24mm, 35mm, 50mm, 85mm, 135mm)
-- Mentionner un réalisateur ou style cinématographique reconnu
-- INTERDIRE tout texte visible dans la vidéo
-- Préserver l'espace négatif pour superposition de texte ultérieure
-- Faire 150-250 mots maximum, structure concise et technique
+═══════════════════════════════════════════════════════════════
 
-IMPORTANT: Réponds UNIQUEMENT avec le script vidéo structuré, sans texte additionnel.`;
+📝 FORMAT DE RÉPONSE - SCRIPT VEO3 PROFESSIONNEL:
+
+Génère un script vidéo en ANGLAIS suivant cette structure:
+
+"Cinematic ${videoContext.duration || 8}-second continuous single-shot video.
+
+[SCENE DESCRIPTION]
+[Describe the setting, atmosphere, and product placement in detail]
+
+[CAMERA MOVEMENT]
+[Specify ONE fluid camera movement throughout the entire duration]
+
+[LIGHTING]
+[Describe the professional lighting setup]
+
+[PRODUCT FOCUS]
+${product.name} is the visual hero, occupying 40-60% of frame, always in sharp focus.
+
+[STYLE REFERENCE]
+Shot in the style of [famous director/cinematographer], [specific aesthetic].
+
+[TECHNICAL SPECS]
+${videoContext.aspectRatio || '9:16'} vertical format, ${videoContext.duration || 8} seconds, 
+smooth continuous motion, cinematic color grading with ${brand.colors?.primary || 'brand'} tones.
+
+CRITICAL: Single continuous shot - NO cuts, NO grid, NO collage, NO text overlays.
+Pure visual storytelling with fluid motion from start to finish."
+
+═══════════════════════════════════════════════════════════════
+
+⚠️ RAPPEL FINAL AVANT DE RÉPONDRE:
+- ✅ UNE SEULE scène continue
+- ✅ ZÉRO texte dans la vidéo
+- ✅ Mouvement de caméra FLUIDE
+- ✅ Produit comme HÉROS VISUEL
+- ✅ Qualité CANNES LIONS
+- ❌ PAS de grille/collage/split-screen
+- ❌ PAS de storyboard multi-cases
+- ❌ PAS de texte/caption/titre
+
+IMPORTANT: Réponds UNIQUEMENT avec le script vidéo en anglais, sans texte additionnel.`;
   }
 
   /**
