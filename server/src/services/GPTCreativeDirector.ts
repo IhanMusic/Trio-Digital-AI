@@ -693,6 +693,7 @@ ${avoidanceInstructions}
 11. 🆕 REFLÈTE PARFAITEMENT le message et le ton du texte généré (cohérence texte-image)
 12. 🆕 ÉVOQUE l'émotion cible "${textAnalysis.targetEmotion}" de manière visuelle
 13. 🆕 INTÈGRE les éléments visuels suggérés par le texte: ${textAnalysis.visualElements.join(', ') || 'éléments contextuels appropriés'}
+14. 🚫 NE CONTIENT ABSOLUMENT AUCUN TEXTE, lettres, mots, typographie, slogans, titres ou éléments écrits dans l'image - pure imagerie visuelle uniquement
 
 FORMAT DE RÉPONSE:
 Génère UNIQUEMENT le prompt d'image final, détaillé et technique, prêt à être envoyé à Gemini.
@@ -706,6 +707,7 @@ Le prompt doit faire 200-400 mots et inclure:
 - Mood et émotion recherchés (émotion cible: "${textAnalysis.targetEmotion}")
 - Références stylistiques
 - 🆕 Éléments visuels du texte intégrés: ${textAnalysis.visualElements.join(', ') || 'contexte approprié'}
+- 🚫 IMPÉRATIF ABSOLU: Aucun texte, lettres, mots, typographie, slogans ou éléments écrits dans l'image - pure imagerie visuelle uniquement. Le texte sera ajouté séparément en post-production.
 
 ⚠️ RAPPEL CRITIQUE: L'image doit être la traduction visuelle PARFAITE du texte généré.
 Quelqu'un qui lit le texte puis voit l'image doit ressentir une COHÉRENCE TOTALE.

@@ -108,7 +108,10 @@ export class GeminiImageService {
         ? ' Generate a vertical image with 9:16 aspect ratio.'
         : '';
       
-      const enhancedPrompt = prompt + resolutionInstruction + aspectRatioInstruction;
+      // 🚫 INSTRUCTION CRITIQUE: Aucun texte dans les images générées
+      const noTextInstruction = ' CRITICAL REQUIREMENT: Generate image with absolutely NO TEXT, no letters, no words, no typography, no captions, no titles, no slogans, no written elements - pure visual imagery only. Text will be added separately in post-production.';
+      
+      const enhancedPrompt = prompt + resolutionInstruction + aspectRatioInstruction + noTextInstruction;
 
       // 🎯 CONSTRUIRE LE CONTENU AVEC SUPPORT MULTI-RÉFÉRENCES
       let promptContent: any = enhancedPrompt;

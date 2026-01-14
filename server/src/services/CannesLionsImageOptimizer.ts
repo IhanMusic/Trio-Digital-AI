@@ -414,6 +414,14 @@ STYLE REQUIREMENTS:
    */
   private static generateIntelligentNegativePrompt(essence: CreativeEssence): string {
     const negatives: string[] = [
+      // 🚫 TEXTE ET TYPOGRAPHIE (CRITIQUE - PRIORITÉ ABSOLUE)
+      "text", "letters", "words", "typography", "font", "writing", "caption",
+      "title", "subtitle", "headline", "slogan", "tagline", "label text",
+      "written text", "printed text", "handwritten text", "text overlay",
+      "any text", "readable text", "visible text", "text elements",
+      "numbers", "digits", "characters", "alphabet", "logo text",
+      "brand name text", "product name text", "watermark text",
+      
       // Anatomie critique
       "extra fingers", "less than 5 fingers", "6 fingers", "7 fingers", "4 fingers",
       "fused fingers", "merged digits", "webbed hands", "deformed hands",
