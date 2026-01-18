@@ -944,7 +944,7 @@ const Results: React.FC = () => {
                         {/* Badge format */}
                         <div className="absolute top-2 right-12 z-20">
                           <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs font-medium shadow-lg">
-                            {post.platform === 'instagram' ? '3:4' : post.platform === 'linkedin' ? '16:9' : '1:1'}
+                            {post.platform === 'instagram' ? '4:5' : post.platform === 'linkedin' ? '16:9' : '1:1'}
                           </span>
                         </div>
                         {/* Bouton téléchargement carrousel */}
@@ -975,7 +975,7 @@ const Results: React.FC = () => {
                         {/* Badge format optimisé */}
                         <div className="absolute top-2 left-2 z-10">
                           <span className="bg-green-500 text-white px-2 py-1 rounded text-xs font-medium shadow-lg">
-                            {post.platform === 'instagram' ? '3:4' : 
+                            {post.platform === 'instagram' ? '4:5' : 
                              post.platform === 'linkedin' ? '16:9' : 
                              post.content.contentType === 'stories' ? '9:16' : '1:1'}
                           </span>
@@ -1005,7 +1005,7 @@ const Results: React.FC = () => {
                     <div className="bg-white/5 p-8 rounded text-white/60 text-center">
                       <div className="mb-2">⏳ Génération en cours...</div>
                       <div className="text-xs">
-                        Format cible: {post.platform === 'instagram' ? '3:4 (Instagram)' : 
+                        Format cible: {post.platform === 'instagram' ? '4:5 (Instagram)' : 
                                       post.platform === 'linkedin' ? '16:9 (LinkedIn)' : 
                                       '1:1 (Universel)'}
                       </div>

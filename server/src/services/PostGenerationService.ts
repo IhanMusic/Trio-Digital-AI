@@ -493,7 +493,8 @@ class PostGenerationService {
           switch (selectedType) {
             case 'Carrousels':
               contentTypeForThisPost = 'carousel';
-              aspectRatioForThisPost = platform === 'linkedin' ? '16:9' : '1:1';
+              // 🎯 Carrousels: Instagram 4:5, LinkedIn 16:9, Facebook 1:1
+              aspectRatioForThisPost = platform === 'instagram' ? '4:5' : platform === 'linkedin' ? '16:9' : '1:1';
               promptModification = 'Create a cohesive carousel series with 4 related images that tell a story. Each image should be visually connected but standalone. ';
               logger.info(`🎠 Post ${i + 1} sera un CARROUSEL (${aspectRatioForThisPost})`);
               break;
@@ -515,7 +516,8 @@ class PostGenerationService {
             case 'Photos de produits':
             default:
               contentTypeForThisPost = 'single';
-              aspectRatioForThisPost = platform === 'instagram' ? '3:4' : platform === 'linkedin' ? '16:9' : '1:1';
+              // 🎯 Instagram: 4:5 (format optimal pour le feed), Facebook: 1:1, LinkedIn: 16:9
+              aspectRatioForThisPost = platform === 'instagram' ? '4:5' : platform === 'linkedin' ? '16:9' : '1:1';
               promptModification = 'Create a professional product photography shot with clean composition and optimal lighting. ';
               logger.info(`📷 Post ${i + 1} sera une PHOTO PRODUIT (${aspectRatioForThisPost})`);
               break;
