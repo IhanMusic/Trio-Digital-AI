@@ -99,14 +99,42 @@ export class GeminiImageService {
         ? ' Generate in high resolution 2048x2048 pixels, premium quality, broadcast ready.'
         : ' Generate in standard resolution 1024x1024 pixels.';
 
-      // Ajouter l'aspect ratio au prompt pour Instagram (format carré)
-      const aspectRatioInstruction = aspectRatio === '1:1' 
-        ? ' Generate a square image with 1:1 aspect ratio (same width and height).'
-        : aspectRatio === '16:9'
-        ? ' Generate a landscape image with 16:9 aspect ratio.'
-        : aspectRatio === '9:16'
-        ? ' Generate a vertical image with 9:16 aspect ratio.'
-        : '';
+      // Ajouter l'aspect ratio au prompt - SUPPORT COMPLET DE TOUS LES RATIOS
+      let aspectRatioInstruction = '';
+      switch (aspectRatio) {
+        case '1:1':
+          aspectRatioInstruction = ' Generate a square image with 1:1 aspect ratio (same width and height).';
+          break;
+        case '4:5':
+          aspectRatioInstruction = ' Generate a vertical portrait image with 4:5 aspect ratio (width:height = 4:5, slightly taller than wide). This is the optimal Instagram feed format.';
+          break;
+        case '5:4':
+          aspectRatioInstruction = ' Generate a horizontal image with 5:4 aspect ratio (width:height = 5:4, slightly wider than tall).';
+          break;
+        case '3:4':
+          aspectRatioInstruction = ' Generate a vertical portrait image with 3:4 aspect ratio (width:height = 3:4).';
+          break;
+        case '4:3':
+          aspectRatioInstruction = ' Generate a horizontal image with 4:3 aspect ratio (width:height = 4:3).';
+          break;
+        case '2:3':
+          aspectRatioInstruction = ' Generate a vertical portrait image with 2:3 aspect ratio (width:height = 2:3).';
+          break;
+        case '3:2':
+          aspectRatioInstruction = ' Generate a horizontal image with 3:2 aspect ratio (width:height = 3:2).';
+          break;
+        case '16:9':
+          aspectRatioInstruction = ' Generate a landscape image with 16:9 aspect ratio (widescreen format).';
+          break;
+        case '9:16':
+          aspectRatioInstruction = ' Generate a vertical image with 9:16 aspect ratio (mobile/stories format).';
+          break;
+        case '21:9':
+          aspectRatioInstruction = ' Generate an ultra-wide cinematic image with 21:9 aspect ratio.';
+          break;
+        default:
+          aspectRatioInstruction = ` Generate an image with ${aspectRatio} aspect ratio.`;
+      }
       
       // 🚫 INSTRUCTION CRITIQUE: Aucun texte dans les images générées (version concise)
       const noTextInstruction = ' NO TEXT, no letters, no words in the image.';
