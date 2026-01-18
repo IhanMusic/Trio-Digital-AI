@@ -171,14 +171,24 @@ export class GeminiImageService {
         console.log(`🎯 Prompt final construit avec ${finalReferenceImages.length} référence(s) produit(s)`);
       }
 
+      // 🎯 CORRECTION CRITIQUE: Utiliser imageConfig pour forcer le ratio d'aspect
+      // Selon la documentation officielle Gemini, le ratio doit être dans imageConfig, pas dans le prompt
+      console.log(`📐 Configuration imageConfig: aspectRatio=${aspectRatio}, imageSize=${imageSize}`);
+      
       // Générer l'image avec Gemini 3 Pro
       const response = await ai.models.generateContent({
         model: 'gemini-3-pro-image-preview',
         contents: promptContent,
         config: {
           responseModalities: ['TEXT', 'IMAGE'],
+          // 🎯 AJOUT CRITIQUE: imageConfig avec aspectRatio et imageSize
+          // @ts-ignore - imageConfig est supporté par l'API Gemini mais pas encore dans les types TypeScript
+          imageConfig: {
+            aspectRatio: aspectRatio,
+            imageSize: imageSize,
+          },
         },
-      });
+      } as any);
 
       // Vérifier que des candidats existent
       if (!response.candidates || response.candidates.length === 0) {
