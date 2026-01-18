@@ -277,6 +277,13 @@ PRODUCT INTEGRATION (Maximum Fidelity Required):
 Reference Image Provided: YES
 Required Fidelity Level: 95%+ 
 
+📐 PROPORTIONS CRITIQUES (NON-NÉGOCIABLE):
+• EXACT same proportions as reference image - NO stretching, squashing, or distortion
+• Product scale must be realistic and consistent with environment
+• Aspect ratio of packaging MUST be preserved exactly
+• Height-to-width ratio identical to reference
+• No elongation, compression, or warping of any kind
+
 PRESERVATION CRITICAL:
 • Packaging: ALL visual elements identical to reference
 • Logos: Exact position, size, colors, and design
@@ -285,7 +292,7 @@ PRESERVATION CRITICAL:
 • Reflections: Appropriate to material (glossy vs matte)
 • Labels: Every detail preserved, readable, sharp
 • Colors: Exact brand colors maintained
-• Shape: No distortion or deformation
+• Shape: No distortion or deformation - EXACT original shape preserved
 
 PRODUCT POSITIONING:
 • Visual occupation: 30-40% of frame maximum
@@ -430,6 +437,12 @@ STYLE REQUIREMENTS:
       "impossible hand pose", "unnatural grip", "wrong hand anatomy",
       "extra limbs", "missing limbs", "deformed body",
       "anatomically incorrect", "distorted anatomy",
+      
+      // 📐 PROPORTIONS ET DISTORSION (CRITIQUE)
+      "distorted proportions", "stretched product", "squashed product", "wrong scale",
+      "disproportionate", "resized incorrectly", "elongated", "compressed",
+      "warped packaging", "deformed product", "incorrect aspect ratio",
+      "stretched packaging", "squashed packaging", "wrong proportions",
       
       // Qualité générale
       "low quality", "worst quality", "blurry", "out of focus", "soft focus (unwanted)",

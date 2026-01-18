@@ -108,10 +108,15 @@ export class GeminiImageService {
         ? ' Generate a vertical image with 9:16 aspect ratio.'
         : '';
       
-      // 🚫 INSTRUCTION CRITIQUE: Aucun texte dans les images générées
-      const noTextInstruction = ' CRITICAL REQUIREMENT: Generate image with absolutely NO TEXT, no letters, no words, no typography, no captions, no titles, no slogans, no written elements - pure visual imagery only. Text will be added separately in post-production.';
+      // 🚫 INSTRUCTION CRITIQUE: Aucun texte dans les images générées (version concise)
+      const noTextInstruction = ' NO TEXT, no letters, no words in the image.';
       
-      const enhancedPrompt = prompt + resolutionInstruction + aspectRatioInstruction + noTextInstruction;
+      // 📐 INSTRUCTION CRITIQUE: Préservation des proportions du produit de référence
+      const proportionInstruction = hasReferences 
+        ? ' CRITICAL: Maintain EXACT proportions and scale of the reference product image. Product must NOT be distorted, stretched, squashed, or resized disproportionately. Preserve the original aspect ratio and shape of the product packaging.'
+        : '';
+      
+      const enhancedPrompt = prompt + resolutionInstruction + aspectRatioInstruction + proportionInstruction + noTextInstruction;
 
       // 🎯 CONSTRUIRE LE CONTENU AVEC SUPPORT MULTI-RÉFÉRENCES
       let promptContent: any = enhancedPrompt;

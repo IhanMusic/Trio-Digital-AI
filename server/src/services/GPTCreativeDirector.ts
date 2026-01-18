@@ -693,7 +693,8 @@ ${avoidanceInstructions}
 11. 🆕 REFLÈTE PARFAITEMENT le message et le ton du texte généré (cohérence texte-image)
 12. 🆕 ÉVOQUE l'émotion cible "${textAnalysis.targetEmotion}" de manière visuelle
 13. 🆕 INTÈGRE les éléments visuels suggérés par le texte: ${textAnalysis.visualElements.join(', ') || 'éléments contextuels appropriés'}
-14. 🚫 NE CONTIENT ABSOLUMENT AUCUN TEXTE, lettres, mots, typographie, slogans, titres ou éléments écrits dans l'image - pure imagerie visuelle uniquement
+14. 🚫 NE CONTIENT AUCUN TEXTE dans l'image - pure imagerie visuelle uniquement
+15. 📐 PRÉSERVE les proportions EXACTES du produit de référence - aucune distorsion, étirement, écrasement ou déformation du packaging
 
 FORMAT DE RÉPONSE:
 Génère UNIQUEMENT le prompt d'image final, détaillé et technique, prêt à être envoyé à Gemini.
