@@ -1415,15 +1415,22 @@ DIRECTIVES CRÉATIVES
                       logger.info('✅ Image lue:', imageBuffer.length, 'bytes');
                     }
                     
-                    // 🎯 HAUTE RÉSOLUTION : Transformer en carré 2048x2048
-                    logger.info('🎯 Transformation en haute résolution 2048x2048 (qualité maximale)...');
+                    // 🎯 HAUTE RÉSOLUTION : Garder l'image originale en haute qualité
+                    // NE PAS forcer un ratio carré - laisser Gemini gérer le ratio demandé
+                    logger.info('🎯 Préparation image haute résolution (ratio original préservé)...');
+                    const metadata = await sharp(imageBuffer).metadata();
+                    const maxDimension = 2048;
+                    
+                    // Redimensionner en gardant le ratio original, max 2048px sur le plus grand côté
                     const highResBuffer = await sharp(imageBuffer)
-                      .resize(2048, 2048, {
-                        fit: 'contain',
-                        background: { r: 255, g: 255, b: 255, alpha: 1 }
+                      .resize(maxDimension, maxDimension, {
+                        fit: 'inside', // Garde le ratio original, ne dépasse pas les dimensions
+                        withoutEnlargement: false
                       })
                       .png({ quality: 100 })
                       .toBuffer();
+                    
+                    logger.info(`📐 Image redimensionnée: ${metadata.width}x${metadata.height} → max ${maxDimension}px (ratio préservé)`);
                     
                     const productImageBase64 = highResBuffer.toString('base64');
                     referenceImagesBase64.push(productImageBase64);
