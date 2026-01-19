@@ -165,18 +165,17 @@ router.post('/', authenticate, upload.single('logo'), async (req: express.Reques
       brandData = req.body;
     }
 
-    // Validation des secteurs d'activité
+    // Validation des secteurs d'activité (synchronisé avec client/src/constants/formOptions.ts)
     const validSectors = [
-      "Agriculture et Agroalimentaire", "Artisanat et Métiers d'art", "Assurance et Mutuelle",
+      "Agroalimentaire et FMCG", "Artisanat et Métiers d'art", "Assurance et Mutuelle",
       "Automobile", "Banque et Finance", "Beauté et Bien-être", "Bâtiment et Construction",
       "Biens de consommation", "Chimie et Pharmaceutique", "Communication et Médias",
       "Divertissement et Culture", "Éducation et Formation", "Énergie et Ressources",
-      "Environnement et Développement durable", "FMCG (Fast-Moving Consumer Goods)",
-      "Hôtellerie, Restauration et Loisirs", "Immobilier", "Industrie Manufacturière",
-      "Informatique et Technologies", "Juridique et Conseil", "Mode et Luxe",
-      "ONG et Associations", "Retail et Distribution", "Santé et Services sociaux",
-      "Sécurité et Défense", "Services B2B", "Services B2C", "Sport et Fitness",
-      "Télécommunications", "Transport et Logistique"
+      "Environnement et Développement durable", "Hôtellerie, Restauration et Loisirs",
+      "Immobilier", "Industrie Manufacturière", "Informatique et Technologies",
+      "Juridique et Conseil", "Mode et Luxe", "ONG et Associations", "Retail et Distribution",
+      "Santé et Services sociaux", "Sécurité et Défense", "Services B2B", "Services B2C",
+      "Sport et Fitness", "Télécommunications", "Transport et Logistique"
     ];
     
     if (brandData.sector && !validSectors.includes(brandData.sector)) {
