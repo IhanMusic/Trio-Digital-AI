@@ -481,7 +481,9 @@ class PostGenerationService {
         
         // Déterminer le type de contenu pour ce post spécifique
         let contentTypeForThisPost: 'single' | 'carousel' | 'stories' = 'single';
-        let aspectRatioForThisPost: string = '1:1'; // par défaut
+        // 🎯 CORRECTION CRITIQUE: Ratio par défaut selon la plateforme (pas 1:1 universel)
+        // Instagram: 4:5 (format optimal pour le feed), LinkedIn: 16:9, Facebook: 1:1
+        let aspectRatioForThisPost: string = platform === 'instagram' ? '4:5' : platform === 'linkedin' ? '16:9' : '1:1';
         let promptModification = '';
         
         // Logique de répartition intelligente basée sur les sélections utilisateur
