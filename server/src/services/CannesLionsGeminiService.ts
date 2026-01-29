@@ -458,11 +458,14 @@ export class CannesLionsGeminiService {
     }
     
     // Déterminer l'aspect ratio selon les réseaux sociaux
-    let aspectRatio: string = '1:1'; // Défaut Instagram
+    // 🎯 CORRECTION: Instagram utilise 4:5 (format optimal pour le feed), pas 1:1
+    let aspectRatio: string = '1:1'; // Défaut universel
     if (calendarContext.socialNetworks.includes('TikTok')) {
       aspectRatio = '9:16'; // Vertical pour TikTok
     } else if (calendarContext.socialNetworks.includes('LinkedIn')) {
       aspectRatio = '16:9'; // Horizontal pour LinkedIn
+    } else if (calendarContext.socialNetworks.includes('Instagram')) {
+      aspectRatio = '4:5'; // 🎯 Format optimal Instagram feed (portrait)
     }
     
     // Déterminer le nombre d'images selon le type de contenu
@@ -699,11 +702,12 @@ export class CannesLionsGeminiService {
 
   /**
    * Paramètres optimaux par plateforme
+   * 🎯 CORRECTION: Instagram utilise 4:5 (format optimal pour le feed)
    */
   private static getPlatformOptimalParams(platform: string): CannesLionsGenerationOptions {
     const platformMappings: Record<string, CannesLionsGenerationOptions> = {
       'Instagram': {
-        aspectRatio: '1:1',
+        aspectRatio: '4:5', // 🎯 Format optimal Instagram feed (portrait)
         imageSize: '2K',
         numberOfImages: 1
       },
@@ -718,7 +722,7 @@ export class CannesLionsGeminiService {
         numberOfImages: 1
       },
       'Facebook': {
-        aspectRatio: '16:9',
+        aspectRatio: '1:1', // Facebook utilise 1:1 (carré)
         imageSize: '2K',
         numberOfImages: 1
       },

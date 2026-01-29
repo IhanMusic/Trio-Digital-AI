@@ -525,7 +525,7 @@ Créez un contenu ${isEnhancement ? 'amélioré' : 'adapté'} qui surpasse l'ori
               finalImagePrompt,
               {
                 numberOfImages: 1,
-                aspectRatio: postData.platform === 'instagram' ? '3:4' : '1:1',
+                aspectRatio: postData.platform === 'instagram' ? '4:5' : '1:1', // 🎯 Format optimal Instagram feed (portrait)
                 imageSize: '2K',
                 referenceImages: allReferenceImages,
                 referenceImageStrength: 0.85 // Force élevée pour garder l'essence visuelle
@@ -536,7 +536,7 @@ Créez un contenu ${isEnhancement ? 'amélioré' : 'adapté'} qui surpasse l'ori
               finalImagePrompt,
               {
                 numberOfImages: 1,
-                aspectRatio: postData.platform === 'instagram' ? '3:4' : '1:1',
+                aspectRatio: postData.platform === 'instagram' ? '4:5' : '1:1', // 🎯 Format optimal Instagram feed (portrait)
                 imageSize: '2K',
                 referenceImages: referenceImagesBase64,
                 referenceImageStrength: adjustedStrength
@@ -547,7 +547,7 @@ Créez un contenu ${isEnhancement ? 'amélioré' : 'adapté'} qui surpasse l'ori
               finalImagePrompt,
               {
                 numberOfImages: 1,
-                aspectRatio: postData.platform === 'instagram' ? '3:4' : '1:1',
+                aspectRatio: postData.platform === 'instagram' ? '4:5' : '1:1', // 🎯 Format optimal Instagram feed (portrait)
                 imageSize: '2K',
                 referenceImage: referenceImagesBase64[0],
                 referenceImageStrength: adjustedStrength
@@ -558,7 +558,7 @@ Créez un contenu ${isEnhancement ? 'amélioré' : 'adapté'} qui surpasse l'ori
               finalImagePrompt,
               {
                 numberOfImages: 1,
-                aspectRatio: postData.platform === 'instagram' ? '3:4' : '1:1',
+                aspectRatio: postData.platform === 'instagram' ? '4:5' : '1:1', // 🎯 Format optimal Instagram feed (portrait)
                 imageSize: '2K'
               }
             );

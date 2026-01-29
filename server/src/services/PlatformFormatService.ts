@@ -43,13 +43,23 @@ export class PlatformFormatService {
       };
     }
     
-    // Facebook et Instagram Posts : 3:4 en 2K
-    if (platforms.includes('Facebook') || platforms.includes('Instagram')) {
+    // 🎯 Instagram Posts : 4:5 en 2K (format optimal pour le feed Instagram)
+    if (platforms.includes('Instagram')) {
       return {
-        aspectRatio: '3:4',
+        aspectRatio: '4:5',
         imageSize: '2K',
-        width: 1792,
+        width: 1856,
         height: 2304
+      };
+    }
+    
+    // Facebook Posts : 1:1 en 2K (format carré optimal pour Facebook)
+    if (platforms.includes('Facebook')) {
+      return {
+        aspectRatio: '1:1',
+        imageSize: '2K',
+        width: 2048,
+        height: 2048
       };
     }
     
